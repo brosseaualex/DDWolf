@@ -516,20 +516,20 @@ void IN_GetGameControllerHat(int* dpadUp, int* dpadDown, int* dpadLeft, int* dpa
 	int hatState = SDL_JoystickGetHat(Joystick, 0);
 
 	if (hatState & SDL_HAT_RIGHT) {
-		dpadRight = hatState;
+		*dpadRight = hatState;
 		//printf("\nD-Pad Right Pressed");
 	}
 	else if (hatState & SDL_HAT_LEFT) {
-		dpadLeft = hatState;
+		*dpadLeft = hatState;
 		//printf("\nD-Pad Left Pressed");
 	}
 
 	if (hatState & SDL_HAT_DOWN) {
-		dpadDown = hatState;
+		*dpadDown = hatState;
 		//printf("\nD-Pad Down Pressed");
 	}
 	else if (hatState & SDL_HAT_UP) {
-		dpadUp = hatState;
+		*dpadUp = hatState;
 		//printf("\nD-Pad Up Pressed");
 	}
 }
@@ -835,7 +835,7 @@ void IN_Startup(void)
 		return;
 
 	IN_ClearKeysDown();
-	
+
 #ifdef USE_MODERN_CONTROLS
 	GameControllerNumHats = SDL_JoystickNumHats(Joystick);
 	GameController = SDL_GameControllerOpen(param_joystickindex);
@@ -843,7 +843,7 @@ void IN_Startup(void)
 	if (GameControllerNumHats > 0) {
 		printf("\nGame Controller hats (D-Pad) found!\n");
 	}
-		
+
 #else
 	if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
 	{
