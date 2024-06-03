@@ -25,7 +25,11 @@
 #include <string.h>
 #include <stdarg.h>
 #endif
+#ifdef __linux__
+#include<SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #if !defined O_BINARY
 #define O_BINARY 0
@@ -1283,12 +1287,14 @@ enum
 //
 //---------------
 // Kyle: Multiple Timers
+#ifndef __linux__
 typedef struct
 {
 	short type;
 	int color;
 	int32_t tics;
 } timer_t;
+#endif
 
 typedef struct
 {
