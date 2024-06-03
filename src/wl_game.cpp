@@ -2,7 +2,19 @@
 
 #include <math.h>
 #include "wl_def.h"
-#include <SDL_mixer.h>
+
+//include sdl mixer, because gcc throws error that MIX_CHANNELS
+//is not defined in  this scope.
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#else
+#include <SDL.h>
+#include <SDL2/SDL_mixer.h> 
+#endif
+
+
+
 #pragma hdrstop
 
 #ifdef MYPROFILE
