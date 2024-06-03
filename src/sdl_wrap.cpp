@@ -1,4 +1,9 @@
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
+
 #include "wl_def.h"
 #include "id_vl.h"
 

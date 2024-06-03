@@ -28,7 +28,11 @@
 //
 
 #include "wl_def.h"
+#ifdef __linux__
+#include <SDL2/SDL_mixer.h>
+#else
 #include <SDL_mixer.h>
+#endif
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
 #else
