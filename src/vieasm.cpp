@@ -112,9 +112,9 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
            , link_version->major, link_version->minor, link_version->patch);
 
     if (use8Bit)
-        channels = Mix_OpenAudio(frequency, AUDIO_S8, 2, buffersize);
+        channels = Mix_OpenAudioDevice(frequency, AUDIO_S8, 2, buffersize, NULL, NULL);
     else
-        channels = Mix_OpenAudio(frequency, AUDIO_S16, 2, buffersize);
+        channels = Mix_OpenAudioDevice(frequency, AUDIO_S16, 2, buffersize, NULL, NULL);
 
     printf("Opened with:\n"
            "      frequency - %d Hz\n"
@@ -127,7 +127,7 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
            "----------\n"
            , frequency, channels, maxchan, buffersize, sndvolume, musvolume, (reverse) ? "true" : "false");
 #endif
-    if(Mix_OpenAudio(frequency, channels, 2, buffersize) == -1)
+    if (Mix_OpenAudioDevice(frequency, MIX_DEFAULT_FORMAT, 2, buffersize, NULL, NULL) == -1)
     {
 #ifdef VERBOSE
         printf("ASM_Open: %s\n", Mix_GetError());

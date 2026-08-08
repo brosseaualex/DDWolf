@@ -31,8 +31,8 @@
 
 #endif
 
-//#define USE_MODERN_CONTROLS						// Enables modern controls - ! DELETE CONFIG.WL6 AFTER CHANGING !
-//#define VIEASM										// AlumiuN's Advanced Sound Manager.
+#define USE_MODERN_CONTROLS						// Enables modern controls - ! DELETE CONFIG.WL6 AFTER CHANGING !
+#define VIEASM										// AlumiuN's Advanced Sound Manager.
 													// Some modifications made by WSJ. Information in asmcref.h
 
 #define DISABLE_WALLSOUND							// Disables wall hit and space bar sounds
