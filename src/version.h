@@ -31,7 +31,7 @@
 
 #endif
 
-#define USE_MODERN_CONTROLS						// Enables modern controls - ! DELETE CONFIG.WL6 AFTER CHANGING !
+//#define USE_MODERN_CONTROLS						// Enables modern controls - ! DELETE CONFIG.WL6 AFTER CHANGING !
 //#define VIEASM									// AlumiuN's Advanced Sound Manager.
 													// Some modifications made by WSJ. Information in asmcref.h
 
@@ -76,7 +76,7 @@
 
 //#define BANDEDHOLOWALLS							// Use the old DOS-style "banded" wall drawing behaviour when inside walls
 
-//#define SHOW_GAME_OPTIONS							// Enables game options for feature flags (Do not use, incomplete)
+#define SHOW_GFX_OPTIONS							// Enables game options for feature flags (Do not use, incomplete)
 													// shading, textured floor, ceiling and precipitation
 
 //#define SHOW_CUSTOM_CONTROLS						// !!!!! DELETE CONFIG.WL6 AFTER CHANGING !!!!!

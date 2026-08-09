@@ -70,12 +70,12 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS))
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_GFX_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS))
 	{ 1, STR_NG, CP_NewGame },
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
@@ -407,7 +407,8 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, STR_MOUSEMOVEMENT, 0},
-	{1, STR_SENS, MouseSensitivity} };
+	{1, STR_SENS, MouseSensitivity}
+};
 
 CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_FRWD, 0},
@@ -417,7 +418,8 @@ CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_STF_LEFT, 0},
 	{1, STR_STF_RIGHT, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CRUN, 0},
@@ -426,7 +428,8 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, "More Actions", CP_KeyboardMoreActionCtl},
-	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl} };
+	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl}
+};
 
 CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_WPN_1, 0},
@@ -437,14 +440,14 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_NEXT_WPN, 0},
 	//{1, STR_AUTOMAP, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlJoystickMenu[] = {
 	{1, STR_CRUN, 0},
 	{1, STR_COPEN, 0},
 	{1, STR_CFIRE, 0},
 	{1, STR_CSTRAFE, 0} };
-
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 CP_itemtype CusCtlMenu[] = {
 	{1, STR_CUS_CTL_1, 0},
@@ -468,7 +471,14 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-
+#ifdef SHOW_GFX_OPTIONS
+	CP_itemtype GfxOptMenu[] = {
+		{1, STR_GFX_OPT_TEXTURED, 0},
+		{1, STR_GFX_OPT_SHADING, 0},
+		{1, STR_GFX_OPT_CLOUDS_STARS, 0},
+		{1, STR_GFX_OPT_RAIN_SNOW, 0}
+	};
+#endif
 
 CP_itemtype OptMenu[] = {
 #ifdef JAPAN
@@ -486,8 +496,8 @@ CP_itemtype OptMenu[] = {
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(SHOW_GAME_OPTIONS)
-	{1, STR_OP_GAME, 0},
+#if defined(SHOW_GFX_OPTIONS)
+	{1, STR_OP_GAME, CP_GfxOptions},
 #endif
 #endif
 };
@@ -495,6 +505,10 @@ CP_itemtype OptMenu[] = {
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
+
+#ifdef SHOW_GFX_OPTIONS
+GfxOptItems = { GFX_OPT_X, GFX_OPT_Y, lengthof(GfxOptMenu), 0, 32 },
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
@@ -2340,7 +2354,7 @@ int CP_Control(int blank)
 	return 0;
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2375,6 +2389,43 @@ int CP_Options(int blank)
 
 	return 0;
 }
+
+#ifdef SHOW_GFX_OPTIONS
+////////////////////////////////////////////////////////////////////
+//
+// DEFINE OPTIONS
+//
+////////////////////////////////////////////////////////////////////
+int CP_GfxOptions(int blank)
+{
+	int which;
+	menuExit = 0;
+
+	DrawGfxOptScreen();
+	MenuFadeIn();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&GfxOptItems, GfxOptMenu, NULL);
+
+		switch (which)
+		{
+		case -1:
+			MenuFadeOut();
+			return 0;
+			break;
+		default:
+			DrawGfxOptScreen();
+			MenuFadeIn();
+			WaitKeyUp();
+			break;
+		}
+	} while (which >= 0);
+
+	return 0;
+}
+#endif
 #endif
 
 ////////////////////////////////
@@ -2591,7 +2642,7 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2631,6 +2682,48 @@ void DrawOptScreen(void)
 	}
 
 	DrawMenuGun(&OptItems);
+	VW_UpdateScreen();
+}
+
+///////////////////////////
+//
+// DRAW GAME OPTIONS MENU SCREEN
+//
+void DrawGfxOptScreen(void)
+{
+	int i = 0, x = 0, y = 0;
+
+#ifdef JAPAN
+	VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
+	ClearMScreen();
+	DrawStripes(10);
+	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
+	DrawWindow(GFX_OPT_X - 8, GFX_OPT_Y - 5, GFX_OPT_W, GFX_OPT_H, BKGDCOLOR);
+#endif
+	WindowX = 0;
+	WindowW = 320;
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+	DrawMenu(&GfxOptItems, GfxOptMenu);
+
+	//
+	// PICK FIRST AVAILABLE SPOT
+	//
+	if (GfxOptItems.curpos < 0 || !GfxOptMenu[GfxOptItems.curpos].active)
+	{
+		for (i = 0; i < GfxOptItems.amount; i++)
+		{
+			if (GfxOptMenu[i].active)
+			{
+				GfxOptItems.curpos = i;
+				break;
+			}
+		}
+	}
+
+	DrawMenuGun(&GfxOptItems);
 	VW_UpdateScreen();
 }
 #endif

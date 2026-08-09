@@ -25,8 +25,8 @@
 #define STR_CV "Change View"
 #else
 #define STR_CV "View Size"
-
 #endif
+
 #define STR_VS "View Scores"
 #define STR_EG "End Game"
 #define STR_BD "Back to Demo"
@@ -119,7 +119,7 @@
 
 #define STR_SEEAGAIN "Let's see that again!"
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
 #define STR_OP "Options"
 #endif
 
@@ -151,8 +151,13 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
-#if defined(SHOW_GAME_OPTIONS)
+#if defined(SHOW_GFX_OPTIONS)
 #define STR_OP_GAME "Game Options"
+
+#define STR_GFX_OPT_TEXTURED "Floor/Ceiling Textures"
+#define STR_GFX_OPT_SHADING "Shading"
+#define STR_GFX_OPT_CLOUDS_STARS "Clouds/Stars"
+#define STR_GFX_OPT_RAIN_SNOW "Rain/Snow"
 #endif
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)

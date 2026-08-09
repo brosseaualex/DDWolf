@@ -111,14 +111,20 @@
 #endif
 #define OPT_W 200
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
 #define OPT_H 62
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)
+#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_GFX_OPTIONS)
 #define OPT_H 48
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
 #define OPT_H 34
-//#else
-//#define OPT_H 48
+#endif
+
+#ifdef SHOW_GFX_OPTIONS
+#define GFX_OPT_X 36
+#define GFX_OPT_Y 86
+#define GFX_OPT_W 260
+//IF FLAGS ENABLED, HEIGHT = WHATEVER
+#define GFX_OPT_H 62
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -339,8 +345,9 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
 void DrawOptScreen(void);
+void DrawGfxOptScreen(void);
 #endif
 void DrawJoystickScreen(void);
 
@@ -356,12 +363,10 @@ int CP_SaveGame(int quick);
 int CP_Options(int);
 int CP_Control(int);
 int CP_ChangeView(int);
-int CP_ExitOptions(int);
 int CP_Quit(int);
 int CP_ViewScores(int);
 int CP_EndGame(int);
 int CP_CheckQuick(ScanCode scancode);
-int Controls(int);
 int MouseSensitivity(int);
 #ifdef USE_MODERN_CONTROLS
 int CP_MouseCtl(int);
@@ -374,6 +379,10 @@ int CP_CustomCtl(int);
 #endif
 #else
 int CustomControls(int);
+#endif
+
+#ifdef SHOW_GFX_OPTIONS
+int CP_GfxOptions(int);
 #endif
 
 void CheckForEpisodes(void);
