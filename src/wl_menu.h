@@ -111,14 +111,21 @@
 #endif
 #define OPT_W 200
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 62
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)
+#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 48
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 34
-//#else
-//#define OPT_H 48
+#else
+#define OPT_H 20
+#endif
+
+#ifdef SHOW_ATMOS_OPTIONS
+#define ATMOS_X 46
+#define ATMOS_Y 72
+#define ATMOS_W 244
+#define ATMOS_H 60
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -246,9 +253,6 @@ void ExitToControlScreen(void);
 extern const int MAX_CUSTOM_CONTROLS;
 extern const int CUS_CTL_ARRAY_RANGE_START;
 extern const int CUS_CTL_ARRAY_RANGE_END;
-extern int menuExit;
-
-
 #endif
 
 //
@@ -339,9 +343,14 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 void DrawOptScreen(void);
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+void DrawAtmosOptScreen(void);
 #endif
+#endif
+
 void DrawJoystickScreen(void);
 
 void PrintLSEntry(int w, int color);
@@ -356,12 +365,10 @@ int CP_SaveGame(int quick);
 int CP_Options(int);
 int CP_Control(int);
 int CP_ChangeView(int);
-int CP_ExitOptions(int);
 int CP_Quit(int);
 int CP_ViewScores(int);
 int CP_EndGame(int);
 int CP_CheckQuick(ScanCode scancode);
-int Controls(int);
 int MouseSensitivity(int);
 #ifdef USE_MODERN_CONTROLS
 int CP_MouseCtl(int);
@@ -374,6 +381,10 @@ int CP_CustomCtl(int);
 #endif
 #else
 int CustomControls(int);
+#endif
+
+#ifdef SHOW_ATMOS_OPTIONS
+int CP_AtmosOptions(int);
 #endif
 
 void CheckForEpisodes(void);
@@ -430,6 +441,14 @@ void NonShareware(void);
 int GetYorN(int x, int y, int pic);
 
 #endif
+
+//IFDEF CUSTOM CONTROLS? - TODO and test properly
+const int MORE_ACTIONS_ARRAY_START = 5;
+const int MORE_ACTIONS_ARRAY_END = 12;
+
+const int MAX_CUSTOM_CONTROLS = 10;
+const int CUS_CTL_ARRAY_RANGE_START = 19;
+const int CUS_CTL_ARRAY_RANGE_END = 29;
 
 #ifdef VIEASM
 void DrawSoundVols(bool);

@@ -193,7 +193,12 @@ void ReadConfig(void)
 		read(file, &musicvol, sizeof(musicvol));
 		read(file, &reversestereo, sizeof(reversestereo));
 #endif
-
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+		read(file, &atmosTexturedEnabled, sizeof(atmosTexturedEnabled));
+		read(file, &atmosShadingEnabled, sizeof(atmosShadingEnabled));
+		read(file, &atmosSkyboxEnabled, sizeof(atmosSkyboxEnabled));
+		read(file, &atmosPrecipitationEnabled, sizeof(atmosPrecipitationEnabled));
+#endif
 		close(file);
 
 #ifndef VIEASM
@@ -214,6 +219,7 @@ void ReadConfig(void)
 #ifdef USE_MODERN_CONTROLS
 		if (mouseYAxis)
 			mouseYAxis = true;
+
 		if (alwaysRun)
 			alwaysRun = true;
 
@@ -294,6 +300,31 @@ void ReadConfig(void)
 #endif
 		viewsize = 20; // start with a good size
 		mouseadjustment = 5;
+
+		//Atmosphere options
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if !defined(USE_FLOORCEILINGTEX)
+		atmosTexturedEnabled = false;
+#endif
+#if !defined(USE_SHADING)
+		atmosShadingEnabled = false;
+#endif
+#if !defined(USE_CLOUDSKY) && !defined(USE_STARSKY)
+		atmosSkyboxEnabled = false;
+#endif
+#if !defined(USE_RAIN) && !defined(USE_SNOW)
+		atmosPrecipitationEnabled = false;
+#endif
+
+		if (atmosTexturedEnabled)
+			atmosTexturedEnabled = true;
+		if (atmosShadingEnabled)
+			atmosShadingEnabled = true;
+		if (atmosSkyboxEnabled)
+			atmosSkyboxEnabled = true;
+		if (atmosPrecipitationEnabled)
+			atmosPrecipitationEnabled = true;
+#endif
 
 #ifdef VIEASM
 		soundvol = 100;
@@ -376,6 +407,13 @@ void WriteConfig(void)
 		write(file, &soundvol, sizeof(soundvol));
 		write(file, &musicvol, sizeof(musicvol));
 		write(file, &reversestereo, sizeof(reversestereo));
+#endif
+		// Atmosphere options
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+		write(file, &atmosTexturedEnabled, sizeof(atmosTexturedEnabled));
+		write(file, &atmosShadingEnabled, sizeof(atmosShadingEnabled));
+		write(file, &atmosSkyboxEnabled, sizeof(atmosSkyboxEnabled));
+		write(file, &atmosPrecipitationEnabled, sizeof(atmosPrecipitationEnabled));
 #endif
 
 		close(file);

@@ -22,6 +22,17 @@
 #pragma hdrstop
 
 extern int lastgamemusicoffset;
+int menuExit = 0;
+
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+boolean atmosTexturedEnabled = true;
+boolean atmosShadingEnabled = true;
+boolean atmosSkyboxEnabled = true;
+boolean atmosPrecipitationEnabled = true;
+#endif
 
 //
 // PRIVATE PROTOTYPES
@@ -29,15 +40,6 @@ extern int lastgamemusicoffset;
 int CP_ReadThis(int);
 
 void SetTextColor(CP_itemtype* items, int hlight);
-
-int menuExit = 0;
-
-const int MORE_ACTIONS_ARRAY_START = 5;
-const int MORE_ACTIONS_ARRAY_END = 12;
-
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
 
 #ifdef USE_READTHIS
 #define STARTITEM       readthis
@@ -70,19 +72,19 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS))
-	{ 1, STR_NG, CP_NewGame },
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
+	{1, STR_NG, CP_NewGame},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-	//{1, STR_CV, CP_ChangeView},
 #else
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
@@ -91,7 +93,14 @@ CP_itemtype MainMenu[] = {
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_CV, CP_ChangeView},
 #endif
-
+#else
+	{1, STR_NG, CP_NewGame},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+	{1, STR_LG, CP_LoadGame},
+	{0, STR_SG, CP_SaveGame},
+	{1, STR_CV, CP_ChangeView},
+#endif
 #ifdef USE_READTHIS
 #ifdef SPANISH
 	{2, "Ve esto!", CP_ReadThis},
@@ -121,7 +130,7 @@ CP_itemtype SndMenu[] = {
 	{1, "", 0},
 #else
 #ifndef VIEASM
-		{1, STR_NONE, 0},
+	{1, STR_NONE, 0},
 	{1, STR_PC, 0},
 	{1, STR_ALSB, 0},
 	{0, "", 0},
@@ -134,7 +143,7 @@ CP_itemtype SndMenu[] = {
 	{1, STR_NONE, 0},
 	{1, STR_ALSB, 0}
 #else
-	 { 1, "Off", 0 },
+	{ 1, "Off", 0 },
 	{1, "On", 0},
 	{0, "", 0},
 	{0, "", 0},
@@ -143,7 +152,7 @@ CP_itemtype SndMenu[] = {
 	{0, "", 0},
 	{0, "", 0},
 	{1, "Adjust Volume", AdjustVolume},
-	{1, "Reverse Stereo", 0},
+	{1, "Reverse Stereo", 0}
 #endif // !VIEASM
 #endif
 };
@@ -245,6 +254,14 @@ enum
 #endif
 
 #endif
+
+enum
+{
+	ATMOS_USE_TEXTURED,
+	ATMOS_USE_SHADING,
+	ATMOS_USE_SKYBOX,
+	ATMOS_USE_PRECIPITATION
+};
 
 CP_itemtype CtlMenu[] = {
 #ifdef JAPAN
@@ -407,7 +424,8 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, STR_MOUSEMOVEMENT, 0},
-	{1, STR_SENS, MouseSensitivity} };
+	{1, STR_SENS, MouseSensitivity}
+};
 
 CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_FRWD, 0},
@@ -417,7 +435,8 @@ CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_STF_LEFT, 0},
 	{1, STR_STF_RIGHT, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CRUN, 0},
@@ -426,7 +445,8 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, "More Actions", CP_KeyboardMoreActionCtl},
-	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl} };
+	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl}
+};
 
 CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_WPN_1, 0},
@@ -437,14 +457,14 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_NEXT_WPN, 0},
 	//{1, STR_AUTOMAP, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlJoystickMenu[] = {
 	{1, STR_CRUN, 0},
 	{1, STR_COPEN, 0},
 	{1, STR_CFIRE, 0},
 	{1, STR_CSTRAFE, 0} };
-
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 CP_itemtype CusCtlMenu[] = {
 	{1, STR_CUS_CTL_1, 0},
@@ -468,7 +488,16 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+CP_itemtype AtmosOptMenu[] = {
+	{1, STR_ATMOS_TEXTURED, 0},
+	{1, STR_ATMOS_SHADING, 0},
+	{1, STR_ATMOS_SKYBOX, 0},
+	{1, STR_ATMOS_PRECIPITATION, 0}
+};
+#endif
+#endif
 
 CP_itemtype OptMenu[] = {
 #ifdef JAPAN
@@ -486,8 +515,10 @@ CP_itemtype OptMenu[] = {
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(SHOW_GAME_OPTIONS)
-	{1, STR_OP_GAME, 0},
+#if defined(USE_SHADING) || defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)|| defined(USE_STARSKY)|| defined(USE_RAIN) || defined(USE_SNOW)
+	#if defined(SHOW_ATMOS_OPTIONS)
+		{1, STR_ATMOS_TITLE, CP_AtmosOptions},
+	#endif
 #endif
 #endif
 };
@@ -495,6 +526,12 @@ CP_itemtype OptMenu[] = {
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
+#endif
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
@@ -2340,7 +2377,6 @@ int CP_Control(int blank)
 	return 0;
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2375,6 +2411,61 @@ int CP_Options(int blank)
 
 	return 0;
 }
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+////////////////////////////////////////////////////////////////////
+//
+// DEFINE OPTIONS
+//
+////////////////////////////////////////////////////////////////////
+int CP_AtmosOptions(int blank)
+{
+	int which;
+
+	DrawAtmosOptScreen();
+	MenuFadeIn();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&AtmosOptItems, AtmosOptMenu, NULL);
+		switch (which)
+		{
+		case -1:
+			MenuFadeOut();
+			return 0;
+			break;
+		case ATMOS_USE_TEXTURED:
+			atmosTexturedEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SHADING:
+			atmosShadingEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SKYBOX:
+			atmosSkyboxEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_PRECIPITATION:
+			atmosPrecipitationEnabled ^= 1;
+			DrawAtmosOptScreen();
+			MenuFadeIn();
+			WaitKeyUp();
+			break;
+		}
+	} while (which >= 0);
+
+	return 0;
+}
+#endif
 #endif
 
 ////////////////////////////////
@@ -2591,7 +2682,6 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2605,7 +2695,7 @@ void DrawOptScreen(void)
 #else
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(OPT_X - 8, OPT_Y - 5, OPT_W, OPT_H, BKGDCOLOR);
 #endif
@@ -2633,6 +2723,104 @@ void DrawOptScreen(void)
 	DrawMenuGun(&OptItems);
 	VW_UpdateScreen();
 }
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+///////////////////////////
+//
+// DRAW ATMOSPHERE OPTIONS MENU SCREEN
+//
+void DrawAtmosOptScreen(void)
+{
+	int i, x, y;
+
+#ifdef JAPAN
+	VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
+	ClearMScreen();
+	DrawStripes(10);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
+	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
+#endif
+	WindowX = 0;
+	WindowW = 320;
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+#if defined(USE_FLOORCEILINGTEX)
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 0;
+#endif
+
+#if defined(USE_SHADING)
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 0;
+#endif
+
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 0;
+#endif
+
+#if defined(USE_RAIN) || defined(USE_SNOW)
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 0;
+#endif
+
+	DrawMenu(&AtmosOptItems, AtmosOptMenu);
+
+	x = ATMOS_X + AtmosOptItems.indent - 23;
+	y = ATMOS_Y + 2;
+
+	if (atmosTexturedEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 15;
+
+	if (atmosShadingEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 28;
+
+	if (atmosSkyboxEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 41;
+
+	if (atmosPrecipitationEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	//
+	// PICK FIRST AVAILABLE SPOT
+	//
+	if (AtmosOptItems.curpos < 0 || !AtmosOptMenu[AtmosOptItems.curpos].active)
+	{
+		for (i = 0; i < AtmosOptItems.amount; i++)
+		{
+			if (AtmosOptMenu[i].active)
+			{
+				AtmosOptItems.curpos = i;
+				break;
+			}
+		}
+	}
+
+	DrawMenuGun(&AtmosOptItems);
+	VW_UpdateScreen();
+}
+#endif
 #endif
 
 #ifdef USE_MODERN_CONTROLS

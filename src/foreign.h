@@ -21,11 +21,11 @@
 #define STR_CL "Control"
 #define STR_LG "Load Game"
 #define STR_SG "Save Game"
+#define STR_OP "Options"
 #ifndef USE_MODERN_CONTROLS
 #define STR_CV "Change View"
 #else
 #define STR_CV "View Size"
-
 #endif
 #define STR_VS "View Scores"
 #define STR_EG "End Game"
@@ -119,10 +119,6 @@
 
 #define STR_SEEAGAIN "Let's see that again!"
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
-#define STR_OP "Options"
-#endif
-
 #ifdef USE_MODERN_CONTROLS
 #define STR_JOYEN "Controller Enabled"
 
@@ -151,8 +147,15 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
-#if defined(SHOW_GAME_OPTIONS)
-#define STR_OP_GAME "Game Options"
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+#define STR_ATMOS_TITLE "Atmosphere"
+
+#define STR_ATMOS_TEXTURED "Textured fl and clg."
+#define STR_ATMOS_SHADING "Shading"
+#define STR_ATMOS_SKYBOX "Skybox"
+#define STR_ATMOS_PRECIPITATION "Precipitation"
+#endif
 #endif
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
