@@ -70,11 +70,19 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#ifdef USE_MODERN_CONTROLS
-	{1, STR_NG, CP_NewGame},
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS))
+	{ 1, STR_NG, CP_NewGame },
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+	{1, STR_NG, CP_NewGame},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+	{1, STR_LG, CP_LoadGame},
+	{0, STR_SG, CP_SaveGame},
+	{1, STR_OP, CP_Options},
+	//{1, STR_CV, CP_ChangeView},
 #else
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
@@ -83,6 +91,7 @@ CP_itemtype MainMenu[] = {
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_CV, CP_ChangeView},
 #endif
+
 #ifdef USE_READTHIS
 #ifdef SPANISH
 	{2, "Ve esto!", CP_ReadThis},
@@ -125,7 +134,7 @@ CP_itemtype SndMenu[] = {
 	{1, STR_NONE, 0},
 	{1, STR_ALSB, 0}
 #else
-	 {1, "Off", 0},
+	 { 1, "Off", 0 },
 	{1, "On", 0},
 	{0, "", 0},
 	{0, "", 0},
@@ -246,13 +255,13 @@ CP_itemtype CtlMenu[] = {
 	{0, "", MouseSensitivity},
 	{1, "", CustomControls}
 #else
-	{0, STR_MOUSEEN, 0},
+	{ 0, STR_MOUSEEN, 0 },
 #ifndef USE_MODERN_CONTROLS
 	{0, STR_SENS, MouseSensitivity},
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{0, STR_JOYEN, 0},
+	{ 0, STR_JOYEN, 0 },
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -297,53 +306,57 @@ CP_itemtype NewEmenu[] = {
 #endif
 #else
 #ifdef SPANISH
-	{1, "Episodio 1\n"
-		"Fuga desde Wolfenstein",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 2\n"
-		"Operacion Eisenfaust",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 3\n"
-		"Muere, Fuhrer, Muere!",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 4\n"
-		"Un Negro Secreto",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 5\n"
-		"Huellas del Loco",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 6\n"
-		"Confrontacion",
-	 0}
+	{
+1, "Episodio 1\n"
+   "Fuga desde Wolfenstein",
+0
+},
+{0, "", 0},
+{3, "Episodio 2\n"
+	"Operacion Eisenfaust",
+ 0},
+{0, "", 0},
+{3, "Episodio 3\n"
+	"Muere, Fuhrer, Muere!",
+ 0},
+{0, "", 0},
+{3, "Episodio 4\n"
+	"Un Negro Secreto",
+ 0},
+{0, "", 0},
+{3, "Episodio 5\n"
+	"Huellas del Loco",
+ 0},
+{0, "", 0},
+{3, "Episodio 6\n"
+	"Confrontacion",
+ 0}
 #else
-	{1, "Episode 1\n"
-		"Escape from Wolfenstein",
-	 0},
-	{0, "", 0},
-	{3, "Episode 2\n"
-		"Operation: Eisenfaust",
-	 0},
-	{0, "", 0},
-	{3, "Episode 3\n"
-		"Die, Fuhrer, Die!",
-	 0},
-	{0, "", 0},
-	{3, "Episode 4\n"
-		"A Dark Secret",
-	 0},
-	{0, "", 0},
-	{3, "Episode 5\n"
-		"Trail of the Madman",
-	 0},
-	{0, "", 0},
-	{3, "Episode 6\n"
-		"Confrontation",
-	 0}
+	{
+1, "Episode 1\n"
+   "Escape from Wolfenstein",
+0
+},
+{0, "", 0},
+{3, "Episode 2\n"
+	"Operation: Eisenfaust",
+ 0},
+{0, "", 0},
+{3, "Episode 3\n"
+	"Die, Fuhrer, Die!",
+ 0},
+{0, "", 0},
+{3, "Episode 4\n"
+	"A Dark Secret",
+ 0},
+{0, "", 0},
+{3, "Episode 5\n"
+	"Trail of the Madman",
+ 0},
+{0, "", 0},
+{3, "Episode 6\n"
+	"Confrontation",
+ 0}
 #endif
 #endif
 };
@@ -356,7 +369,7 @@ CP_itemtype NewMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-	{1, STR_DADDY, 0},
+	{ 1, STR_DADDY, 0 },
 	{1, STR_HURTME, 0},
 	{1, STR_BRINGEM, 0},
 	{1, STR_DEATH, 0}
@@ -466,17 +479,15 @@ CP_itemtype OptMenu[] = {
 	{0, "", MouseSensitivity},
 	{1, "", CustomControls}
 #else
-	{1, STR_OP_SND, CP_Sound},
+#if defined(USE_MODERN_CONTROLS)
+	{ 1, STR_OP_SND, CP_Sound },
 	{1, STR_OP_CTL, CP_Control},
-#ifdef USE_MODERN_CONTROLS
-#ifdef SHOW_GAME_OPTIONS
 	{1, STR_CV, CP_ChangeView},
-	{1, STR_OP_GAME, 0}
 #else
-	{1, STR_CV, CP_ChangeView}
+	{1, STR_CV, CP_ChangeView},
 #endif
-#else
-	{1, STR_CV, CP_ChangeView},
+#if defined(SHOW_GAME_OPTIONS)
+	{1, STR_OP_GAME, 0},
 #endif
 #endif
 };
@@ -1043,7 +1054,7 @@ int CP_CheckQuick(ScanCode scancode)
 
 			if (!startgame && !loadedgame)
 				ContinueMusic(lastgamemusicoffset);
-			  
+
 			if (loadedgame)
 				playstate = ex_abort;
 
@@ -1587,7 +1598,7 @@ DrawSoundVols(bool curmode)
 
 	WindowX = scalingOffsetX;
 	WindowW = 320;
-	
+
 	PrintY = 30 + scalingOffsetY;
 	SETFONTCOLOR(READCOLOR, BKGDCOLOR);
 	US_CPrint("Adjust Volume");
@@ -2028,7 +2039,7 @@ void TrackWhichGame(int w)
 
 	DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
 	SDL_Surface* bmpSurface = SDL_LoadBMP(bmpName);
-	
+
 	if (bmpSurface != NULL) {
 		byte* surfaceBytes = new byte[bmpSurface->w * bmpSurface->h * 4];
 
@@ -2190,8 +2201,8 @@ int CP_SaveGame(int quick)
 					DrawLoadSaveScreen(1);
 					PrintLSEntry(which, HIGHLIGHT);
 					VW_UpdateScreen();
+				}
 			}
-		}
 
 			ShootSnd();
 
@@ -2227,7 +2238,7 @@ int CP_SaveGame(int quick)
 				bmpName[7] = which + '0';
 				if (configdir[0]) {
 					snprintf(picpath, sizeof(picpath), "%s/%s", configdir, bmpName);
-			}
+				}
 				else {
 					strcpy(picpath, bmpName);
 				}
@@ -2252,7 +2263,7 @@ int CP_SaveGame(int quick)
 
 			fontnumber = 1;
 			break;
-}
+		}
 
 	} while (which >= 0);
 
@@ -2327,8 +2338,9 @@ int CP_Control(int blank)
 	} while (which >= 0);
 
 	return 0;
-		}
+}
 
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2363,6 +2375,7 @@ int CP_Options(int blank)
 
 	return 0;
 }
+#endif
 
 ////////////////////////////////
 //
@@ -2404,7 +2417,7 @@ void DrawMouseSens(void)
 #endif
 
 	VWB_Bar(60 + scalingOffsetX, 97 + scalingOffsetY, 200, 10, TEXTCOLOR);
-	DrawOutline(60 , 97, 200, 10, 0, HIGHLIGHT);
+	DrawOutline(60, 97, 200, 10, 0, HIGHLIGHT);
 	DrawOutline(60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
 	VWB_Bar(61 + 20 * mouseadjustment + scalingOffsetX, 98 + scalingOffsetY, 19, 9, READHCOLOR);
 
@@ -2578,6 +2591,7 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2619,6 +2633,7 @@ void DrawOptScreen(void)
 	DrawMenuGun(&OptItems);
 	VW_UpdateScreen();
 }
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 
@@ -2930,7 +2945,7 @@ enum
 	LEFT,
 	STF_LEFT,
 	STF_RIGHT
-	};
+};
 int moveorder[6] = { FWRD, BKWD, LEFT, RIGHT, STF_LEFT, STF_RIGHT };
 #else
 enum
@@ -3625,19 +3640,19 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				{
 					picked = 1;
 					SD_PlaySound(ESCPRESSEDSND);
-					}
+				}
 
 				if (picked)
 					break;
 
 				ReadAnyControl(&ci);
-					}
+			}
 
 			SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 			redraw = 1;
 			WaitKeyUp();
 			continue;
-					}
+		}
 
 		if (ci.button1 || IN_KeyDown(sc_Escape))
 			exit = 1;
@@ -3678,15 +3693,15 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		case dir_South:
 			exit = 1;
 		}
-				} while (!exit);
+	} while (!exit);
 
-				SD_PlaySound(ESCPRESSEDSND);
-				WaitKeyUp();
+	SD_PlaySound(ESCPRESSEDSND);
+	WaitKeyUp();
 
 #ifndef USE_MODERN_CONTROLS
-				DrawWindow(5, PrintY - 1 - scalingOffsetY, 310, 13, BKGDCOLOR);
+	DrawWindow(5, PrintY - 1 - scalingOffsetY, 310, 13, BKGDCOLOR);
 #endif
-			}
+}
 
 ////////////////////////
 //
@@ -3905,7 +3920,7 @@ void DrawKeyboardActionCtlScreen(void)
 	US_CPrint("Action keys 1/2");
 #endif
 
-	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);	
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H - 13, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardActionItems);
@@ -4339,7 +4354,7 @@ void DrawCustMouse(int highlight)
 #endif
 	for (i = 0; i < 4; i++)
 		PrintCustMouse(i);
-		}
+}
 
 #ifdef USE_MODERN_CONTROLS
 void PrintCustJoy(int i)
@@ -4456,7 +4471,7 @@ void DrawCustJoy(int hilight)
 
 	for (i = 0; i < 4; i++)
 		PrintCustJoy(i);
-			}
+}
 #endif
 
 void PrintCustKeybd(int i)
@@ -4528,7 +4543,7 @@ void PrintMoreActionsKeys(int i)
 	//PrintY = CST_START + (CST_SPC_Y * i);
 	PrintY = OPT_KEYBOARD_MORE_ACTION_TEXT_Y + scalingOffsetY + (CST_SPC_Y * i);
 	US_Print((const char*)IN_GetScanName(buttonscan[4 + actionorder[i]]));
-		}
+}
 
 void DrawMoreActionsKeys(int hilight)
 {
@@ -4652,7 +4667,7 @@ int CP_ChangeView(int blank)
 		VL_ClearScreen(0);
 
 	return 0;
-	}
+}
 
 /////////////////////////////
 //
@@ -4706,7 +4721,7 @@ int CP_Quit(int blank)
 		SD_StopSound();
 		MenuFadeOut();
 		Quit(NULL);
-}
+	}
 
 	DrawMainMenu();
 	return 0;
@@ -5465,29 +5480,29 @@ int Confirm(const char* string)
 #ifdef SPANISH
 	} while (!Keyboard(sc_S) && !Keyboard(sc_N) && !Keyboard(sc_Escape));
 #else
-} while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape) && !ci.button0 && !ci.button1);
+	} while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape) && !ci.button0 && !ci.button1);
 #endif
 
 #ifdef SPANISH
-if (Keyboard(sc_S) || ci.button0)
-{
-	xit = 1;
-	ShootSnd();
-}
+	if (Keyboard(sc_S) || ci.button0)
+	{
+		xit = 1;
+		ShootSnd();
+	}
 #else
-if (Keyboard(sc_Y) || ci.button0)
-{
-	xit = 1;
-	ShootSnd();
-}
+	if (Keyboard(sc_Y) || ci.button0)
+	{
+		xit = 1;
+		ShootSnd();
+	}
 #endif
 
-IN_ClearKeysDown();
-WaitKeyUp();
+	IN_ClearKeysDown();
+	WaitKeyUp();
 
-SD_PlaySound((soundnames)whichsnd[xit]);
+	SD_PlaySound((soundnames)whichsnd[xit]);
 
-return xit;
+	return xit;
 }
 
 #ifdef JAPAN
@@ -6007,8 +6022,8 @@ void CheckForEpisodes(void)
 			{
 				Quit("The configuration directory \"%s\" could not be created.", configdir);
 			}
+		}
 	}
-}
 
 	//
 	// JAPANESE VERSION
@@ -6146,4 +6161,4 @@ void CheckForEpisodes(void)
 #endif
 	strcat(endfilename, extension);
 #endif
-	}
+}

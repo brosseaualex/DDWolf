@@ -186,33 +186,33 @@ The current version of the source code is available on GitHub at: https://github
 
 **_Preferred methods for compiling the source code:_**
 
-- Code::Blocks 20.03
+- Code::Blocks 20.03 - ***Supported***
   - DDWolf_x86.cbp (Requires 32-bits compiler)
   - DDWolf_x64.cbp (Requires 64-bits compiler)
     - README-codeblocks.txt
-- Visual Studio C++ (2019/2022)
+- Visual Studio C++ (2019/2022) - ***Supported***
   - [VS 2022] - DDWolf.VC2022.sln
   - [VS 2019] - DDWolf.VC2019.sln
     - README-VC.txt
-- [Untested] CMake
-- [Untested] Makefile (for Linux, BSD variants and MinGW/MSYS)
+- [CLion] CMakeList (Tested with MingW) - ***No support provided***
+- [Outdated] Makefile (for Linux, BSD variants and MinGW/MSYS) - ***No support provided***
 
 <h2><em>SDL Libraries</em></h2>
 
-Batch files that automatically download and setup the correct SDL2 and SDL2_Mixer libraries for you are included in the repository.
+Batch files that automatically downloads and places the correct SDL2 and SDL2_Mixer libraries in the required folders are included in the repository.
 
 You only need to run the script and open the project you want to use.
 
 <h4>WARNING</h4>
 
-*This script does not work with admin privileges (Run as administrator), make sure to clone the repository somewhere where elevation is NOT required.*
+*This script **DOES NOT WORK** with admin privileges (Run as administrator), make sure to clone the repository somewhere where elevation is **NOT** required.*
 
 *Tested in a directory under 'C:\Users\Username'.*
 
 <h4>Script files</h4>
 
 ```
-- _get-libs-mingw.bat (Code::Blocks libraries)
+- _get-libs-mingw.bat (Code::Blocks/MingW libraries)
 - _get-libs-vc.bat (Visual Studio libraries)
 ```
 

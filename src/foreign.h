@@ -119,8 +119,11 @@
 
 #define STR_SEEAGAIN "Let's see that again!"
 
-#ifdef USE_MODERN_CONTROLS
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 #define STR_OP "Options"
+#endif
+
+#ifdef USE_MODERN_CONTROLS
 #define STR_JOYEN "Controller Enabled"
 
 #define STR_OP_MOUSE "Mouse Config"
@@ -148,7 +151,7 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#if defined(SHOW_GAME_OPTIONS)
 #define STR_OP_GAME "Game Options"
 #endif
 

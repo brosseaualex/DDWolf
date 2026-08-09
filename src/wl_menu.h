@@ -113,8 +113,12 @@
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
 #define OPT_H 62
-#else
+#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_GAME_OPTIONS)
 #define OPT_H 48
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GAME_OPTIONS)
+#define OPT_H 34
+//#else
+//#define OPT_H 48
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -335,7 +339,9 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GAME_OPTIONS)
 void DrawOptScreen(void);
+#endif
 void DrawJoystickScreen(void);
 
 void PrintLSEntry(int w, int color);

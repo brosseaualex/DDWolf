@@ -32,7 +32,7 @@
 #endif
 
 #define USE_MODERN_CONTROLS						// Enables modern controls - ! DELETE CONFIG.WL6 AFTER CHANGING !
-#define VIEASM										// AlumiuN's Advanced Sound Manager.
+//#define VIEASM									// AlumiuN's Advanced Sound Manager.
 													// Some modifications made by WSJ. Information in asmcref.h
 
 #define DISABLE_WALLSOUND							// Disables wall hit and space bar sounds
@@ -56,11 +56,11 @@
 //#define REVEALMAP									// Enables showing only the areas of the overhead map that have been seen
 //#define SEAMLESSLEVELS							// Disables the Episode selection screen on Wolf3D.
 //#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
-//#define USE_RAND                                  // Enables the C++ random number generator
-//#define WSJ_MESSAGE								// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors.
+//#define USE_RAND                                  // Enables the C++ random number generator (SRAND). By Matthew
+//#define WSJ_MESSAGE								// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors. By WSJ
 //#define SAVE_GAME_SCREENSHOT						// Shows a screenshot in the Save and Load screens. By insurrectionman
 
-#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
+//#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
 //#define NO_TIME_WASTE								// Disables the FadeIn and FadeOut delay, useful when debugging
 //#define ARTSEXTERN
 #define DEMOSEXTERN
@@ -75,9 +75,10 @@
 #define FIXCALCROTATE								// Apply a modified version of Ginyu's fix to make CalcRotate more accurate at high resolutions
 
 //#define BANDEDHOLOWALLS							// Use the old DOS-style "banded" wall drawing behaviour when inside walls
-//#define SHOW_GAME_OPTIONS							// Requires USE_MODERN_CONTROLS flag enabled. (Do not use, incomplete)
-													// Enables game options for feature flags
+
+//#define SHOW_GAME_OPTIONS							// Enables game options for feature flags (Do not use, incomplete)
 													// shading, textured floor, ceiling and precipitation
+
 //#define SHOW_CUSTOM_CONTROLS						// !!!!! DELETE CONFIG.WL6 AFTER CHANGING !!!!!
 													// Requires #USE_MODERN_CONTROLS flag enabled and code changes to customize the keys.
 #endif
