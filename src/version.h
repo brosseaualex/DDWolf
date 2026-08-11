@@ -76,7 +76,7 @@
 
 //#define BANDEDHOLOWALLS							// Use the old DOS-style "banded" wall drawing behaviour when inside walls
 
-#define SHOW_GFX_OPTIONS							// Enables game options for feature flags (Do not use, incomplete)
+#define SHOW_ATMOS_SETTINGS							// Enables game options for feature flags (Do not use, incomplete)
 													// shading, textured floor, ceiling and precipitation
 
 //#define SHOW_CUSTOM_CONTROLS						// !!!!! DELETE CONFIG.WL6 AFTER CHANGING !!!!!

@@ -111,20 +111,20 @@
 #endif
 #define OPT_W 200
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
 #define OPT_H 62
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_GFX_OPTIONS)
+#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_SETTINGS)
 #define OPT_H 48
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
 #define OPT_H 34
 #endif
 
-#ifdef SHOW_GFX_OPTIONS
-#define GFX_OPT_X 36
-#define GFX_OPT_Y 86
-#define GFX_OPT_W 260
+#ifdef SHOW_ATMOS_SETTINGS
+#define ATMOS_X 48
+#define ATMOS_Y 86
+#define ATMOS_W 240
 //IF FLAGS ENABLED, HEIGHT = WHATEVER
-#define GFX_OPT_H 62
+#define ATMOS_H 62
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -252,9 +252,6 @@ void ExitToControlScreen(void);
 extern const int MAX_CUSTOM_CONTROLS;
 extern const int CUS_CTL_ARRAY_RANGE_START;
 extern const int CUS_CTL_ARRAY_RANGE_END;
-extern int menuExit;
-
-
 #endif
 
 //
@@ -345,9 +342,9 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
 void DrawOptScreen(void);
-void DrawGfxOptScreen(void);
+void DrawAtmosScreen(void);
 #endif
 void DrawJoystickScreen(void);
 
@@ -381,8 +378,8 @@ int CP_CustomCtl(int);
 int CustomControls(int);
 #endif
 
-#ifdef SHOW_GFX_OPTIONS
-int CP_GfxOptions(int);
+#ifdef SHOW_ATMOS_SETTINGS
+int CP_AtmosOptions(int);
 #endif
 
 void CheckForEpisodes(void);
@@ -439,6 +436,14 @@ void NonShareware(void);
 int GetYorN(int x, int y, int pic);
 
 #endif
+
+//IFDEF CUSTOM CONTROLS? - TODO and test properly
+const int MORE_ACTIONS_ARRAY_START = 5;
+const int MORE_ACTIONS_ARRAY_END = 12;
+
+const int MAX_CUSTOM_CONTROLS = 10;
+const int CUS_CTL_ARRAY_RANGE_START = 19;
+const int CUS_CTL_ARRAY_RANGE_END = 29;
 
 #ifdef VIEASM
 void DrawSoundVols(bool);

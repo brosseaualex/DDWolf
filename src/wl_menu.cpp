@@ -22,6 +22,7 @@
 #pragma hdrstop
 
 extern int lastgamemusicoffset;
+int menuExit = 0;
 
 //
 // PRIVATE PROTOTYPES
@@ -29,15 +30,6 @@ extern int lastgamemusicoffset;
 int CP_ReadThis(int);
 
 void SetTextColor(CP_itemtype* items, int hlight);
-
-int menuExit = 0;
-
-const int MORE_ACTIONS_ARRAY_START = 5;
-const int MORE_ACTIONS_ARRAY_END = 12;
-
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
 
 #ifdef USE_READTHIS
 #define STARTITEM       readthis
@@ -70,19 +62,18 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_GFX_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS))
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_SETTINGS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS))
 	{ 1, STR_NG, CP_NewGame },
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_GFX_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-	//{1, STR_CV, CP_ChangeView},
 #else
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
@@ -121,7 +112,7 @@ CP_itemtype SndMenu[] = {
 	{1, "", 0},
 #else
 #ifndef VIEASM
-		{1, STR_NONE, 0},
+	{1, STR_NONE, 0},
 	{1, STR_PC, 0},
 	{1, STR_ALSB, 0},
 	{0, "", 0},
@@ -134,7 +125,7 @@ CP_itemtype SndMenu[] = {
 	{1, STR_NONE, 0},
 	{1, STR_ALSB, 0}
 #else
-	 { 1, "Off", 0 },
+	{1, "Off", 0},
 	{1, "On", 0},
 	{0, "", 0},
 	{0, "", 0},
@@ -143,7 +134,7 @@ CP_itemtype SndMenu[] = {
 	{0, "", 0},
 	{0, "", 0},
 	{1, "Adjust Volume", AdjustVolume},
-	{1, "Reverse Stereo", 0},
+	{1, "Reverse Stereo", 0}
 #endif // !VIEASM
 #endif
 };
@@ -471,12 +462,12 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-#ifdef SHOW_GFX_OPTIONS
-	CP_itemtype GfxOptMenu[] = {
-		{1, STR_GFX_OPT_TEXTURED, 0},
-		{1, STR_GFX_OPT_SHADING, 0},
-		{1, STR_GFX_OPT_CLOUDS_STARS, 0},
-		{1, STR_GFX_OPT_RAIN_SNOW, 0}
+#ifdef SHOW_ATMOS_SETTINGS
+	CP_itemtype AtmosOptMenu[] = {
+		{1, STR_ATMOS_TEXTURED, 0},
+		{1, STR_ATMOS_SHADING, 0},
+		{1, STR_ATMOS_CLOUDS_STARS, 0},
+		{1, STR_ATMOS_RAIN_SNOW, 0}
 	};
 #endif
 
@@ -496,8 +487,8 @@ CP_itemtype OptMenu[] = {
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(SHOW_GFX_OPTIONS)
-	{1, STR_OP_GAME, CP_GfxOptions},
+#if defined(SHOW_ATMOS_SETTINGS)
+	{1, STR_ATMOS_TITLE, CP_AtmosOptions},
 #endif
 #endif
 };
@@ -506,8 +497,8 @@ CP_itemtype OptMenu[] = {
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
 
-#ifdef SHOW_GFX_OPTIONS
-GfxOptItems = { GFX_OPT_X, GFX_OPT_Y, lengthof(GfxOptMenu), 0, 32 },
+#ifdef SHOW_ATMOS_SETTINGS
+AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 60 },
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -2354,7 +2345,7 @@ int CP_Control(int blank)
 	return 0;
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2390,24 +2381,24 @@ int CP_Options(int blank)
 	return 0;
 }
 
-#ifdef SHOW_GFX_OPTIONS
+#ifdef SHOW_ATMOS_SETTINGS
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
 //
 ////////////////////////////////////////////////////////////////////
-int CP_GfxOptions(int blank)
+int CP_AtmosOptions(int blank)
 {
 	int which;
 	menuExit = 0;
 
-	DrawGfxOptScreen();
+	DrawAtmosScreen();
 	MenuFadeIn();
 	WaitKeyUp();
 
 	do
 	{
-		which = HandleMenu(&GfxOptItems, GfxOptMenu, NULL);
+		which = HandleMenu(&AtmosOptItems, AtmosOptMenu, NULL);
 
 		switch (which)
 		{
@@ -2416,7 +2407,7 @@ int CP_GfxOptions(int blank)
 			return 0;
 			break;
 		default:
-			DrawGfxOptScreen();
+			DrawAtmosScreen();
 			MenuFadeIn();
 			WaitKeyUp();
 			break;
@@ -2642,7 +2633,7 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_GFX_OPTIONS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2656,7 +2647,7 @@ void DrawOptScreen(void)
 #else
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(OPT_X - 8, OPT_Y - 5, OPT_W, OPT_H, BKGDCOLOR);
 #endif
@@ -2689,7 +2680,7 @@ void DrawOptScreen(void)
 //
 // DRAW GAME OPTIONS MENU SCREEN
 //
-void DrawGfxOptScreen(void)
+void DrawAtmosScreen(void)
 {
 	int i = 0, x = 0, y = 0;
 
@@ -2698,32 +2689,61 @@ void DrawGfxOptScreen(void)
 #else
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
-	DrawWindow(GFX_OPT_X - 8, GFX_OPT_Y - 5, GFX_OPT_W, GFX_OPT_H, BKGDCOLOR);
+	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
 #endif
 	WindowX = 0;
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	DrawMenu(&GfxOptItems, GfxOptMenu);
+	DrawMenu(&AtmosOptItems, AtmosOptMenu);
+
+	x = ATMOS_X + AtmosOptItems.indent - 28;
+	y = ATMOS_Y + 3;
+
+	if (mouseenabled) //If Floor/Ceiling textures enabled
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 16;
+
+	if (mouseenabled) //If Shading enabled
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = y + 13;
+
+	if (mouseenabled) //If Clouds/Stars enabled
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = y + 13;
+
+	if (mouseenabled) //If Rain/Snow enabled
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	//
 	// PICK FIRST AVAILABLE SPOT
 	//
-	if (GfxOptItems.curpos < 0 || !GfxOptMenu[GfxOptItems.curpos].active)
+	if (AtmosOptItems.curpos < 0 || !AtmosOptMenu[AtmosOptItems.curpos].active)
 	{
-		for (i = 0; i < GfxOptItems.amount; i++)
+		for (i = 0; i < AtmosOptItems.amount; i++)
 		{
-			if (GfxOptMenu[i].active)
+			if (AtmosOptMenu[i].active)
 			{
-				GfxOptItems.curpos = i;
+				AtmosOptItems.curpos = i;
 				break;
 			}
 		}
 	}
 
-	DrawMenuGun(&GfxOptItems);
+	DrawMenuGun(&AtmosOptItems);
 	VW_UpdateScreen();
 }
 #endif
