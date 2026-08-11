@@ -125,7 +125,7 @@ CP_itemtype SndMenu[] = {
 	{1, STR_NONE, 0},
 	{1, STR_ALSB, 0}
 #else
-	{1, "Off", 0},
+	{ 1, "Off", 0 },
 	{1, "On", 0},
 	{0, "", 0},
 	{0, "", 0},
@@ -463,12 +463,23 @@ CP_itemtype CtlMouseMenu[] = {
 #endif
 
 #ifdef SHOW_ATMOS_SETTINGS
-	CP_itemtype AtmosOptMenu[] = {
+CP_itemtype AtmosOptMenu[] = {
+#ifdef USE_FLOORCEILINGTEX
 		{1, STR_ATMOS_TEXTURED, 0},
+#endif
+#ifdef USE_SHADING
 		{1, STR_ATMOS_SHADING, 0},
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
 		{1, STR_ATMOS_CLOUDS_STARS, 0},
-		{1, STR_ATMOS_RAIN_SNOW, 0}
-	};
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
+		{1, STR_ATMOS_RAIN_SNOW, 0},
+#endif
+#if !defined(USE_FLOORCEILINGTEX) && !defined(USE_SHADING) && !defined(USE_CLOUDSKY) && !defined(USE_STARSKY) && !defined(USE_RAIN) && !defined(USE_SNOW)
+		{1, "", 0},
+#endif
+};
 #endif
 
 CP_itemtype OptMenu[] = {
@@ -2682,17 +2693,17 @@ void DrawOptScreen(void)
 //
 void DrawAtmosScreen(void)
 {
-	int i = 0, x = 0, y = 0;
+	int i = 0, x = 0, y = 0, h = 0;
 
-#ifdef JAPAN
-	VWB_DrawPic(0, 0, S_CONTROLPIC);
-#else
 	ClearMScreen();
 	DrawStripes(10);
 	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
-	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
-#endif
+
+	h = 13 * AtmosOptItems.amount;
+
+	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, h + 8, BKGDCOLOR);
+
 	WindowX = 0;
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
@@ -2700,33 +2711,38 @@ void DrawAtmosScreen(void)
 	DrawMenu(&AtmosOptItems, AtmosOptMenu);
 
 	x = ATMOS_X + AtmosOptItems.indent - 28;
-	y = ATMOS_Y + 3;
+	y = ATMOS_Y + 2;
 
+#ifdef USE_FLOORCEILINGTEX
 	if (mouseenabled) //If Floor/Ceiling textures enabled
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-	y = ATMOS_Y + 16;
-
+	y = y + 13;
+#endif
+#ifdef USE_SHADING
 	if (mouseenabled) //If Shading enabled
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	y = y + 13;
-
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
 	if (mouseenabled) //If Clouds/Stars enabled
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	y = y + 13;
-
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
 	if (mouseenabled) //If Rain/Snow enabled
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#endif
 
 	//
 	// PICK FIRST AVAILABLE SPOT

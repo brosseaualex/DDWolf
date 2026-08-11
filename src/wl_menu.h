@@ -121,7 +121,7 @@
 
 #ifdef SHOW_ATMOS_SETTINGS
 #define ATMOS_X 48
-#define ATMOS_Y 86
+#define ATMOS_Y 80
 #define ATMOS_W 240
 //IF FLAGS ENABLED, HEIGHT = WHATEVER
 #define ATMOS_H 62

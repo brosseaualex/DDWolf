@@ -154,7 +154,7 @@
 #if defined(SHOW_ATMOS_SETTINGS)
 #define STR_ATMOS_TITLE "Atmosphere"
 
-#define STR_ATMOS_TEXTURED "Floor/Ceiling text."
+#define STR_ATMOS_TEXTURED "Textured fl and clg."
 #define STR_ATMOS_SHADING "Shading"
 #define STR_ATMOS_CLOUDS_STARS "Clouds/Stars"
 #define STR_ATMOS_RAIN_SNOW "Rain/Snow"
