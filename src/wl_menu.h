@@ -341,10 +341,14 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 void DrawOptScreen(void);
-void DrawAtmosScreen(void);
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+void DrawAtmosOptScreen(void);
 #endif
+#endif
+
 void DrawJoystickScreen(void);
 
 void PrintLSEntry(int w, int color);

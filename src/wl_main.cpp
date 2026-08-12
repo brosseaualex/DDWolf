@@ -310,6 +310,7 @@ void ReadConfig(void)
 		mouseadjustment = 5;
 
 		//Atmosphere options
+#if defined(USE_SHADING) || defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)|| defined(USE_STARSKY)|| defined(USE_RAIN) || defined(USE_SNOW)
 #if !defined(USE_FLOORCEILINGTEX)
 		atmosTexturedEnabled = false;
 #endif
@@ -331,6 +332,7 @@ void ReadConfig(void)
 			atmosSkyboxEnabled = true;
 		if (atmosPrecipitationEnabled)
 			atmosPrecipitationEnabled = true;
+	#endif
 
 #ifdef VIEASM
 		soundvol = 100;

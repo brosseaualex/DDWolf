@@ -1518,10 +1518,20 @@ extern void *demobuffer;
 //
 // atmosphere options
 //
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(USE_FLOORCEILINGTEX)
 extern boolean atmosTexturedEnabled;
+#endif
+#if defined(USE_SHADING)
 extern boolean atmosShadingEnabled;
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
 extern boolean atmosSkyboxEnabled;
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
 extern boolean atmosPrecipitationEnabled;
+#endif
+#endif
 
 void InitActorList(void);
 void GetNewActor(void);

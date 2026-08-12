@@ -151,6 +151,7 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
 #if defined(SHOW_ATMOS_OPTIONS)
 #define STR_ATMOS_TITLE "Atmosphere"
 
@@ -158,6 +159,7 @@
 #define STR_ATMOS_SHADING "Shading"
 #define STR_ATMOS_SKYBOX "Skybox"
 #define STR_ATMOS_PRECIPITATION "Precipitation"
+#endif
 #endif
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)

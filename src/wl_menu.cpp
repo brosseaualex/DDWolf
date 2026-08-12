@@ -24,10 +24,23 @@
 extern int lastgamemusicoffset;
 int menuExit = 0;
 
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(USE_FLOORCEILINGTEX)
 boolean atmosTexturedEnabled = true;
+#endif
+#if defined(USE_SHADING)
 boolean atmosShadingEnabled = true;
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
 boolean atmosSkyboxEnabled = true;
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
 boolean atmosPrecipitationEnabled = true;
+#endif
+#endif
 
 //
 // PRIVATE PROTOTYPES
@@ -68,11 +81,12 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0}
 #else
 #if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
-	{ 1, STR_NG, CP_NewGame },
+	{1, STR_NG, CP_NewGame},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
 #elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
@@ -86,6 +100,7 @@ CP_itemtype MainMenu[] = {
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_CV, CP_ChangeView},
+#endif
 #endif
 
 #ifdef USE_READTHIS
@@ -475,13 +490,15 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
 CP_itemtype AtmosOptMenu[] = {
 	{1, STR_ATMOS_TEXTURED, 0},
 	{1, STR_ATMOS_SHADING, 0},
 	{1, STR_ATMOS_SKYBOX, 0},
 	{1, STR_ATMOS_PRECIPITATION, 0}
 };
+#endif
 #endif
 
 CP_itemtype OptMenu[] = {
@@ -500,8 +517,10 @@ CP_itemtype OptMenu[] = {
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(SHOW_ATMOS_OPTIONS)
-	{1, STR_ATMOS_TITLE, CP_AtmosOptions},
+#if defined(USE_SHADING) || defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)|| defined(USE_STARSKY)|| defined(USE_RAIN) || defined(USE_SNOW)
+	#if defined(SHOW_ATMOS_OPTIONS)
+		{1, STR_ATMOS_TITLE, CP_AtmosOptions},
+	#endif
 #endif
 #endif
 };
@@ -510,8 +529,10 @@ CP_itemtype OptMenu[] = {
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
 AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
+#endif
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -2358,7 +2379,6 @@ int CP_Control(int blank)
 	return 0;
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2394,7 +2414,8 @@ int CP_Options(int blank)
 	return 0;
 }
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2404,7 +2425,7 @@ int CP_AtmosOptions(int blank)
 {
 	int which;
 
-	DrawAtmosScreen();
+	DrawAtmosOptScreen();
 	MenuFadeIn();
 	WaitKeyUp();
 
@@ -2419,25 +2440,25 @@ int CP_AtmosOptions(int blank)
 			break;
 		case ATMOS_USE_TEXTURED:
 			atmosTexturedEnabled ^= 1;
-			DrawAtmosScreen();
+			DrawAtmosOptScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
 		case ATMOS_USE_SHADING:
 			atmosShadingEnabled ^= 1;
-			DrawAtmosScreen();
+			DrawAtmosOptScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
 		case ATMOS_USE_SKYBOX:
 			atmosSkyboxEnabled ^= 1;
-			DrawAtmosScreen();
+			DrawAtmosOptScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
 		case ATMOS_USE_PRECIPITATION:
 			atmosPrecipitationEnabled ^= 1;
-			DrawAtmosScreen();
+			DrawAtmosOptScreen();
 			MenuFadeIn();
 			WaitKeyUp();
 			break;
@@ -2663,7 +2684,6 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2706,11 +2726,13 @@ void DrawOptScreen(void)
 	VW_UpdateScreen();
 }
 
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
 ///////////////////////////
 //
-// DRAW GAME OPTIONS MENU SCREEN
+// DRAW ATMOSPHERE OPTIONS MENU SCREEN
 //
-void DrawAtmosScreen(void)
+void DrawAtmosOptScreen(void)
 {
 	int i, x, y;
 
@@ -2792,6 +2814,7 @@ void DrawAtmosScreen(void)
 	DrawMenuGun(&AtmosOptItems);
 	VW_UpdateScreen();
 }
+#endif
 #endif
 
 #ifdef USE_MODERN_CONTROLS
