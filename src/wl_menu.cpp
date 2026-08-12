@@ -28,18 +28,10 @@ int menuExit = 0;
 // atmosphere options
 //
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(USE_FLOORCEILINGTEX)
 boolean atmosTexturedEnabled = true;
-#endif
-#if defined(USE_SHADING)
 boolean atmosShadingEnabled = true;
-#endif
-#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
 boolean atmosSkyboxEnabled = true;
-#endif
-#if defined(USE_RAIN) || defined(USE_SNOW)
 boolean atmosPrecipitationEnabled = true;
-#endif
 #endif
 
 //
@@ -2749,19 +2741,27 @@ void DrawAtmosOptScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-#if !defined(USE_FLOORCEILINGTEX)
+#if defined(USE_FLOORCEILINGTEX)
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 1;
+#else
 	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 0;
 #endif
 
-#if !defined(ATMOS_USE_SHADING)
+#if defined(USE_SHADING)
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 1;
+#else
 	AtmosOptMenu[ATMOS_USE_SHADING].active = 0;
 #endif
 
-#if !defined(ATMOS_USE_CLOUD_STAR)
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 1;
+#else
 	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 0;
 #endif
 
-#if !defined(ATMOS_USE_RAIN_SNOW)
+#if defined(USE_RAIN) || defined(USE_SNOW)
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 1;
+#else
 	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 0;
 #endif
 
