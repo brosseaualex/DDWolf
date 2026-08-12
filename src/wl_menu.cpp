@@ -24,6 +24,11 @@
 extern int lastgamemusicoffset;
 int menuExit = 0;
 
+boolean atmosTexturedEnabled = true;
+boolean atmosShadingEnabled = true;
+boolean atmosSkyboxEnabled = true;
+boolean atmosPrecipitationEnabled = true;
+
 //
 // PRIVATE PROTOTYPES
 //
@@ -62,12 +67,12 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_SETTINGS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS))
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
 	{ 1, STR_NG, CP_NewGame },
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
@@ -236,6 +241,14 @@ enum
 #endif
 
 #endif
+
+enum
+{
+	ATMOS_USE_TEXTURED,
+	ATMOS_USE_SHADING,
+	ATMOS_USE_SKYBOX,
+	ATMOS_USE_PRECIPITATION
+};
 
 CP_itemtype CtlMenu[] = {
 #ifdef JAPAN
@@ -462,23 +475,12 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-#ifdef SHOW_ATMOS_SETTINGS
+#ifdef SHOW_ATMOS_OPTIONS
 CP_itemtype AtmosOptMenu[] = {
-#ifdef USE_FLOORCEILINGTEX
-		{1, STR_ATMOS_TEXTURED, 0},
-#endif
-#ifdef USE_SHADING
-		{1, STR_ATMOS_SHADING, 0},
-#endif
-#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
-		{1, STR_ATMOS_CLOUDS_STARS, 0},
-#endif
-#if defined(USE_RAIN) || defined(USE_SNOW)
-		{1, STR_ATMOS_RAIN_SNOW, 0},
-#endif
-#if !defined(USE_FLOORCEILINGTEX) && !defined(USE_SHADING) && !defined(USE_CLOUDSKY) && !defined(USE_STARSKY) && !defined(USE_RAIN) && !defined(USE_SNOW)
-		{1, "", 0},
-#endif
+	{1, STR_ATMOS_TEXTURED, 0},
+	{1, STR_ATMOS_SHADING, 0},
+	{1, STR_ATMOS_SKYBOX, 0},
+	{1, STR_ATMOS_PRECIPITATION, 0}
 };
 #endif
 
@@ -498,7 +500,7 @@ CP_itemtype OptMenu[] = {
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(SHOW_ATMOS_SETTINGS)
+#if defined(SHOW_ATMOS_OPTIONS)
 	{1, STR_ATMOS_TITLE, CP_AtmosOptions},
 #endif
 #endif
@@ -508,8 +510,8 @@ CP_itemtype OptMenu[] = {
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
 
-#ifdef SHOW_ATMOS_SETTINGS
-AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 60 },
+#ifdef SHOW_ATMOS_OPTIONS
+AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -2356,7 +2358,7 @@ int CP_Control(int blank)
 	return 0;
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2392,7 +2394,7 @@ int CP_Options(int blank)
 	return 0;
 }
 
-#ifdef SHOW_ATMOS_SETTINGS
+#ifdef SHOW_ATMOS_OPTIONS
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2401,7 +2403,6 @@ int CP_Options(int blank)
 int CP_AtmosOptions(int blank)
 {
 	int which;
-	menuExit = 0;
 
 	DrawAtmosScreen();
 	MenuFadeIn();
@@ -2410,14 +2411,32 @@ int CP_AtmosOptions(int blank)
 	do
 	{
 		which = HandleMenu(&AtmosOptItems, AtmosOptMenu, NULL);
-
 		switch (which)
 		{
 		case -1:
 			MenuFadeOut();
 			return 0;
 			break;
-		default:
+		case ATMOS_USE_TEXTURED:
+			atmosTexturedEnabled ^= 1;
+			DrawAtmosScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SHADING:
+			atmosShadingEnabled ^= 1;
+			DrawAtmosScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SKYBOX:
+			atmosSkyboxEnabled ^= 1;
+			DrawAtmosScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_PRECIPITATION:
+			atmosPrecipitationEnabled ^= 1;
 			DrawAtmosScreen();
 			MenuFadeIn();
 			WaitKeyUp();
@@ -2644,7 +2663,7 @@ void DrawCtlScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 ///////////////////////////
 //
 // DRAW OPTIONS MENU SCREEN
@@ -2693,56 +2712,67 @@ void DrawOptScreen(void)
 //
 void DrawAtmosScreen(void)
 {
-	int i = 0, x = 0, y = 0, h = 0;
+	int i, x, y;
 
+#ifdef JAPAN
+	VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
 	ClearMScreen();
 	DrawStripes(10);
 	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
-
-	h = 13 * AtmosOptItems.amount;
-
-	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, h + 8, BKGDCOLOR);
-
+	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
+#endif
 	WindowX = 0;
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
+#if !defined(USE_FLOORCEILINGTEX)
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 0;
+#endif
+
+#if !defined(ATMOS_USE_SHADING)
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 0;
+#endif
+
+#if !defined(ATMOS_USE_CLOUD_STAR)
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 0;
+#endif
+
+#if !defined(ATMOS_USE_RAIN_SNOW)
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 0;
+#endif
+
 	DrawMenu(&AtmosOptItems, AtmosOptMenu);
 
-	x = ATMOS_X + AtmosOptItems.indent - 28;
+	x = ATMOS_X + AtmosOptItems.indent - 23;
 	y = ATMOS_Y + 2;
 
-#ifdef USE_FLOORCEILINGTEX
-	if (mouseenabled) //If Floor/Ceiling textures enabled
+	if (atmosTexturedEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-	y = y + 13;
-#endif
-#ifdef USE_SHADING
-	if (mouseenabled) //If Shading enabled
+	y = ATMOS_Y + 15;
+
+	if (atmosShadingEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-	y = y + 13;
-#endif
-#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
-	if (mouseenabled) //If Clouds/Stars enabled
+	y = ATMOS_Y + 28;
+
+	if (atmosSkyboxEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-	y = y + 13;
-#endif
-#if defined(USE_RAIN) || defined(USE_SNOW)
-	if (mouseenabled) //If Rain/Snow enabled
+	y = ATMOS_Y + 41;
+
+	if (atmosPrecipitationEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#endif
 
 	//
 	// PICK FIRST AVAILABLE SPOT

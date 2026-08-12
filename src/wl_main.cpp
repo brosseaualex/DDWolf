@@ -194,6 +194,19 @@ void ReadConfig(void)
 		read(file, &reversestereo, sizeof(reversestereo));
 #endif
 
+#if defined(USE_FLOORCEILINGTEX)
+		read(file, &atmosTexturedEnabled, sizeof(atmosTexturedEnabled));
+#endif
+#if defined(USE_SHADING)
+		read(file, &atmosShadingEnabled, sizeof(atmosShadingEnabled));
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
+		read(file, &atmosSkyboxEnabled, sizeof(atmosSkyboxEnabled));
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
+		read(file, &atmosPrecipitationEnabled, sizeof(atmosPrecipitationEnabled));
+#endif
+
 		close(file);
 
 #ifndef VIEASM
@@ -214,6 +227,7 @@ void ReadConfig(void)
 #ifdef USE_MODERN_CONTROLS
 		if (mouseYAxis)
 			mouseYAxis = true;
+
 		if (alwaysRun)
 			alwaysRun = true;
 
@@ -294,6 +308,29 @@ void ReadConfig(void)
 #endif
 		viewsize = 20; // start with a good size
 		mouseadjustment = 5;
+
+		//Atmosphere options
+#if !defined(USE_FLOORCEILINGTEX)
+		atmosTexturedEnabled = false;
+#endif
+#if !defined(USE_SHADING)
+		atmosShadingEnabled = false;
+#endif
+#if !defined(USE_CLOUDSKY) && !defined(USE_STARSKY)
+		atmosSkyboxEnabled = false;
+#endif
+#if !defined(USE_RAIN) && !defined(USE_SNOW)
+		atmosPrecipitationEnabled = false;
+#endif
+
+		if (atmosTexturedEnabled)
+			atmosTexturedEnabled = true;
+		if (atmosShadingEnabled)
+			atmosShadingEnabled = true;
+		if (atmosSkyboxEnabled)
+			atmosSkyboxEnabled = true;
+		if (atmosPrecipitationEnabled)
+			atmosPrecipitationEnabled = true;
 
 #ifdef VIEASM
 		soundvol = 100;
@@ -378,6 +415,19 @@ void WriteConfig(void)
 		write(file, &reversestereo, sizeof(reversestereo));
 #endif
 
+#if defined(USE_FLOORCEILINGTEX)
+		write(file, &atmosTexturedEnabled, sizeof(atmosTexturedEnabled));
+#endif
+#if defined(USE_SHADING)
+		write(file, &atmosShadingEnabled, sizeof(atmosShadingEnabled));
+
+#endif
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
+		write(file, &atmosSkyboxEnabled, sizeof(atmosSkyboxEnabled));
+#endif
+#if defined(USE_RAIN) || defined(USE_SNOW)
+		write(file, &atmosPrecipitationEnabled, sizeof(atmosPrecipitationEnabled));
+#endif
 		close(file);
 	}
 }

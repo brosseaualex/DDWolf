@@ -1515,6 +1515,14 @@ extern boolean demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
 extern void *demobuffer;
 
+//
+// atmosphere options
+//
+extern boolean atmosTexturedEnabled;
+extern boolean atmosShadingEnabled;
+extern boolean atmosSkyboxEnabled;
+extern boolean atmosPrecipitationEnabled;
+
 void InitActorList(void);
 void GetNewActor(void);
 void PlayLoop(void);

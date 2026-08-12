@@ -119,7 +119,7 @@
 
 #define STR_SEEAGAIN "Let's see that again!"
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 #define STR_OP "Options"
 #endif
 
@@ -151,13 +151,13 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
-#if defined(SHOW_ATMOS_SETTINGS)
+#if defined(SHOW_ATMOS_OPTIONS)
 #define STR_ATMOS_TITLE "Atmosphere"
 
 #define STR_ATMOS_TEXTURED "Textured fl and clg."
 #define STR_ATMOS_SHADING "Shading"
-#define STR_ATMOS_CLOUDS_STARS "Clouds/Stars"
-#define STR_ATMOS_RAIN_SNOW "Rain/Snow"
+#define STR_ATMOS_SKYBOX "Skybox"
+#define STR_ATMOS_PRECIPITATION "Precipitation"
 #endif
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)

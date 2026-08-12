@@ -111,20 +111,19 @@
 #endif
 #define OPT_W 200
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 62
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_SETTINGS)
+#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 48
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_SETTINGS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 34
 #endif
 
-#ifdef SHOW_ATMOS_SETTINGS
-#define ATMOS_X 48
-#define ATMOS_Y 80
-#define ATMOS_W 240
-//IF FLAGS ENABLED, HEIGHT = WHATEVER
-#define ATMOS_H 62
+#ifdef SHOW_ATMOS_OPTIONS
+#define ATMOS_X 46
+#define ATMOS_Y 72
+#define ATMOS_W 244
+#define ATMOS_H 60
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -342,7 +341,7 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_SETTINGS)
+#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
 void DrawOptScreen(void);
 void DrawAtmosScreen(void);
 #endif
@@ -378,7 +377,7 @@ int CP_CustomCtl(int);
 int CustomControls(int);
 #endif
 
-#ifdef SHOW_ATMOS_SETTINGS
+#ifdef SHOW_ATMOS_OPTIONS
 int CP_AtmosOptions(int);
 #endif
 
