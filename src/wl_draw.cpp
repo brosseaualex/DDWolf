@@ -1628,8 +1628,10 @@ void ThreeDRefresh(void)
     //
     VGAClearScreen();
 #if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
-    if (GetFeatureFlags() & FF_STARSKY)
-        DrawStarSky();
+    if (atmosSkyboxEnabled) {
+        if (GetFeatureFlags() & FF_STARSKY)
+            DrawStarSky();
+    }
 #endif
 
     WallRefresh();
@@ -1640,12 +1642,17 @@ void ThreeDRefresh(void)
 #endif
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if (GetFeatureFlags() & FF_CLOUDSKY)
-        DrawCloudPlanes();
+    if (atmosSkyboxEnabled) {
+        if (GetFeatureFlags() & FF_CLOUDSKY)
+            DrawCloudPlanes();
+    }
 #endif
 
 #ifdef USE_FLOORCEILINGTEX
-    DrawPlanes();
+    if (atmosTexturedEnabled)
+    {
+        DrawPlanes();
+    }
 #endif
 
     //
@@ -1654,12 +1661,18 @@ void ThreeDRefresh(void)
     DrawScaleds(); // draw scaled stuff
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
-    if (GetFeatureFlags() & FF_RAIN)
-        DrawRain();
+    if (atmosPrecipitationEnabled)
+    {
+        if (GetFeatureFlags() & FF_RAIN)
+            DrawRain();
+    }
 #endif
 #if defined(USE_FEATUREFLAGS) && defined(USE_SNOW)
-    if (GetFeatureFlags() & FF_SNOW)
-        DrawSnow();
+    if (atmosPrecipitationEnabled)
+    {
+        if (GetFeatureFlags() & FF_SNOW)
+            DrawSnow();
+    }
 #endif
 
     DrawPlayerWeapon(); // draw player's hands

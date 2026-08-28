@@ -250,7 +250,6 @@ void VL_SetVGAPlaneMode(void) {
     printf("VL_SetVGAPlaneMode - screenOffsetX: %d\n", scalingOffsetX);
     printf("VL_SetVGAPlaneMode - screenOffsetY: %d\n", scalingOffsetY);
 #endif
-
     ylookup = (uint32_t *) SafeMalloc(screenHeight * sizeof(*ylookup));
     pixelangle = (short *) SafeMalloc(screenWidth * sizeof(*pixelangle));
     wallheight = (int16_t *) SafeMalloc(screenWidth * sizeof(*wallheight));
