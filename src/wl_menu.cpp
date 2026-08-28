@@ -77,7 +77,7 @@ CP_itemtype MainMenu[] = {
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS) || !defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
@@ -93,8 +93,14 @@ CP_itemtype MainMenu[] = {
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_CV, CP_ChangeView},
 #endif
+#else
+	{1, STR_NG, CP_NewGame},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+	{1, STR_LG, CP_LoadGame},
+	{0, STR_SG, CP_SaveGame},
+	{1, STR_CV, CP_ChangeView},
 #endif
-
 #ifdef USE_READTHIS
 #ifdef SPANISH
 	{2, "Ve esto!", CP_ReadThis},

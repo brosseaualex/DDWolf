@@ -1637,8 +1637,11 @@ void ThreeDRefresh(void)
     WallRefresh();
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
-    if (GetFeatureFlags() & FF_PARALLAXSKY)
-        DrawParallax();
+    if(atmosSkyboxEnabled)
+    {
+        if (GetFeatureFlags() & FF_PARALLAXSKY)
+            DrawParallax();
+    }
 #endif
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)

@@ -21,12 +21,12 @@
 #define STR_CL "Control"
 #define STR_LG "Load Game"
 #define STR_SG "Save Game"
+#define STR_OP "Options"
 #ifndef USE_MODERN_CONTROLS
 #define STR_CV "Change View"
 #else
 #define STR_CV "View Size"
 #endif
-
 #define STR_VS "View Scores"
 #define STR_EG "End Game"
 #define STR_BD "Back to Demo"
@@ -118,10 +118,6 @@
 #define STR_SAVECHT4 "play anyway...."
 
 #define STR_SEEAGAIN "Let's see that again!"
-
-#if defined(USE_MODERN_CONTROLS) || defined(SHOW_ATMOS_OPTIONS)
-#define STR_OP "Options"
-#endif
 
 #ifdef USE_MODERN_CONTROLS
 #define STR_JOYEN "Controller Enabled"
