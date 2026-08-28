@@ -327,7 +327,6 @@ void ScalePost(void)
 #ifdef USE_SHADING
     byte *curshades = shadetable[GetShade(wallheight[postx])];
 #endif
-
     ywcount = yd = wallheight[postx] >> 3;
     if (yd <= 0)
         yd = 100;
@@ -711,10 +710,20 @@ void VGAClearScreen(void)
     int y;
     byte *dest = vbuf;
 #ifdef USE_SHADING
-    for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
-        memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
-    for (; y < viewheight; y++, dest += bufferPitch)
-        memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+    if (atmosShadingEnabled)
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
+            memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+    }
+    else
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, ceiling, viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
+            memset(dest, 0x19, viewwidth);
+    }
 #else
     for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
         memset(dest, ceiling, viewwidth);
@@ -1619,24 +1628,34 @@ void ThreeDRefresh(void)
     //
     VGAClearScreen();
 #if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
-    if (GetFeatureFlags() & FF_STARSKY)
-        DrawStarSky();
+    if (atmosSkyboxEnabled) {
+        if (GetFeatureFlags() & FF_STARSKY)
+            DrawStarSky();
+    }
 #endif
 
     WallRefresh();
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
-    if (GetFeatureFlags() & FF_PARALLAXSKY)
-        DrawParallax();
+    if(atmosSkyboxEnabled)
+    {
+        if (GetFeatureFlags() & FF_PARALLAXSKY)
+            DrawParallax();
+    }
 #endif
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-    if (GetFeatureFlags() & FF_CLOUDSKY)
-        DrawCloudPlanes();
+    if (atmosSkyboxEnabled) {
+        if (GetFeatureFlags() & FF_CLOUDSKY)
+            DrawCloudPlanes();
+    }
 #endif
 
 #ifdef USE_FLOORCEILINGTEX
-    DrawPlanes();
+    if (atmosTexturedEnabled)
+    {
+        DrawPlanes();
+    }
 #endif
 
     //
@@ -1645,12 +1664,18 @@ void ThreeDRefresh(void)
     DrawScaleds(); // draw scaled stuff
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
-    if (GetFeatureFlags() & FF_RAIN)
-        DrawRain();
+    if (atmosPrecipitationEnabled)
+    {
+        if (GetFeatureFlags() & FF_RAIN)
+            DrawRain();
+    }
 #endif
 #if defined(USE_FEATUREFLAGS) && defined(USE_SNOW)
-    if (GetFeatureFlags() & FF_SNOW)
-        DrawSnow();
+    if (atmosPrecipitationEnabled)
+    {
+        if (GetFeatureFlags() & FF_SNOW)
+            DrawSnow();
+    }
 #endif
 
     DrawPlayerWeapon(); // draw player's hands

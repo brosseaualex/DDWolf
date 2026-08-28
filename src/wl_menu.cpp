@@ -22,6 +22,17 @@
 #pragma hdrstop
 
 extern int lastgamemusicoffset;
+int menuExit = 0;
+
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+boolean atmosTexturedEnabled = true;
+boolean atmosShadingEnabled = true;
+boolean atmosSkyboxEnabled = true;
+boolean atmosPrecipitationEnabled = true;
+#endif
 
 //
 // PRIVATE PROTOTYPES
@@ -29,15 +40,6 @@ extern int lastgamemusicoffset;
 int CP_ReadThis(int);
 
 void SetTextColor(CP_itemtype* items, int hlight);
-
-int menuExit = 0;
-
-const int MORE_ACTIONS_ARRAY_START = 5;
-const int MORE_ACTIONS_ARRAY_END = 12;
-
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
 
 #ifdef USE_READTHIS
 #define STARTITEM       readthis
@@ -70,11 +72,27 @@ CP_itemtype MainMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-#ifdef USE_MODERN_CONTROLS
+#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
 	{1, STR_NG, CP_NewGame},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+	{1, STR_NG, CP_NewGame},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+	{1, STR_LG, CP_LoadGame},
+	{0, STR_SG, CP_SaveGame},
+	{1, STR_OP, CP_Options},
+#else
+	{1, STR_NG, CP_NewGame},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+	{1, STR_LG, CP_LoadGame},
+	{0, STR_SG, CP_SaveGame},
+	{1, STR_CV, CP_ChangeView},
+#endif
 #else
 	{1, STR_NG, CP_NewGame},
 	{1, STR_SD, CP_Sound},
@@ -112,7 +130,7 @@ CP_itemtype SndMenu[] = {
 	{1, "", 0},
 #else
 #ifndef VIEASM
-		{1, STR_NONE, 0},
+	{1, STR_NONE, 0},
 	{1, STR_PC, 0},
 	{1, STR_ALSB, 0},
 	{0, "", 0},
@@ -125,7 +143,7 @@ CP_itemtype SndMenu[] = {
 	{1, STR_NONE, 0},
 	{1, STR_ALSB, 0}
 #else
-	 {1, "Off", 0},
+	{ 1, "Off", 0 },
 	{1, "On", 0},
 	{0, "", 0},
 	{0, "", 0},
@@ -134,7 +152,7 @@ CP_itemtype SndMenu[] = {
 	{0, "", 0},
 	{0, "", 0},
 	{1, "Adjust Volume", AdjustVolume},
-	{1, "Reverse Stereo", 0},
+	{1, "Reverse Stereo", 0}
 #endif // !VIEASM
 #endif
 };
@@ -237,6 +255,14 @@ enum
 
 #endif
 
+enum
+{
+	ATMOS_USE_TEXTURED,
+	ATMOS_USE_SHADING,
+	ATMOS_USE_SKYBOX,
+	ATMOS_USE_PRECIPITATION
+};
+
 CP_itemtype CtlMenu[] = {
 #ifdef JAPAN
 	{0, "", 0},
@@ -246,13 +272,13 @@ CP_itemtype CtlMenu[] = {
 	{0, "", MouseSensitivity},
 	{1, "", CustomControls}
 #else
-	{0, STR_MOUSEEN, 0},
+	{ 0, STR_MOUSEEN, 0 },
 #ifndef USE_MODERN_CONTROLS
 	{0, STR_SENS, MouseSensitivity},
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{0, STR_JOYEN, 0},
+	{ 0, STR_JOYEN, 0 },
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -297,53 +323,57 @@ CP_itemtype NewEmenu[] = {
 #endif
 #else
 #ifdef SPANISH
-	{1, "Episodio 1\n"
-		"Fuga desde Wolfenstein",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 2\n"
-		"Operacion Eisenfaust",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 3\n"
-		"Muere, Fuhrer, Muere!",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 4\n"
-		"Un Negro Secreto",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 5\n"
-		"Huellas del Loco",
-	 0},
-	{0, "", 0},
-	{3, "Episodio 6\n"
-		"Confrontacion",
-	 0}
+	{
+1, "Episodio 1\n"
+   "Fuga desde Wolfenstein",
+0
+},
+{0, "", 0},
+{3, "Episodio 2\n"
+	"Operacion Eisenfaust",
+ 0},
+{0, "", 0},
+{3, "Episodio 3\n"
+	"Muere, Fuhrer, Muere!",
+ 0},
+{0, "", 0},
+{3, "Episodio 4\n"
+	"Un Negro Secreto",
+ 0},
+{0, "", 0},
+{3, "Episodio 5\n"
+	"Huellas del Loco",
+ 0},
+{0, "", 0},
+{3, "Episodio 6\n"
+	"Confrontacion",
+ 0}
 #else
-	{1, "Episode 1\n"
-		"Escape from Wolfenstein",
-	 0},
-	{0, "", 0},
-	{3, "Episode 2\n"
-		"Operation: Eisenfaust",
-	 0},
-	{0, "", 0},
-	{3, "Episode 3\n"
-		"Die, Fuhrer, Die!",
-	 0},
-	{0, "", 0},
-	{3, "Episode 4\n"
-		"A Dark Secret",
-	 0},
-	{0, "", 0},
-	{3, "Episode 5\n"
-		"Trail of the Madman",
-	 0},
-	{0, "", 0},
-	{3, "Episode 6\n"
-		"Confrontation",
-	 0}
+	{
+1, "Episode 1\n"
+   "Escape from Wolfenstein",
+0
+},
+{0, "", 0},
+{3, "Episode 2\n"
+	"Operation: Eisenfaust",
+ 0},
+{0, "", 0},
+{3, "Episode 3\n"
+	"Die, Fuhrer, Die!",
+ 0},
+{0, "", 0},
+{3, "Episode 4\n"
+	"A Dark Secret",
+ 0},
+{0, "", 0},
+{3, "Episode 5\n"
+	"Trail of the Madman",
+ 0},
+{0, "", 0},
+{3, "Episode 6\n"
+	"Confrontation",
+ 0}
 #endif
 #endif
 };
@@ -356,7 +386,7 @@ CP_itemtype NewMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-	{1, STR_DADDY, 0},
+	{ 1, STR_DADDY, 0 },
 	{1, STR_HURTME, 0},
 	{1, STR_BRINGEM, 0},
 	{1, STR_DEATH, 0}
@@ -394,7 +424,8 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, STR_MOUSEMOVEMENT, 0},
-	{1, STR_SENS, MouseSensitivity} };
+	{1, STR_SENS, MouseSensitivity}
+};
 
 CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_FRWD, 0},
@@ -404,7 +435,8 @@ CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_STF_LEFT, 0},
 	{1, STR_STF_RIGHT, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CRUN, 0},
@@ -413,7 +445,8 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, "More Actions", CP_KeyboardMoreActionCtl},
-	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl} };
+	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl}
+};
 
 CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_WPN_1, 0},
@@ -424,14 +457,14 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_NEXT_WPN, 0},
 	//{1, STR_AUTOMAP, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl} };
+	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+};
 
 CP_itemtype CtlJoystickMenu[] = {
 	{1, STR_CRUN, 0},
 	{1, STR_COPEN, 0},
 	{1, STR_CFIRE, 0},
 	{1, STR_CSTRAFE, 0} };
-
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 CP_itemtype CusCtlMenu[] = {
 	{1, STR_CUS_CTL_1, 0},
@@ -455,7 +488,16 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+CP_itemtype AtmosOptMenu[] = {
+	{1, STR_ATMOS_TEXTURED, 0},
+	{1, STR_ATMOS_SHADING, 0},
+	{1, STR_ATMOS_SKYBOX, 0},
+	{1, STR_ATMOS_PRECIPITATION, 0}
+};
+#endif
+#endif
 
 CP_itemtype OptMenu[] = {
 #ifdef JAPAN
@@ -466,17 +508,17 @@ CP_itemtype OptMenu[] = {
 	{0, "", MouseSensitivity},
 	{1, "", CustomControls}
 #else
-	{1, STR_OP_SND, CP_Sound},
+#if defined(USE_MODERN_CONTROLS)
+	{ 1, STR_OP_SND, CP_Sound },
 	{1, STR_OP_CTL, CP_Control},
-#ifdef USE_MODERN_CONTROLS
-#ifdef SHOW_GAME_OPTIONS
 	{1, STR_CV, CP_ChangeView},
-	{1, STR_OP_GAME, 0}
 #else
-	{1, STR_CV, CP_ChangeView}
+	{1, STR_CV, CP_ChangeView},
 #endif
-#else
-	{1, STR_CV, CP_ChangeView},
+#if defined(USE_SHADING) || defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)|| defined(USE_STARSKY)|| defined(USE_RAIN) || defined(USE_SNOW)
+	#if defined(SHOW_ATMOS_OPTIONS)
+		{1, STR_ATMOS_TITLE, CP_AtmosOptions},
+	#endif
 #endif
 #endif
 };
@@ -484,6 +526,12 @@ CP_itemtype OptMenu[] = {
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
+#endif
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
@@ -1043,7 +1091,7 @@ int CP_CheckQuick(ScanCode scancode)
 
 			if (!startgame && !loadedgame)
 				ContinueMusic(lastgamemusicoffset);
-			  
+
 			if (loadedgame)
 				playstate = ex_abort;
 
@@ -1587,7 +1635,7 @@ DrawSoundVols(bool curmode)
 
 	WindowX = scalingOffsetX;
 	WindowW = 320;
-	
+
 	PrintY = 30 + scalingOffsetY;
 	SETFONTCOLOR(READCOLOR, BKGDCOLOR);
 	US_CPrint("Adjust Volume");
@@ -2028,7 +2076,7 @@ void TrackWhichGame(int w)
 
 	DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
 	SDL_Surface* bmpSurface = SDL_LoadBMP(bmpName);
-	
+
 	if (bmpSurface != NULL) {
 		byte* surfaceBytes = new byte[bmpSurface->w * bmpSurface->h * 4];
 
@@ -2190,8 +2238,8 @@ int CP_SaveGame(int quick)
 					DrawLoadSaveScreen(1);
 					PrintLSEntry(which, HIGHLIGHT);
 					VW_UpdateScreen();
+				}
 			}
-		}
 
 			ShootSnd();
 
@@ -2227,7 +2275,7 @@ int CP_SaveGame(int quick)
 				bmpName[7] = which + '0';
 				if (configdir[0]) {
 					snprintf(picpath, sizeof(picpath), "%s/%s", configdir, bmpName);
-			}
+				}
 				else {
 					strcpy(picpath, bmpName);
 				}
@@ -2252,7 +2300,7 @@ int CP_SaveGame(int quick)
 
 			fontnumber = 1;
 			break;
-}
+		}
 
 	} while (which >= 0);
 
@@ -2327,7 +2375,7 @@ int CP_Control(int blank)
 	} while (which >= 0);
 
 	return 0;
-		}
+}
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -2363,6 +2411,62 @@ int CP_Options(int blank)
 
 	return 0;
 }
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+////////////////////////////////////////////////////////////////////
+//
+// DEFINE OPTIONS
+//
+////////////////////////////////////////////////////////////////////
+int CP_AtmosOptions(int blank)
+{
+	int which;
+
+	DrawAtmosOptScreen();
+	MenuFadeIn();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&AtmosOptItems, AtmosOptMenu, NULL);
+		switch (which)
+		{
+		case -1:
+			MenuFadeOut();
+			return 0;
+			break;
+		case ATMOS_USE_TEXTURED:
+			atmosTexturedEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SHADING:
+			atmosShadingEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_SKYBOX:
+			atmosSkyboxEnabled ^= 1;
+			DrawAtmosOptScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
+		case ATMOS_USE_PRECIPITATION:
+			atmosPrecipitationEnabled ^= 1;
+			DrawAtmosOptScreen();
+			MenuFadeIn();
+			WaitKeyUp();
+			break;
+		}
+	} while (which >= 0);
+
+	return 0;
+}
+#endif
+#endif
 
 ////////////////////////////////
 //
@@ -2404,7 +2508,7 @@ void DrawMouseSens(void)
 #endif
 
 	VWB_Bar(60 + scalingOffsetX, 97 + scalingOffsetY, 200, 10, TEXTCOLOR);
-	DrawOutline(60 , 97, 200, 10, 0, HIGHLIGHT);
+	DrawOutline(60, 97, 200, 10, 0, HIGHLIGHT);
 	DrawOutline(60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
 	VWB_Bar(61 + 20 * mouseadjustment + scalingOffsetX, 98 + scalingOffsetY, 19, 9, READHCOLOR);
 
@@ -2591,7 +2695,7 @@ void DrawOptScreen(void)
 #else
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(OPT_X - 8, OPT_Y - 5, OPT_W, OPT_H, BKGDCOLOR);
 #endif
@@ -2619,6 +2723,105 @@ void DrawOptScreen(void)
 	DrawMenuGun(&OptItems);
 	VW_UpdateScreen();
 }
+
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+#if defined(SHOW_ATMOS_OPTIONS)
+///////////////////////////
+//
+// DRAW ATMOSPHERE OPTIONS MENU SCREEN
+//
+void DrawAtmosOptScreen(void)
+{
+	int i, x, y;
+
+#ifdef JAPAN
+	VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
+	ClearMScreen();
+	DrawStripes(10);
+	VWB_DrawPic(80, -scalingOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
+	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
+#endif
+	WindowX = 0;
+	WindowW = 320;
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+#if defined(USE_FLOORCEILINGTEX)
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_TEXTURED].active = 0;
+#endif
+
+#if defined(USE_SHADING)
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_SHADING].active = 0;
+#endif
+
+#if defined(USE_CLOUDSKY) || defined(USE_STARSKY)
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_SKYBOX].active = 0;
+#endif
+
+#if defined(USE_RAIN) || defined(USE_SNOW)
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 1;
+#else
+	AtmosOptMenu[ATMOS_USE_PRECIPITATION].active = 0;
+#endif
+
+	DrawMenu(&AtmosOptItems, AtmosOptMenu);
+
+	x = ATMOS_X + AtmosOptItems.indent - 23;
+	y = ATMOS_Y + 2;
+
+	if (atmosTexturedEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 15;
+
+	if (atmosShadingEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 28;
+
+	if (atmosSkyboxEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	y = ATMOS_Y + 41;
+
+	if (atmosPrecipitationEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	//
+	// PICK FIRST AVAILABLE SPOT
+	//
+	if (AtmosOptItems.curpos < 0 || !AtmosOptMenu[AtmosOptItems.curpos].active)
+	{
+		for (i = 0; i < AtmosOptItems.amount; i++)
+		{
+			if (AtmosOptMenu[i].active)
+			{
+				AtmosOptItems.curpos = i;
+				break;
+			}
+		}
+	}
+
+	DrawMenuGun(&AtmosOptItems);
+	VW_UpdateScreen();
+}
+#endif
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 
@@ -2930,7 +3133,7 @@ enum
 	LEFT,
 	STF_LEFT,
 	STF_RIGHT
-	};
+};
 int moveorder[6] = { FWRD, BKWD, LEFT, RIGHT, STF_LEFT, STF_RIGHT };
 #else
 enum
@@ -3625,19 +3828,19 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				{
 					picked = 1;
 					SD_PlaySound(ESCPRESSEDSND);
-					}
+				}
 
 				if (picked)
 					break;
 
 				ReadAnyControl(&ci);
-					}
+			}
 
 			SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 			redraw = 1;
 			WaitKeyUp();
 			continue;
-					}
+		}
 
 		if (ci.button1 || IN_KeyDown(sc_Escape))
 			exit = 1;
@@ -3678,15 +3881,15 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		case dir_South:
 			exit = 1;
 		}
-				} while (!exit);
+	} while (!exit);
 
-				SD_PlaySound(ESCPRESSEDSND);
-				WaitKeyUp();
+	SD_PlaySound(ESCPRESSEDSND);
+	WaitKeyUp();
 
 #ifndef USE_MODERN_CONTROLS
-				DrawWindow(5, PrintY - 1 - scalingOffsetY, 310, 13, BKGDCOLOR);
+	DrawWindow(5, PrintY - 1 - scalingOffsetY, 310, 13, BKGDCOLOR);
 #endif
-			}
+}
 
 ////////////////////////
 //
@@ -3905,7 +4108,7 @@ void DrawKeyboardActionCtlScreen(void)
 	US_CPrint("Action keys 1/2");
 #endif
 
-	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);	
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H - 13, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardActionItems);
@@ -4339,7 +4542,7 @@ void DrawCustMouse(int highlight)
 #endif
 	for (i = 0; i < 4; i++)
 		PrintCustMouse(i);
-		}
+}
 
 #ifdef USE_MODERN_CONTROLS
 void PrintCustJoy(int i)
@@ -4456,7 +4659,7 @@ void DrawCustJoy(int hilight)
 
 	for (i = 0; i < 4; i++)
 		PrintCustJoy(i);
-			}
+}
 #endif
 
 void PrintCustKeybd(int i)
@@ -4528,7 +4731,7 @@ void PrintMoreActionsKeys(int i)
 	//PrintY = CST_START + (CST_SPC_Y * i);
 	PrintY = OPT_KEYBOARD_MORE_ACTION_TEXT_Y + scalingOffsetY + (CST_SPC_Y * i);
 	US_Print((const char*)IN_GetScanName(buttonscan[4 + actionorder[i]]));
-		}
+}
 
 void DrawMoreActionsKeys(int hilight)
 {
@@ -4652,7 +4855,7 @@ int CP_ChangeView(int blank)
 		VL_ClearScreen(0);
 
 	return 0;
-	}
+}
 
 /////////////////////////////
 //
@@ -4706,7 +4909,7 @@ int CP_Quit(int blank)
 		SD_StopSound();
 		MenuFadeOut();
 		Quit(NULL);
-}
+	}
 
 	DrawMainMenu();
 	return 0;
@@ -5465,29 +5668,29 @@ int Confirm(const char* string)
 #ifdef SPANISH
 	} while (!Keyboard(sc_S) && !Keyboard(sc_N) && !Keyboard(sc_Escape));
 #else
-} while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape) && !ci.button0 && !ci.button1);
+	} while (!Keyboard(sc_Y) && !Keyboard(sc_N) && !Keyboard(sc_Escape) && !ci.button0 && !ci.button1);
 #endif
 
 #ifdef SPANISH
-if (Keyboard(sc_S) || ci.button0)
-{
-	xit = 1;
-	ShootSnd();
-}
+	if (Keyboard(sc_S) || ci.button0)
+	{
+		xit = 1;
+		ShootSnd();
+	}
 #else
-if (Keyboard(sc_Y) || ci.button0)
-{
-	xit = 1;
-	ShootSnd();
-}
+	if (Keyboard(sc_Y) || ci.button0)
+	{
+		xit = 1;
+		ShootSnd();
+	}
 #endif
 
-IN_ClearKeysDown();
-WaitKeyUp();
+	IN_ClearKeysDown();
+	WaitKeyUp();
 
-SD_PlaySound((soundnames)whichsnd[xit]);
+	SD_PlaySound((soundnames)whichsnd[xit]);
 
-return xit;
+	return xit;
 }
 
 #ifdef JAPAN
@@ -6007,8 +6210,8 @@ void CheckForEpisodes(void)
 			{
 				Quit("The configuration directory \"%s\" could not be created.", configdir);
 			}
+		}
 	}
-}
 
 	//
 	// JAPANESE VERSION
@@ -6146,4 +6349,4 @@ void CheckForEpisodes(void)
 #endif
 	strcat(endfilename, extension);
 #endif
-	}
+}

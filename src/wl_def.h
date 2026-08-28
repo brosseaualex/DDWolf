@@ -1515,6 +1515,16 @@ extern boolean demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
 extern void *demobuffer;
 
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+extern boolean atmosTexturedEnabled;
+extern boolean atmosShadingEnabled;
+extern boolean atmosSkyboxEnabled;
+extern boolean atmosPrecipitationEnabled;
+#endif
+
 void InitActorList(void);
 void GetNewActor(void);
 void PlayLoop(void);
