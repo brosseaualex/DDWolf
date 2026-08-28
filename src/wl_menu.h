@@ -115,7 +115,7 @@
 #define OPT_H 62
 #elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 48
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
+#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS) || !defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 34
 #endif
 
