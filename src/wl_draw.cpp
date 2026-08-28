@@ -327,7 +327,6 @@ void ScalePost(void)
 #ifdef USE_SHADING
     byte *curshades = shadetable[GetShade(wallheight[postx])];
 #endif
-
     ywcount = yd = wallheight[postx] >> 3;
     if (yd <= 0)
         yd = 100;
@@ -711,10 +710,20 @@ void VGAClearScreen(void)
     int y;
     byte *dest = vbuf;
 #ifdef USE_SHADING
-    for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
-        memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
-    for (; y < viewheight; y++, dest += bufferPitch)
-        memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+    if (atmosShadingEnabled)
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
+            memset(dest, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+    }
+    else
+    {
+        for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
+            memset(dest, ceiling, viewwidth);
+        for (; y < viewheight; y++, dest += bufferPitch)
+            memset(dest, 0x19, viewwidth);
+    }
 #else
     for (y = 0; y < viewheight / 2; y++, dest += bufferPitch)
         memset(dest, ceiling, viewwidth);
