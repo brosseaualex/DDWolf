@@ -139,7 +139,7 @@ void Victory(void)
 	StartCPMusic(URAHERO_MUS);
 	ClearSplitVWB();
 
-	VWB_Bar(0, 0, originalScreenWidth, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+	VWB_Bar(0, 0, rescaledWidth, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 	if (bordercol != VIEWCOLOR)
 		DrawStatusBorder(VIEWCOLOR);
 
@@ -513,7 +513,7 @@ void LevelCompleted(void)
 	};
 
 	ClearSplitVWB(); // set up for double buffering in split screen
-	VWB_Bar(0, 0, originalScreenWidth, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+	VWB_Bar(0, 0, rescaledWidth, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
 	if (bordercol != VIEWCOLOR)
 		DrawStatusBorder(VIEWCOLOR);

@@ -104,6 +104,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif
