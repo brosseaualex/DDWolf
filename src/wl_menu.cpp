@@ -4873,7 +4873,7 @@ void DrawChangeView(int view)
 #else
 	ShowViewSize(view);
 
-	PrintY = (screenHeight / scaleFactor) - 39;
+	PrintY = rescaledHeight - 39;
 	WindowX = scalingOffsetX;
 	WindowY = 320; // TODO: Check this!
 	SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR);

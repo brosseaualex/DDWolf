@@ -236,7 +236,6 @@ void VL_SetVGAPlaneMode(void) {
 #ifdef _DEBUG
     printf("VL_SetVGAPlaneMode - scaleFactor: %d\n", scaleFactor);
 #endif
-
     printHorizAdjust = picHorizAdjust / scaleFactor;
     printVertAdjust = picVertAdjust / scaleFactor;
 
