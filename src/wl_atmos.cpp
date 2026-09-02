@@ -134,7 +134,9 @@ void Init3DPoints(void)
 {
     int i, j;
     float length;
-    point3d_t *pt;
+    point3d_t* pt;
+
+    const float BASE_CENTERY = 100.0f;
 
     for (i = 0; i < MAXPOINTS; i++)
     {
@@ -143,7 +145,7 @@ void Init3DPoints(void)
         pt->x = 16384 - (rand() & 32767);
         pt->z = 16384 - (rand() & 32767);
 
-        length = sqrt((float)pt->x * pt->x + (float)pt->z * pt->z);
+        length = (float)sqrt((double)pt->x * pt->x + (double)pt->z * pt->z);
         j = 50;
 
         do
@@ -151,7 +153,7 @@ void Init3DPoints(void)
             pt->y = 1024 + (rand() & 8191);
             j--;
 
-        } while (j > 0 && ((float)pt->y * 256.F) / length >= centery);
+        } while (j > 0 && ((float)pt->y * 256.0f) / length >= BASE_CENTERY);
     }
 }
 
@@ -170,15 +172,17 @@ void Init3DPoints(void)
 void DrawStarSky(void)
 {
     int i, j;
-    point3d_t *pt;
-    byte *dest;
+    point3d_t* pt;
+    byte* dest;
     byte shade;
     int16_t stopx, starty, stopy;
     fixed x, y, z;
     fixed xx, yy;
 
-    dest = vbuf;
+    const float scaleRatio = (float)viewheight / 200.0f;
+    const int starSize = (int)(1.0f * scaleRatio);
 
+    dest = vbuf;
     for (i = 0; i < centery; i++, dest += bufferPitch)
         memset(dest, 0, viewwidth);
 
@@ -187,8 +191,9 @@ void DrawStarSky(void)
         pt = &points[i];
 
         x = pt->x * viewcos + pt->z * viewsin;
-        y = pt->y << 16;
-        z = (pt->z * viewcos - pt->x * viewsin) >> 8;
+
+        y = (int32_t)((pt->y << 16) * scaleRatio);
+        z = ((pt->z * viewcos - pt->x * viewsin)) >> 8;
 
         if (z <= 0)
             continue;
@@ -201,8 +206,16 @@ void DrawStarSky(void)
         xx = ((x / z) * scaleFactor) + (centerx + 1);
         yy = centery - (y / z);
 
-        if (xx >= 0 && xx < viewwidth && yy >= 0 && yy < centery)
-            vbuf[ylookup[yy] + xx] = shade + 15;
+        if (xx >= 0 && xx < viewwidth - starSize && yy >= 0 && yy < centery - starSize)
+        {
+            for (int dy = 0; dy < starSize; dy++)
+            {
+                for (int dx = 0; dx < starSize; dx++)
+                {
+                    vbuf[ylookup[yy + dy] + (xx + dx)] = shade + 15;
+                }
+            }
+        }
     }
 
     x = (16384 * viewcos) + (16384 * viewsin);
@@ -212,30 +225,44 @@ void DrawStarSky(void)
         return;
 
     xx = ((x / z) * scaleFactor) + (centerx + 1);
-    yy = centery - (((centery - (centery >> 3)) << 22) / z);
 
-    if (xx > (scaleFactor * -10) && xx < viewwidth)
+    int32_t baseCenterY = 100;
+    int32_t rawMoonY = (((baseCenterY - (baseCenterY >> 3)) << 22) / z);
+    yy = centery - (int32_t)(rawMoonY * scaleRatio);
+
+    int moonScale = scaleFactor * (int)scaleRatio;
+    if (moonScale < 1) moonScale = 1;
+
+    if (xx > (moonScale * -10) && xx < viewwidth)
     {
-        stopx = 10 * scaleFactor;
+        stopx = 10 * moonScale;
         starty = 0;
-        stopy = 10 * scaleFactor;
+        stopy = 10 * moonScale;
         i = 0;
 
         if (xx < 0)
             i = -xx;
-        if (xx >= viewwidth - (10 * scaleFactor))
+        if (xx >= viewwidth - (10 * moonScale))
             stopx = viewwidth - xx;
 
         if (yy < 0)
             starty = -yy;
-        if (yy >= viewheight - (10 * scaleFactor))
+        if (yy >= viewheight - (10 * moonScale))
             stopy = viewheight - yy;
 
         while (i < stopx)
         {
             for (j = starty; j < stopy; j++)
-                vbuf[ylookup[yy + j] + xx + i] = moon[((j / scaleFactor) * 10) + (i / scaleFactor)];
-
+            {
+                int srcX = i / moonScale;
+                int srcY = j / moonScale;
+                if (srcX < 10 && srcY < 10)
+                {
+                    byte col = moon[(srcY * 10) + srcX];
+                    if (col)
+                        vbuf[ylookup[yy + j] + xx + i] = col;
+                }
+            }
             i++;
         }
     }

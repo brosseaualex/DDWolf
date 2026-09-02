@@ -345,10 +345,8 @@ void PrintCustKeys(int i);
 
 void DrawOptScreen(void);
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(SHOW_ATMOS_OPTIONS)
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 void DrawAtmosOptScreen(void);
-#endif
 #endif
 
 void DrawJoystickScreen(void);
