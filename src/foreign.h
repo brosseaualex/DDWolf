@@ -147,8 +147,14 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
+#define STR_OP_SCREEN "Screen options"
+#define STR_SCREEN_RESOLUTION "Change Resolution"
+#define STR_SCREEN_RATIO_CORRECTION "Aspect ratio correct."
+#define STR_SCREEN_FULLSCREEN "Fullscreen"
+#define STR_SCREEN_APPLY "Apply"
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-#define STR_ATMOS_TITLE "Atmosphere"
+#define STR_OP_ATMOS "Atmosphere"
 #define STR_ATMOS_TEXTURED "Textured fl and clg."
 #define STR_ATMOS_SHADING "Shading"
 #define STR_ATMOS_SKYBOX "Skybox"

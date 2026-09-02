@@ -253,6 +253,14 @@ enum
 
 #endif
 
+//Screen
+enum
+{
+	SCREEN_RESOLUTION,
+	SCREEN_RATIO_CORRECTION,
+	SCREEN_FULLSCREEN
+};
+
 #ifdef SHOW_ATMOS_OPTIONS
 enum
 {
@@ -488,6 +496,14 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
+CP_itemtype ScreenMenu[] = {
+	{1, STR_SCREEN_RESOLUTION, CP_ScreenResolution},
+	{1, STR_SCREEN_RATIO_CORRECTION, 0},
+	{1, STR_SCREEN_FULLSCREEN, 0},
+	{0, "", 0},
+	{1, STR_SCREEN_APPLY, CP_ScreenApply}
+};
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 CP_itemtype AtmosOptMenu[] = {
 	{1, STR_ATMOS_TEXTURED, 0},
@@ -507,14 +523,16 @@ CP_itemtype OptMenu[] = {
 	{1, "", CustomControls}
 #else
 #if defined(USE_MODERN_CONTROLS)
+	{1, STR_OP_SCREEN, CP_Screen},
 	{1, STR_OP_SND, CP_Sound},
 	{1, STR_OP_CTL, CP_Control},
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
+{1, STR_OP_ATMOS, CP_AtmosOptions},
+#endif
 	{1, STR_CV, CP_ChangeView},
 #else
+	{1, STR_OP_SCREEN, CP_Screen},
 	{1, STR_CV, CP_ChangeView},
-#endif
-#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-{1, STR_ATMOS_TITLE, CP_AtmosOptions},
 #endif
 #endif
 };
@@ -522,6 +540,7 @@ CP_itemtype OptMenu[] = {
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
+ScreenItems = { SCREEN_CTL_X, SCREEN_CTL_Y, lengthof(ScreenMenu), 0, 54 },
 
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
@@ -1771,8 +1790,7 @@ int AdjustVolume(int)
 	return 0;
 }
 
-int
-CP_Sound(int)
+int CP_Sound(int)
 {
 	int which;
 
@@ -1848,8 +1866,7 @@ CP_Sound(int)
 	return 0;
 }
 
-void
-DrawSoundMenu(void)
+void DrawSoundMenu(void)
 {
 	int i, on;
 
@@ -2406,12 +2423,74 @@ int CP_Options(int blank)
 	return 0;
 }
 
+////////////////////////////////////////////////////////////////////
+//
+// DEFINE SCREEN OPTIONS
+//
+////////////////////////////////////////////////////////////////////
+int CP_Screen(int blank)
+{
+	int which;
+
+	DrawScreenOptScreen();
+	MenuFadeIn();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&ScreenItems, ScreenMenu, NULL);
+
+		switch (which)
+		{
+		case -1:
+			MenuFadeOut();
+			return 0;
+			break;
+		case SCREEN_RESOLUTION:
+			//atmosTexturedEnabled ^= 1;
+			//DrawScreenOptScreen();
+			break;
+		case SCREEN_RATIO_CORRECTION:
+			disableratiofix ^= 1;
+			DrawScreenOptScreen();
+			break;
+		case SCREEN_FULLSCREEN:
+			fullscreen ^= 1;
+			DrawScreenOptScreen();			
+			break;
+		default:
+			DrawScreenOptScreen();
+			MenuFadeIn();
+			WaitKeyUp();
+			break;
+		}
+
+		CusItems.curpos = -1;
+		ShootSnd();
+	} while (which >= 0);
+
+	return 0;
+}
+
+int CP_ScreenResolution(int blank)
+{
+
+
+	return 0;
+}
+
+int CP_ScreenApply(int blank)
+{
+	
+
+	return 0;
+}
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-////////////////////////////////////////////////////////////////////
+/////////////////////////////////////
 //
-// DEFINE OPTIONS
+// DRAW ATMOSPHERE OPTIONS SCREEN
 //
-////////////////////////////////////////////////////////////////////
 int CP_AtmosOptions(int blank)
 {
 	int which;
@@ -2713,6 +2792,66 @@ void DrawOptScreen(void)
 	}
 
 	DrawMenuGun(&OptItems);
+	VW_UpdateScreen();
+}
+
+///////////////////////////
+//
+// DRAW CONTROL MENU SCREEN
+//
+void DrawScreenOptScreen(void)
+{
+	int i, x, y;
+
+#ifdef JAPAN
+	VWB_DrawPic(0, 0, S_CONTROLPIC);
+#else
+	ClearMScreen();
+	DrawStripes(10);
+	VWB_DrawPic(80, -scalingOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(112, 184 + scalingOffsetY, C_MOUSELBACKPIC);
+	DrawWindow(SCREEN_CTL_X - 8, SCREEN_CTL_Y - 5, SCREEN_CTL_W, SCREEN_CTL_H, BKGDCOLOR);
+#endif
+	WindowX = 0;
+	WindowW = 320;
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+	//ScreenMenu[SCREEN_RATIO_CORRECTION].active = 1;
+	//ScreenMenu[SCREEN_FULLSCREEN].active = 1;
+
+	DrawMenu(&ScreenItems, ScreenMenu);
+
+	x = SCREEN_CTL_X + ScreenItems.indent - 24;
+	y = SCREEN_CTL_Y + 15;
+
+	if (disableratiofix)
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+
+	y = y + 13;
+
+	if (fullscreen)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+
+	//
+	// PICK FIRST AVAILABLE SPOT
+	//
+	if (ScreenItems.curpos < 0 || !ScreenMenu[ScreenItems.curpos].active)
+	{
+		for (i = 0; i < ScreenItems.amount; i++)
+		{
+			if (ScreenMenu[i].active)
+			{
+				ScreenItems.curpos = i;
+				break;
+			}
+		}
+	}
+
+	DrawMenuGun(&ScreenItems);
 	VW_UpdateScreen();
 }
 

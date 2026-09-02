@@ -67,6 +67,8 @@
 #define SM_X 48
 #define SM_W 250
 
+//Screen options
+
 #ifndef VIEASM
 #define SM_Y1 20
 #define SM_H1 4 * 13 - 7
@@ -82,7 +84,6 @@
 #define SM_Y3   SM_Y2+4*13
 #define SM_H3   3*13-7
 #endif
-
 
 #ifdef JAPAN
 #define CTL_Y 70
@@ -121,9 +122,14 @@
 #define OPT_H 20
 #endif
 
+#define SCREEN_CTL_X 46
+#define SCREEN_CTL_Y 86
+#define SCREEN_CTL_W 262
+#define SCREEN_CTL_H 74
+
 #ifdef SHOW_ATMOS_OPTIONS
 #define ATMOS_X 46
-#define ATMOS_Y 72
+#define ATMOS_Y 84
 #define ATMOS_W 244
 #define ATMOS_H 60
 #endif
@@ -345,6 +351,8 @@ void PrintCustKeys(int i);
 
 void DrawOptScreen(void);
 
+void DrawScreenOptScreen(void);
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 void DrawAtmosOptScreen(void);
 #endif
@@ -380,6 +388,10 @@ int CP_CustomCtl(int);
 #else
 int CustomControls(int);
 #endif
+
+int CP_Screen(int);
+int CP_ScreenResolution(int);
+int CP_ScreenApply(int);
 
 #ifdef SHOW_ATMOS_OPTIONS
 int CP_AtmosOptions(int);
