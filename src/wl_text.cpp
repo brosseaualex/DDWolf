@@ -411,7 +411,7 @@ void PageLayout(boolean shownumber)
     // clear the screen
     //
     VWB_Bar(0, 0, rescaledWidth, rescaledHeight, 0);
-    VWB_Bar(scalingOffsetX, scalingOffsetY, 320, 200, BACKCOLOR);
+    VWB_Bar(scaleOffsetX, scaleOffsetY, 320, 200, BACKCOLOR);
 #ifndef SPEAR //SOD does not have any textures files dedicated to the ReadThis screen
     VWB_DrawPic(0, 0, H_TOPWINDOWPIC);
     VWB_DrawPic(0, 8, H_LEFTWINDOWPIC);
@@ -421,12 +421,12 @@ void PageLayout(boolean shownumber)
 
     for (i = 0; i < TEXTROWS; i++)
     {
-        leftmargin[i] = LEFTMARGIN + scalingOffsetX;
-        rightmargin[i] = SCREENPIXWIDTH - RIGHTMARGIN + scalingOffsetY;
+        leftmargin[i] = LEFTMARGIN + scaleOffsetX;
+        rightmargin[i] = SCREENPIXWIDTH - RIGHTMARGIN + scaleOffsetY;
     }
 
-    px = LEFTMARGIN + scalingOffsetX;
-    py = TOPMARGIN + scalingOffsetY;
+    px = LEFTMARGIN + scaleOffsetX;
+    py = TOPMARGIN + scaleOffsetY;
     rowon = 0;
     layoutdone = false;
 
@@ -472,9 +472,9 @@ void PageLayout(boolean shownumber)
         px = 208;
 #else
         sprintf(str, "pg %d of %d", pagenum, numpages);
-        px = 213 + scalingOffsetX;
+        px = 213 + scaleOffsetX;
 #endif
-        py = 183 + scalingOffsetY;
+        py = 183 + scaleOffsetY;
         fontcolor = 0x4f; //12^BACKCOLOR;
 
         VWB_DrawPropString(str);

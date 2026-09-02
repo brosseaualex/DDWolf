@@ -22,7 +22,7 @@ void ClearSplitVWB(void)
 {
 	WindowX = 0;
 	WindowY = 0;
-	WindowW = originalScreenWidth;
+	WindowW = ORIGINAL_SCREEN_WIDTH;
 	WindowH = 160;
 }
 
@@ -250,7 +250,7 @@ void Victory(void)
 	IN_Ack();
 
 	VW_FadeOut();
-	if (screenHeight % originalScreenHeight != 0)
+	if (screenHeight % ORIGINAL_SCREEN_HEIGHT != 0)
 		VL_ClearScreen(0);
 
 	MainMenu[savegame].active = 0; // ADDEDFIX 3 - Tricob
@@ -280,7 +280,7 @@ void PG13(void)
 	VW_FadeOut();
 	VWB_Bar(0, 0, rescaledWidth, rescaledHeight, 0x82); // background
 
-	VWB_DrawPic(216, 110 + scalingOffsetY, PG13PIC);
+	VWB_DrawPic(216, 110 + scaleOffsetY, PG13PIC);
 	VW_UpdateScreen();
 
 	VW_FadeIn();
@@ -623,7 +623,7 @@ void LevelCompleted(void)
 				Write(x, 7, tempstr);
 				if (!(i % (PAR_AMOUNT / 10)))
 					SD_PlaySound(ENDBONUS1SND);
-				if (!usedoublebuffering || !(i % (PAR_AMOUNT / 50)))
+				if (!doubleBuffering || !(i % (PAR_AMOUNT / 50)))
 					VW_UpdateScreen();
 				while (SD_SoundPlaying())
 					BJ_Breathe();
@@ -654,7 +654,7 @@ void LevelCompleted(void)
 			Write(x, 14, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-			if (!usedoublebuffering || !(i & 1))
+			if (!doubleBuffering || !(i & 1))
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
@@ -697,7 +697,7 @@ void LevelCompleted(void)
 			Write(x, 16, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-			if (!usedoublebuffering || !(i & 1))
+			if (!doubleBuffering || !(i & 1))
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
@@ -739,7 +739,7 @@ void LevelCompleted(void)
 			Write(x, 18, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-			if (!usedoublebuffering || !(i & 1))
+			if (!doubleBuffering || !(i & 1))
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
@@ -982,7 +982,7 @@ void DrawHighScores(void)
 	ClearMScreen();
 	DrawStripes(10);
 
-	VWB_DrawPic(48, -scalingOffsetY, HIGHSCORESPIC);
+	VWB_DrawPic(48, -scaleOffsetY, HIGHSCORESPIC);
 
 #ifndef APOGEE_1_0
 	VWB_DrawPic(4 * 8, 68, C_NAMEPIC);
@@ -1010,15 +1010,15 @@ void DrawHighScores(void)
 
 	for (i = 0, s = Scores; i < MaxScores; i++, s++)
 	{
-		PrintY = 76 + scalingOffsetY + (16 * i);
+		PrintY = 76 + scaleOffsetY + (16 * i);
 
 		//
 		// name
 		//
 #ifndef SPEAR
-		PrintX = 4 * 8 + scalingOffsetX;
+		PrintX = 4 * 8 + scaleOffsetX;
 #else
-		PrintX = 16 + scalingOffsetX;
+		PrintX = 16 + scaleOffsetX;
 #endif
 		US_Print(s->name);
 
@@ -1030,10 +1030,10 @@ void DrawHighScores(void)
 		for (str = buffer; *str; str++)
 			*str = *str + (129 - '0'); // Used fixed-width numbers (129...)
 		USL_MeasureString(buffer, &w, &h);
-		PrintX = (22 * 8) - w + scalingOffsetX;
+		PrintX = (22 * 8) - w + scaleOffsetX;
 #else
 		USL_MeasureString(buffer, &w, &h);
-		PrintX = 194 - w + scalingOffsetX;
+		PrintX = 194 - w + scaleOffsetX;
 #endif
 
 #ifndef UPLOAD
@@ -1061,10 +1061,10 @@ void DrawHighScores(void)
 		for (str = buffer; *str; str++)
 			*str = *str + (129 - '0'); // Used fixed-width numbers (129...)
 		USL_MeasureString(buffer, &w, &h);
-		PrintX = (34 * 8) - 8 - w + scalingOffsetX;
+		PrintX = (34 * 8) - 8 - w + scaleOffsetX;
 #else
 		USL_MeasureString(buffer, &w, &h);
-		PrintX = 292 - w + scalingOffsetX;
+		PrintX = 292 - w + scaleOffsetX;
 #endif
 		US_Print(buffer);
 

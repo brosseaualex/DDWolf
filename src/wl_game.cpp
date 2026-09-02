@@ -672,7 +672,7 @@ void SetupGameLevel(void)
     //
     memset(tilemap, 0, sizeof(tilemap));
     memset(actorat, 0, sizeof(actorat));
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
     memset(mapseen, 0, sizeof(mapseen));
 #endif
     map = mapsegs[0];
@@ -847,7 +847,7 @@ void DrawPlayBorderSides(void)
 
 void DrawStatusBorder(byte color)
 {
-    int statusborderw = (screenWidth - scaleFactor * originalScreenWidth) / 2;
+    int statusborderw = (screenWidth - scaleFactor * ORIGINAL_SCREEN_WIDTH) / 2;
 
     VWB_BarScaledCoord(0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 3), color);
     VWB_BarScaledCoord(0, screenHeight - scaleFactor * (STATUSLINES - 3),
@@ -884,7 +884,7 @@ void DrawPlayBorder(void)
         DrawStatusBorder(bordercol);
     else
     {
-        const int statusborderw = (screenWidth - px * originalScreenWidth) / 2;
+        const int statusborderw = (screenWidth - px * ORIGINAL_SCREEN_WIDTH) / 2;
         VWB_BarScaledCoord(0, screenHeight - px * STATUSLINES,
                            statusborderw + px * 8, px * STATUSLINES, bordercol);
         VWB_BarScaledCoord(screenWidth - statusborderw - px * 8, screenHeight - px * STATUSLINES,
@@ -926,7 +926,7 @@ void DrawPlayBorder(void)
 
 void DrawPlayScreen(void)
 {
-    VWB_DrawPicScaledCoord((screenWidth - scaleFactor * originalScreenWidth) / 2, screenHeight - scaleFactor * STATUSLINES, STATUSBARPIC);
+    VWB_DrawPicScaledCoord((screenWidth - scaleFactor * ORIGINAL_SCREEN_WIDTH) / 2, screenHeight - scaleFactor * STATUSLINES, STATUSBARPIC);
     DrawPlayBorder();
 
     DrawFace();
@@ -946,7 +946,7 @@ void ShowActStatus()
     int picnum = STATUSBARPIC - STARTPICS;
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
-    int destx = (screenWidth - scaleFactor * originalScreenWidth) / 2 + 9 * scaleFactor;
+    int destx = (screenWidth - scaleFactor * ORIGINAL_SCREEN_WIDTH) / 2 + 9 * scaleFactor;
     int desty = screenHeight - (height - 4) * scaleFactor;
     VL_MemToScreenScaledCoord2(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
@@ -1095,7 +1095,7 @@ void RecordDemo(void)
     SetupGameLevel();
     StartMusic();
 
-    if (usedoublebuffering)
+    if (doubleBuffering)
         VW_UpdateScreen();
     fizzlein = true;
 
@@ -1139,7 +1139,6 @@ void PlayDemo(int demonumber)
 #else
     int dems[1] = {T_DEMO0};
 #endif
-
     demoptr = (int8_t *)grsegs[dems[demonumber]];
 #else
     demoname[4] = '0' + demonumber;
@@ -1290,7 +1289,7 @@ void Died(void)
     //
     FinishPaletteShifts();
 
-    if (usedoublebuffering)
+    if (doubleBuffering)
         VW_UpdateScreen();
 
     VL_BarScaledCoord(viewscreenx, viewscreeny, viewwidth, viewheight, 4);
@@ -1544,7 +1543,7 @@ restartgame:
                 break; // more lives left
 
             VW_FadeOut();
-            if (screenHeight % originalScreenHeight != 0)
+            if (screenHeight % ORIGINAL_SCREEN_HEIGHT != 0)
                 VL_ClearScreen(0);
 
             ClearMemory();

@@ -15,6 +15,7 @@ void Quit(const char *error, ...);
 //===========================================================================
 
 extern SDL_Surface* screen, * screenBuffer;
+extern SDL_DisplayMode displayMode;
 #ifdef SAVE_GAME_SCREENSHOT
 extern SDL_Surface *lastGameSurface;
 #endif
@@ -26,15 +27,23 @@ extern SDL_Texture *texture;
 extern SDL_Rect *displayBounds;
 #endif
 
-extern boolean fullscreen, usedoublebuffering, disablehdres, disableratiofix;
-extern unsigned screenWidth, screenHeight, screenPitch, bufferPitch;
-extern unsigned originalScreenWidth, originalScreenHeight, defaultScreenWidth, defaultScreenHeight;
-extern int screenBits;
+extern boolean fullscreen, borderless, doubleBuffering, enablevsync;
+extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
+extern unsigned screenWidth, screenHeight, rescaledWidth, rescaledHeight, screenPitch, bufferPitch;
+
+extern unsigned screenResW;
+extern unsigned screenResH;
+
 extern int scaleFactor;
-extern int rescaledWidth;
-extern int rescaledHeight;
-extern int scalingOffsetX; // Used with HD scaling to calculate and center screens
-extern int scalingOffsetY;
+extern int scaleOffsetX; // Used with HD scaling to calculate and center screens
+extern int scaleOffsetY;
+
+extern float picHorizAdjust;
+extern float picVertAdjust;
+extern float printHorizAdjust;
+extern float printVertAdjust;
+
+extern int screenBits;
 
 extern boolean screenfaded;
 extern unsigned bordercolor;
@@ -61,7 +70,7 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette(int red, int green, int blue);
 void VL_SetColor(int color, int red, int green, int blue);
 void VL_GetColor(int color, int *red, int *green, int *blue);
-void VL_SetPalette(SDL_Color *palette, bool forceupdate);
+void VL_SetPalette(SDL_Color* palette, bool forceupdate);
 void VL_GetPalette(SDL_Color *palette);
 void VL_FadeOut(int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn(int start, int end, SDL_Color *palette, int steps);
@@ -83,7 +92,7 @@ void VL_Vlin(int x, int y, int height, int color);
 void VL_BarScaledCoord(int scx, int scy, int scwidth, int scheight, int color);
 void VL_Bar(int x, int y, int width, int height, int color);
 
-void VL_DrawPicBare(int x, int y, byte *pic, int width, int height);
+//void VL_DrawPicBare(int x, int y, byte *pic, int width, int height);
 void VL_ScreenToScreen(SDL_Surface *source, SDL_Surface *dest);
 void VL_MemToScreenScaledCoord(byte *source, int width, int height, int scx, int scy);
 void VL_MemToScreenScaledCoord2(byte *source, int origwidth, int origheight, int srcx, int srcy,
@@ -92,9 +101,9 @@ void VL_MemToScreenScaledCoord2(byte *source, int origwidth, int origheight, int
 void VL_MemToScreen(byte *source, int width, int height, int x, int y);
 void VL_SurfaceToByteArray(SDL_Surface* surface, byte* byteArray);
 
-#endif
+void VL_CreateYlookup(void);
+void VL_UpdateUIScale(int newWidth, int newHeight);
+void VL_ApplyDisplaySettings(void);
+void VL_SetDisplayResolution(int newWidth, int newHeight);
 
-extern int picHorizAdjust;
-extern int picVertAdjust;
-extern int printHorizAdjust;
-extern int printVertAdjust;
+#endif

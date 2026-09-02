@@ -202,7 +202,6 @@ extern int GameControllerNumButtons;
 #else
 extern int JoyNumButtons;
 #endif
-extern boolean forcegrabmouse;
 
 // Function prototypes
 #define IN_KeyDown(code) (Keyboard((code)))
@@ -257,4 +256,5 @@ void IN_StartAck(void);
 boolean IN_CheckAck(void);
 bool IN_IsInputGrabbed();
 void IN_CenterMouse();
+void IN_MouseGrab(void);
 #endif

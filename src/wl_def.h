@@ -88,6 +88,8 @@ typedef struct
 } Rect;
 
 void Quit(const char *errorStr, ...);
+void ReadDisplayConfig(void);
+void WriteConfig(void);
 
 #include "id_pm.h"
 #ifdef VIEASM
@@ -1462,7 +1464,7 @@ extern objtype *newobj, *player, *objfreelist, *killerobj;
 extern tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
 extern bool spotvis[MAPSIZE][MAPSIZE];
 extern objtype *actorat[MAPSIZE][MAPSIZE];
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
 extern bool mapseen[MAPSIZE][MAPSIZE];
 #endif
 extern boolean singlestep, godmode, noclip, ammocheat, mapreveal;
@@ -1886,8 +1888,8 @@ extern void EndText(void);
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
 #ifdef _WIN32
-//#define strcasecmp stricmp
-//#define strncasecmp strnicmp
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
 #define snprintf _snprintf
 #else
 static inline char *itoa(int value, char *string, int radix)

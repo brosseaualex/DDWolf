@@ -13,7 +13,6 @@
 //#define APOGEE_1_0
 //#define APOGEE_1_1
 //#define APOGEE_1_2
-//#define JAPAN
 
 /*
 	Wolf3d Full v1.1 Apogee (with ReadThis)			- define CARMACIZED and APOGEE_1_1
@@ -35,21 +34,22 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
-													// Enables modern controls
+#define USE_MODERN_CONTROLS						// Enables modern controls
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
-#define SHOW_ATMOS_OPTIONS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
-													// Enables options to enable/disable atmosphere at runtime
-													// Textured floor & ceiling, Shading, Skybox and Precipitation
-													// Requires at least ONE atmosphere flag to be enabled for the menu to appear.
+//#define SHOW_ATMOS_OPTIONS						// Enables options to enable/disable atmosphere at runtime
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
+													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
+													
 
-//#define SHOW_CUSTOM_CONTROLS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
-													// Requires #USE_MODERN_CONTROLS flag enabled and code changes to customize the keys.
+//#define SHOW_CUSTOM_CONTROLS						// #USE_MODERN_CONTROLS REQUIRED
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
-//#define VIEASM									// AlumiuN's Advanced Sound Manager.
-													// Some modifications made by WSJ. Information in asmcref.h
+//#define VIEASM									// AlumiuN's Advanced Sound Manager
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
+													
 
-#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
+//#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
 //#define USE_FLOORCEILINGTEX						// Enables texture-mapped floors and ceilings (see wl_plane.c)
 													// Set TEXTURESHIFT in wl_def.h to 7 for 128x128 textures
 													// Set TEXTURESHIFT in wl_def.h to 8 for 256x256 textures
@@ -57,10 +57,10 @@
 //#define USE_SHADING								// Enables shading support (see wl_shade.c)
 //#define USE_PARALLAX 16							// Enables parallax sky with 16 textures per sky (see wl_parallax.c)
 //#define USE_SKYWALLPARALLAX 16					// Enables parallax sky on walls with 16 repeats of sky texture
-#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
-#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
-#define USE_RAIN									// Enables rain support (see wl_atmos.c)
-#define USE_SNOW									// Enables snow support (see wl_atmos.c)
+//#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
+//#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
+//#define USE_RAIN									// Enables rain support (see wl_atmos.c)
+//#define USE_SNOW									// Enables snow support (see wl_atmos.c)
 //#define FIXRAINSNOWLEAKS							// Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
 
 //#define USE_DIR3DSPR								// Enables directional 3d sprites
@@ -69,10 +69,10 @@
 /*###### MINOR FEATURES ######*/
 /*###########################**/
 
-//#define VIEWMAP									// Enables the overhead map
-//#define REVEALMAP									// Enables showing only the areas of the overhead map that have been seen
+//#define OVERHEAD_MAP								// Enables the overhead map
+//#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
 
-//#define SEAMLESSLEVELS							// Disables the Episode selection screen on Wolf3D.
+//#define SEAMLESSLEVELS							// Disables the Episode selection screen on Wolf3D
 
 //#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
 
@@ -83,7 +83,7 @@
 //#define SAVE_GAME_SCREENSHOT						// Shows a screenshot in the Save and Load screens. By insurrectionman
 
 //#define ARTSEXTERN
-//#define DEMOSEXTERN
+#define DEMOSEXTERN
 #define PLAYDEMOLIKEORIGINAL						// When playing or recording demos, several bug fixes do not take
 													// effect to let the original demos work as in the original Wolf3D v1.4
 													// (actually better, as the second demo rarely worked)

@@ -83,14 +83,13 @@
 #define SM_H3   3*13-7
 #endif
 
-
 #ifdef JAPAN
 #define CTL_Y 70
 #else
 #define CTL_Y 72
 #endif
 #ifdef USE_MODERN_CONTROLS
-#define CTL_X 43
+#define CTL_X 38
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 #define CTL_H 114
 #else
@@ -103,27 +102,27 @@
 #define CTL_W 284
 #endif
 
-#define OPT_X 64
+#define OPT_X 94
 #ifdef JAPAN
 #define OPT_Y 70
 #else
 #define OPT_Y 86
 #endif
-#define OPT_W 200
+#define OPT_W 142
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 62
+#define OPT_H 72
 #elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 48
+#define OPT_H 60
 #elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
 #define OPT_H 34
 #else
-#define OPT_H 20
+#define OPT_H 34
 #endif
 
 #ifdef SHOW_ATMOS_OPTIONS
 #define ATMOS_X 46
-#define ATMOS_Y 72
+#define ATMOS_Y 84
 #define ATMOS_W 244
 #define ATMOS_H 60
 #endif
@@ -148,6 +147,16 @@
 #define LSP_H   80
 #define BMP_SAVE_FILENAME "savegam?.bmp"
 #endif
+
+#define DISPLAY_CTL_X 34
+#define DISPLAY_CTL_Y 86
+#define DISPLAY_CTL_W 262
+#define DISPLAY_CTL_H 88
+
+#define RES_MENU_X 44
+#define RES_MENU_Y 55
+#define RES_MENU_W 250
+#define RES_MENU_H 138
 
 #define NM_X 50
 #define NM_Y 100
@@ -220,6 +229,10 @@
 #define CTL_MOUSE_X 180
 #endif
 
+// Resolution definitions
+#define MAX_RESOLUTIONS 64
+#define RES_LIST_MAX_VISIBLE 10
+
 //
 // TYPEDEFS
 //
@@ -247,17 +260,22 @@ typedef struct
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
-void ExitToControlScreen(void);
+//Resolution typedef
+typedef struct {
+	int width;
+	int height;
+	char label[32];
+} ScreenResolution;
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-extern const int MAX_CUSTOM_CONTROLS;
-extern const int CUS_CTL_ARRAY_RANGE_START;
-extern const int CUS_CTL_ARRAY_RANGE_END;
-#endif
+static ScreenResolution DynamicResolutions[MAX_RESOLUTIONS];
+static int numResolutions = 0;
+static int selectedResIdx = 0;
+static int activeResIdx = 0;
 
 //
 // FUNCTION PROTOTYPES
 //
+void ExitToControlScreen(void);
 
 void US_ControlPanel(ScanCode);
 
@@ -267,28 +285,27 @@ void SetupControlPanel(void);
 void SetupSaveGames();
 void CleanupControlPanel(void);
 
-void DrawMenu(CP_iteminfo *item_i, CP_itemtype *items);
-int HandleMenu(CP_iteminfo *item_i,
-			   CP_itemtype *items,
-			   void (*routine)(int w));
+void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items);
+int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w));
+int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w), int totalItems, int* selectedIdx, void (*buildItemsFunc)(void));
 void ClearMScreen(void);
 void DrawWindow(int x, int y, int w, int h, int wcolor);
 void DrawOutline(int x, int y, int w, int h, int color1, int color2);
 void WaitKeyUp(void);
-void ReadAnyControl(ControlInfo *ci);
+void ReadAnyControl(ControlInfo* ci);
 void TicDelay(int count);
 int StartCPMusic(int song);
-int Confirm(const char *string);
-void Message(const char *string);
+int Confirm(const char* string);
+void Message(const char* string);
 void CheckPause(void);
 void ShootSnd(void);
 void CheckSecretMissions(void);
 void BossKey(void);
 
-void DrawGun(CP_iteminfo *item_i, CP_itemtype *items, int x, int *y, int which, int basey, void (*routine)(int w));
+void DrawGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int* y, int which, int basey, void (*routine)(int w));
 void DrawHalfStep(int x, int y);
-void EraseGun(CP_iteminfo *item_i, CP_itemtype *items, int x, int y, int which);
-void DrawMenuGun(CP_iteminfo *iteminfo);
+void EraseGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int y, int which);
+void DrawMenuGun(CP_iteminfo* iteminfo);
 void DrawStripes(int y);
 #ifndef USE_MODERN_CONTROLS
 void DefineMouseBtns(void);
@@ -302,7 +319,7 @@ void DefineKeyBtns(int);
 void DefineJoyBtns(int);
 #endif
 
-void EnterCtrlData(int index, CustomCtrls *cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type);
+void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type);
 
 void DrawMainMenu(void);
 void DrawSoundMenu(void);
@@ -314,13 +331,12 @@ void DrawMouseSens(void);
 void DrawCtlScreen(void);
 void DrawCustomScreen(void);
 void DrawMouseCtlScreen(void);
+void DrawResolutionMenu(void);
 #ifdef USE_MODERN_CONTROLS
 void DrawKeyboardMoveCtlScreen(void);
 void DrawKeyboardActionCtlScreen(void);
 void DrawKeyboardMoreActionCtlScreen(void);
-
 void CheckKeyConflict(void);
-
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 void DrawCustomCtlScreen(void);
 #endif
@@ -345,6 +361,8 @@ void PrintCustKeys(int i);
 
 void DrawOptScreen(void);
 
+void DrawDisplayOptScreen(void);
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 void DrawAtmosOptScreen(void);
 #endif
@@ -362,6 +380,7 @@ int CP_LoadGame(int quick);
 int CP_SaveGame(int quick);
 int CP_Options(int);
 int CP_Control(int);
+int CP_Resolution(int);
 int CP_ChangeView(int);
 int CP_Quit(int);
 int CP_ViewScores(int);
@@ -381,13 +400,24 @@ int CP_CustomCtl(int);
 int CustomControls(int);
 #endif
 
-#ifdef SHOW_ATMOS_OPTIONS
-int CP_AtmosOptions(int);
-#endif
-
 void CheckForEpisodes(void);
 
 void FreeMusic(void);
+
+//Resolution helper functions
+void AddResIfMissing(int w, int h);
+void InitResList(int);
+void BuildResMenuItems(void);
+bool IsDisplayChanged(void);
+void RevertDisplay(void);
+
+//Resolution screens
+int CP_Resolution(int);
+int CP_Display(int);
+
+#ifdef SHOW_ATMOS_OPTIONS
+int CP_Atmos(int);
+#endif
 
 enum
 {
@@ -434,19 +464,19 @@ typedef struct
 
 extern LRstruct LevelRatios[];
 
-void Write(int x, int y, const char *string);
+void Write(int x, int y, const char* string);
 void NonShareware(void);
 int GetYorN(int x, int y, int pic);
-
 #endif
 
-//IFDEF CUSTOM CONTROLS? - TODO and test properly
 const int MORE_ACTIONS_ARRAY_START = 5;
 const int MORE_ACTIONS_ARRAY_END = 12;
 
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 const int MAX_CUSTOM_CONTROLS = 10;
 const int CUS_CTL_ARRAY_RANGE_START = 19;
 const int CUS_CTL_ARRAY_RANGE_END = 29;
+#endif
 
 #ifdef VIEASM
 void DrawSoundVols(bool);

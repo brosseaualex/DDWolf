@@ -332,7 +332,7 @@ void ControlMovement(objtype *ob)
 
 void StatusDrawPic(unsigned x, unsigned y, unsigned picnum)
 {
-	VWB_DrawPicScaledCoord(((screenWidth - scaleFactor * originalScreenWidth) / 16 + scaleFactor * x) * 8,
+	VWB_DrawPicScaledCoord(((screenWidth - scaleFactor * ORIGINAL_SCREEN_WIDTH) / 16 + scaleFactor * x) * 8,
 						   screenHeight - scaleFactor * (STATUSLINES - y), picnum);
 }
 
@@ -823,7 +823,8 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(GETAMMOSND);
 		GiveAmmo(8);
 #ifdef WSJ_MESSAGE
-            strcat(pickupStr, "Clip");
+			//Its not a Clip, its a Mag. IYKYK
+            strcat(pickupStr, "Magazine");
 #endif
 		break;
 	case bo_clip2:
@@ -833,7 +834,8 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(GETAMMOSND);
 		GiveAmmo(4);
 #ifdef WSJ_MESSAGE
-            strcat(pickupStr, "Clip");
+			//Its not a Clip, its a Mag.
+            strcat(pickupStr, "Magazine");
 #endif
 		break;
 
