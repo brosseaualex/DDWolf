@@ -12,9 +12,7 @@
 #include <io.h>
 #include <direct.h>
 #else
-
 #include <unistd.h>
-
 #endif
 
 #include "wl_def.h"
@@ -255,6 +253,7 @@ enum
 
 #endif
 
+#ifdef SHOW_ATMOS_OPTIONS
 enum
 {
 	ATMOS_USE_TEXTURED,
@@ -262,6 +261,7 @@ enum
 	ATMOS_USE_SKYBOX,
 	ATMOS_USE_PRECIPITATION
 };
+#endif
 
 CP_itemtype CtlMenu[] = {
 #ifdef JAPAN
@@ -386,7 +386,7 @@ CP_itemtype NewMenu[] = {
 	{1, "", 0},
 	{1, "", 0}
 #else
-	{ 1, STR_DADDY, 0 },
+	{1, STR_DADDY, 0},
 	{1, STR_HURTME, 0},
 	{1, STR_BRINGEM, 0},
 	{1, STR_DEATH, 0}
@@ -488,15 +488,13 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity} };
 #endif
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(SHOW_ATMOS_OPTIONS)
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 CP_itemtype AtmosOptMenu[] = {
 	{1, STR_ATMOS_TEXTURED, 0},
 	{1, STR_ATMOS_SHADING, 0},
 	{1, STR_ATMOS_SKYBOX, 0},
 	{1, STR_ATMOS_PRECIPITATION, 0}
 };
-#endif
 #endif
 
 CP_itemtype OptMenu[] = {
@@ -509,16 +507,14 @@ CP_itemtype OptMenu[] = {
 	{1, "", CustomControls}
 #else
 #if defined(USE_MODERN_CONTROLS)
-	{ 1, STR_OP_SND, CP_Sound },
+	{1, STR_OP_SND, CP_Sound},
 	{1, STR_OP_CTL, CP_Control},
 	{1, STR_CV, CP_ChangeView},
 #else
 	{1, STR_CV, CP_ChangeView},
 #endif
-#if defined(USE_SHADING) || defined(USE_FLOORCEILINGTEX) || defined(USE_CLOUDSKY)|| defined(USE_STARSKY)|| defined(USE_RAIN) || defined(USE_SNOW)
-	#if defined(SHOW_ATMOS_OPTIONS)
-		{1, STR_ATMOS_TITLE, CP_AtmosOptions},
-	#endif
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
+{1, STR_ATMOS_TITLE, CP_AtmosOptions},
 #endif
 #endif
 };
@@ -527,10 +523,8 @@ CP_itemtype OptMenu[] = {
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
 OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 32 },
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(SHOW_ATMOS_OPTIONS)
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
-#endif
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -2412,8 +2406,7 @@ int CP_Options(int blank)
 	return 0;
 }
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(SHOW_ATMOS_OPTIONS)
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 ////////////////////////////////////////////////////////////////////
 //
 // DEFINE OPTIONS
@@ -2465,7 +2458,6 @@ int CP_AtmosOptions(int blank)
 
 	return 0;
 }
-#endif
 #endif
 
 ////////////////////////////////
@@ -2724,8 +2716,7 @@ void DrawOptScreen(void)
 	VW_UpdateScreen();
 }
 
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-#if defined(SHOW_ATMOS_OPTIONS)
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 ///////////////////////////
 //
 // DRAW ATMOSPHERE OPTIONS MENU SCREEN
@@ -2820,7 +2811,6 @@ void DrawAtmosOptScreen(void)
 	DrawMenuGun(&AtmosOptItems);
 	VW_UpdateScreen();
 }
-#endif
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -3317,16 +3307,14 @@ int CP_KeyboardMoreActionCtl(int blank)
 }
 
 void ExitToControlScreen(void) {
-	if (menuExit <= 2) {
-		if (menuExit == 1) {
-			menuExit++;
-			MenuFadeOut();
-		}
+	if (menuExit == 1) {
+		menuExit++;
+		MenuFadeOut();
+	}
 
-		if (menuExit == 2) {
-			DrawCtlScreen();
-			MenuFadeIn();
-		}
+	if (menuExit == 2) {
+		DrawCtlScreen();
+		MenuFadeIn();
 	}
 }
 

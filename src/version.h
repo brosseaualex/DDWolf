@@ -35,7 +35,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-//#define USE_MODERN_CONTROLS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
+#define USE_MODERN_CONTROLS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
 													// Enables modern controls
 
 #define SHOW_ATMOS_OPTIONS						// !!!DELETE CONFIG.WL6 AFTER CHANGING!!!
