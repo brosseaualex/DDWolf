@@ -96,7 +96,7 @@ void VWB_DrawPic(int x, int y, int chunknum)
     width = pictable[picnum].width;
     height = pictable[picnum].height;
 
-    VL_MemToScreen(grsegs[chunknum], width, height, x + scalingOffsetX, y + scalingOffsetY);
+    VL_MemToScreen(grsegs[chunknum], width, height, x + scaleOffsetX, y + scaleOffsetY);
 }
 
 void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
@@ -294,7 +294,7 @@ boolean FizzleFade(SDL_Surface *source, int x1, int y1,
             }
 
             // If there is no double buffering, we always use the "first frame" case
-            if (usedoublebuffering)
+            if (doubleBuffering)
                 first = 0;
 
             VL_UnlockSurface(screen);

@@ -1152,7 +1152,7 @@ void WallRefresh(void)
             if ((ytilestep == -1 && yinttile <= ytile) || (ytilestep == 1 && yinttile >= ytile))
                 goto horizentry;
         vertentry:
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
             mapseen[xtile][yinttile] = true;
 #endif
             //
@@ -1359,7 +1359,7 @@ void WallRefresh(void)
                 goto vertentry;
 
         horizentry:
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
             mapseen[xinttile][ytile] = true;
 #endif
             //
@@ -1611,7 +1611,7 @@ void ThreeDRefresh(void)
         if (!tilemap[player->tilex][player->tiley] ||
             tilemap[player->tilex][player->tiley] & BIT_DOOR)
             spotvis[player->tilex][player->tiley] = true; // Detect all sprites over player fix
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
     mapseen[player->tilex][player->tiley] = true;
 #endif
 

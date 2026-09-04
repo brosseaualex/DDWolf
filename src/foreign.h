@@ -45,9 +45,9 @@
 #define STR_MOVEJOY2 "Move joystick to\nlower right and\npress button 1\n"
 #define STR_ESCEXIT "ESC to exit"
 
-#define STR_OP_SND "Sound options"
-#define STR_OP_CTL "Control options"
-#define STR_CUSTOM "Customize controls"
+#define STR_OP_SND "Sound"
+#define STR_OP_CTL "Control"
+#define STR_CUSTOM "Customize"
 
 #define STR_NONE "None"
 #define STR_PC "PC Speaker"
@@ -122,13 +122,13 @@
 #ifdef USE_MODERN_CONTROLS
 #define STR_JOYEN "Controller Enabled"
 
-#define STR_OP_MOUSE "Mouse Config"
-#define STR_OP_KEYBOARD "Keyboard Config"
-#define STR_OP_JOYSTICK "Controller Config"
+#define STR_OP_MOUSE "Mouse"
+#define STR_OP_KEYBOARD "Keyboard"
+#define STR_OP_JOYSTICK "Controller"
 
 #define STR_ALWAYS_RUN "Always Run"
 
-#define STR_MOUSEMOVEMENT "Enable Mouse Y Axis"
+#define STR_MOUSEMOVEMENT "Mouse Y Axis Enabled"
 
 #define STR_ACTION_KEYS "Action Keys"
 #define STR_MOVEMENT_KEYS "Movement Keys"
@@ -147,14 +147,15 @@
 #define STR_JOYEN "Joystick Enabled"
 #endif
 
-#define STR_OP_SCREEN "Screen options"
-#define STR_SCREEN_RESOLUTION "Change Resolution"
-#define STR_SCREEN_RATIO_CORRECTION "Aspect ratio correct."
-#define STR_SCREEN_FULLSCREEN "Fullscreen"
-#define STR_SCREEN_APPLY "Apply"
+#define STR_DISPLAY_TITLE "Display"
+#define STR_DISPLAY_RESOLUTION "Change Resolution"
+#define STR_DISPLAY_VSYNC "VSync"
+#define STR_DISPLAY_FULLSCREEN_EXCLUSIVE "Fullscreen"
+#define STR_DISPLAY_FULLSCREEN_BORDERLESS "Borderless fullscreen"
+#define STR_DISPLAY_APPLY "Apply"
 
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-#define STR_OP_ATMOS "Atmosphere"
+#define STR_ATMOS_TITLE "Atmosphere"
 #define STR_ATMOS_TEXTURED "Textured fl and clg."
 #define STR_ATMOS_SHADING "Shading"
 #define STR_ATMOS_SKYBOX "Skybox"

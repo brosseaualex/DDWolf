@@ -35,7 +35,6 @@
 // configuration variables
 //
 boolean MousePresent;
-boolean forcegrabmouse;
 
 volatile boolean KeyboardState[129];
 
@@ -676,19 +675,17 @@ static void processEvent(SDL_Event* event)
 			// check for keypresses
 		case SDL_KEYDOWN:
 		{
+			SDL_Keymod mod = SDL_GetModState();
+
 			if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
 			{
 				GrabInput = !GrabInput;
-	#if SDL_MAJOR_VERSION == 1
-				SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-	#else
 				SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
-	#endif
 				return;
 			}
 
 			LastScan = event->key.keysym.sym;
-			SDL_Keymod mod = SDL_GetModState();
+			
 			if (Keyboard(sc_Alt))
 			{
 				if (LastScan == SDLK_F4)
@@ -845,15 +842,7 @@ void IN_Startup(void)
 
 	SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
-	if (fullscreen || forcegrabmouse)
-	{
-		GrabInput = true;
-#if SDL_MAJOR_VERSION == 1
-		SDL_WM_GrabInput(SDL_GRAB_ON);
-#else
-		SDL_SetRelativeMouseMode(SDL_TRUE);
-#endif
-	}
+	IN_MouseGrab();
 
 	// I didn't find a way to ask libSDL whether a mouse is present, yet...
 	MousePresent = true;
@@ -997,6 +986,7 @@ void IN_StartAck(void)
 	int i;
 
 	IN_ProcessEvents();
+
 	//
 	// get initial state of everything
 	//
@@ -1127,4 +1117,17 @@ void IN_CenterMouse()
 #if SDL_MAJOR_VERSION == 1
 	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
 #endif
+}
+
+void IN_MouseGrab(void)
+{
+	if (!window)
+		return;
+
+	GrabInput = true;
+
+	SDL_ShowCursor(SDL_DISABLE);
+
+	SDL_SetWindowGrab(window, SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }

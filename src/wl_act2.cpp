@@ -3700,7 +3700,7 @@ void A_StartDeathCam(objtype *ob)
         return;
     }
 
-    if (usedoublebuffering)
+    if (doubleBuffering)
         VW_UpdateScreen();
 
     gamestate.victoryflag = true;
@@ -3728,7 +3728,7 @@ void A_StartDeathCam(objtype *ob)
     }
 
     VW_UpdateScreen();
-    if (usedoublebuffering)
+    if (doubleBuffering)
         VW_UpdateScreen();
 
     IN_UserInput(300);

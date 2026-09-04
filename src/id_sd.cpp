@@ -913,6 +913,8 @@ void SD_Startup(void)
     if (SD_Started)
         return;
 
+    memset(SoundChunks, 0, sizeof(SoundChunks));
+
     if (Mix_OpenAudioDevice(param_samplerate, AUDIO_S16, 2, param_audiobuffer, NULL, NULL))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
@@ -923,7 +925,6 @@ void SD_Startup(void)
     Mix_GroupChannels(2, MIX_CHANNELS - 1, 1); // group remaining channels
 
     // Init music
-
     samplesPerMusicTick = param_samplerate / 700; // SDL_t0FastAsmService played at 700Hz
 
     if (YM3812Init(1, 3579545, param_samplerate))
@@ -935,7 +936,6 @@ void SD_Startup(void)
         YM3812Write(oplChip, i, 0);
 
     YM3812Write(oplChip, 1, 0x20); // Set WSE=1
-                                   //    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
 
     Mix_HookMusic(SDL_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
@@ -968,19 +968,35 @@ void SD_Shutdown(void)
     if (!SD_Started)
         return;
 
+    SD_Started = false;
+
+    Mix_SetPostMix(NULL, NULL);
+    Mix_HookMusic(NULL, NULL);
+    Mix_ChannelFinished(NULL);
+
+    Mix_HaltChannel(-1);
+    Mix_HaltMusic();
+
     SD_MusicOff();
     SD_StopSound();
 
-    for (i = 0; i < STARTMUSIC - STARTDIGISOUNDS; i++)
+    int numChunks = STARTMUSIC - STARTDIGISOUNDS;
+    for (i = 0; i < numChunks; i++)
     {
-        if (SoundChunks[i])
+        if (SoundChunks[i] != NULL)
+        {
             Mix_FreeChunk(SoundChunks[i]);
+            SoundChunks[i] = NULL;
+        }
     }
 
-    free(DigiList);
-    DigiList = NULL;
+    if (DigiList != NULL)
+    {
+        free(DigiList);
+        DigiList = NULL;
+    }
 
-    SD_Started = false;
+    Mix_CloseAudio();
 }
 
 ///////////////////////////////////////////////////////////////////////////

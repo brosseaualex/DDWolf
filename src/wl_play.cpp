@@ -41,7 +41,7 @@ int extravbls;
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
 bool spotvis[MAPSIZE][MAPSIZE];
 objtype* actorat[MAPSIZE][MAPSIZE];
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
 bool mapseen[MAPSIZE][MAPSIZE];
 #endif
 
@@ -978,7 +978,7 @@ void CheckKeys(void)
 	}
 #endif
 
-#ifdef VIEWMAP
+#ifdef OVERHEAD_MAP
 	if (Keyboard(sc_O))
 	{
 		ViewMap();

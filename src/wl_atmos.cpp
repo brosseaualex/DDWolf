@@ -343,12 +343,9 @@ void DrawRain(void)
         if (actheight < wallThresh && height < wallheight[xx])
             continue;
 
-        if (xx >= 0 && xx < viewwidth && (yy - (streakSize * 2)) > 0 && yy < viewheight)
+        if (xx >= 0 && xx < viewwidth && (yy - (streakSize * 3)) >= 0 && yy < viewheight)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-            //
-            // Find the rain's tile coordinate
-            //
             prestep = centerx - xx + 1;
             basedist = FixedDiv(scale, (height >> 3) + 1) >> 1;
             stepscale = basedist / scale;
@@ -359,33 +356,37 @@ void DrawRain(void)
             xfrac = (viewx + FixedMul(basedist, viewcos)) - (xstep * prestep);
             yfrac = -(viewy - FixedMul(basedist, viewsin)) - (ystep * prestep);
 
-            tilex = (xfrac >> TILESHIFT) & (mapwidth - 1);
-            tiley = ~(yfrac >> TILESHIFT) & (mapheight - 1);
+            int calcTileX = (xfrac >> TILESHIFT);
+            int calcTileY = (~yfrac >> TILESHIFT);
 
-            //
-            // Is there a ceiling tile?
-            //
-            if (MAPSPOT(tilex, tiley, 2) >> 8)
-                continue;
+            if (calcTileX >= 0 && calcTileX < mapwidth && calcTileY >= 0 && calcTileY < mapheight)
+            {
+                tilex = (byte)calcTileX;
+                tiley = (byte)calcTileY;
+
+                if (MAPSPOT(tilex, tiley, 2) >> 8)
+                    continue;
+            }
 #endif
 
             for (int s = 0; s < streakSize; s++)
             {
-                if (yy - s > 0 && yy - s < viewheight)
-                    vbuf[ylookup[yy - s] + xx] = shade + 15;
+                int ypos = yy - s;
+                if (ypos >= 0 && ypos < viewheight)
+                    vbuf[ylookup[ypos] + xx] = shade + 15;
             }
 
             for (int s = 0; s < streakSize; s++)
             {
                 int ypos = yy - streakSize - s;
-                if (ypos > 0 && ypos < viewheight)
+                if (ypos >= 0 && ypos < viewheight)
                     vbuf[ylookup[ypos] + xx] = shade + 16;
             }
 
             for (int s = 0; s < streakSize; s++)
             {
                 int ypos = yy - (streakSize * 2) - s;
-                if (ypos > 0 && ypos < viewheight)
+                if (ypos >= 0 && ypos < viewheight)
                     vbuf[ylookup[ypos] + xx] = shade + 17;
             }
         }
@@ -468,12 +469,10 @@ void DrawSnow(void)
             continue;
 
         int maxOffset = (shade < 10) ? (snowflakeSize * 2) : snowflakeSize;
+
         if (xx >= maxOffset && xx < viewwidth - maxOffset && yy >= maxOffset && yy < viewheight - maxOffset)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
-            //
-            // Find the snow's tile coordinate
-            //
             prestep = centerx - xx + 1;
             basedist = FixedDiv(scale, (height >> 3) + 1) >> 1;
             stepscale = basedist / scale;
@@ -484,14 +483,17 @@ void DrawSnow(void)
             xfrac = (viewx + FixedMul(basedist, viewcos)) - (xstep * prestep);
             yfrac = -(viewy - FixedMul(basedist, viewsin)) - (ystep * prestep);
 
-            tilex = (xfrac >> TILESHIFT) & (mapwidth - 1);
-            tiley = ~(yfrac >> TILESHIFT) & (mapheight - 1);
+            int calcTileX = (xfrac >> TILESHIFT);
+            int calcTileY = (~yfrac >> TILESHIFT);
 
-            //
-            // Is there a ceiling tile?
-            //
-            if (MAPSPOT(tilex, tiley, 2) >> 8)
-                continue;
+            if (calcTileX >= 0 && calcTileX < mapwidth && calcTileY >= 0 && calcTileY < mapheight)
+            {
+                tilex = (byte)calcTileX;
+                tiley = (byte)calcTileY;
+
+                if (MAPSPOT(tilex, tiley, 2) >> 8)
+                    continue;
+            }
 #endif
 
             if (shade < 10)
@@ -500,10 +502,19 @@ void DrawSnow(void)
                 {
                     for (int dx = 0; dx < snowflakeSize; dx++)
                     {
-                        vbuf[ylookup[yy - dy] + (xx - dx)] = shade + 17;
-                        vbuf[ylookup[yy - dy] + (xx - snowflakeSize - dx)] = shade + 16;
-                        vbuf[ylookup[yy - snowflakeSize - dy] + (xx - dx)] = shade + 16;
-                        vbuf[ylookup[yy - snowflakeSize - dy] + (xx - snowflakeSize - dx)] = shade + 15;
+                        int y1 = yy - dy;
+                        int y2 = yy - snowflakeSize - dy;
+                        int x1 = xx - dx;
+                        int x2 = xx - snowflakeSize - dx;
+
+                        if (y1 >= 0 && y1 < viewheight && y2 >= 0 && y2 < viewheight &&
+                            x1 >= 0 && x1 < viewwidth && x2 >= 0 && x2 < viewwidth)
+                        {
+                            vbuf[ylookup[y1] + x1] = shade + 17;
+                            vbuf[ylookup[y1] + x2] = shade + 16;
+                            vbuf[ylookup[y2] + x1] = shade + 16;
+                            vbuf[ylookup[y2] + x2] = shade + 15;
+                        }
                     }
                 }
             }
@@ -513,7 +524,13 @@ void DrawSnow(void)
                 {
                     for (int dx = 0; dx < snowflakeSize; dx++)
                     {
-                        vbuf[ylookup[yy - dy] + (xx - dx)] = shade + 15;
+                        int y1 = yy - dy;
+                        int x1 = xx - dx;
+
+                        if (y1 >= 0 && y1 < viewheight && x1 >= 0 && x1 < viewwidth)
+                        {
+                            vbuf[ylookup[y1] + x1] = shade + 15;
+                        }
                     }
                 }
             }

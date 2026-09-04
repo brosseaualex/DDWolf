@@ -150,6 +150,14 @@ void ReadConfig(void)
 			close(file);
 			goto noconfig;
 		}
+
+		read(file, &screenResW, sizeof(screenResW));
+		read(file, &screenResH, sizeof(screenResH));
+
+		read(file, &fullscreen, sizeof(fullscreen));
+		read(file, &borderless, sizeof(borderless));
+		read(file, &enablevsync, sizeof(enablevsync));
+
 		read(file, Scores, sizeof(HighScore) * MaxScores);
 
 		read(file, &sd, sizeof(sd));
@@ -245,9 +253,18 @@ void ReadConfig(void)
 			mouseadjustment = 9;
 
 		if (viewsize < 4)
-			viewsize = 4;
+			viewsize = 19;
 		else if (viewsize > 21)
 			viewsize = 21;
+
+		if (fullscreen)
+			fullscreen = true;
+
+		if (borderless)
+			borderless = true;
+
+		if (enablevsync)
+			enablevsync = true;
 
 #ifdef VIEASM
 		if (soundvol > 100) soundvol = 100;
@@ -346,6 +363,44 @@ void ReadConfig(void)
 /*
 ====================
 =
+= ReadResolutionConfig
+=
+====================
+*/
+
+void ReadDisplayConfig(void)
+{
+	char configpath[300];
+
+	if (configdir[0])
+		snprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
+	else
+		strcpy(configpath, configname);
+
+	const int file = open(configpath, O_RDONLY | O_BINARY);
+	if (file == -1)
+		return;
+
+	word tmp;
+	if (read(file, &tmp, sizeof(tmp)) != sizeof(tmp) || tmp != 0xfefa)
+	{
+		close(file);
+		return;
+	}
+
+	read(file, &screenResW, sizeof(screenResW));
+	read(file, &screenResH, sizeof(screenResH));
+
+	read(file, &fullscreen, sizeof(fullscreen));
+	read(file, &borderless, sizeof(borderless));
+	read(file, &enablevsync, sizeof(enablevsync));
+
+	close(file);
+}
+
+/*
+====================
+=
 = WriteConfig
 =
 ====================
@@ -365,6 +420,14 @@ void WriteConfig(void)
 	{
 		word tmp = 0xfefa;
 		write(file, &tmp, sizeof(tmp));
+
+		write(file, &screenResW, sizeof(screenResW));
+		write(file, &screenResH, sizeof(screenResH));
+
+		write(file, &fullscreen, sizeof(fullscreen));
+		write(file, &borderless, sizeof(borderless));
+		write(file, &enablevsync, sizeof(enablevsync));
+
 		write(file, Scores, sizeof(HighScore) * MaxScores);
 
 		write(file, &SoundMode, sizeof(SoundMode));
@@ -454,7 +517,7 @@ void DiskFlopAnim(int x, int y)
 	if (!x && !y)
 		return;
 	VWB_DrawPic(x, y, C_DISKLOADING1PIC + which);
-	if (!usedoublebuffering)
+	if (!doubleBuffering)
 		VW_UpdateScreen(); // ADDEDFIX 4 - Chris
 	which ^= 1;
 }
@@ -502,7 +565,7 @@ boolean SaveTheGame(FILE* file, int x, int y)
 	DiskFlopAnim(x, y);
 	fwrite(tilemap, sizeof(tilemap), 1, file);
 	checksum = DoChecksum((byte*)tilemap, sizeof(tilemap), checksum);
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
 	DiskFlopAnim(x, y);
 	fwrite(mapseen, sizeof(mapseen), 1, file);
 	checksum = DoChecksum((byte*)mapseen, sizeof(mapseen), checksum);
@@ -626,7 +689,7 @@ boolean LoadTheGame(FILE* file, int x, int y)
 	DiskFlopAnim(x, y);
 	fread(tilemap, sizeof(tilemap), 1, file);
 	checksum = DoChecksum((byte*)tilemap, sizeof(tilemap), checksum);
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
 	DiskFlopAnim(x, y);
 	fread(mapseen, sizeof(mapseen), 1, file);
 	checksum = DoChecksum((byte*)mapseen, sizeof(mapseen), checksum);
@@ -852,31 +915,29 @@ void CalcProjection(int32_t focal)
 	double facedist;
 
 	focallength = focal;
-	facedist = focal + MINDIST;
-	halfview = viewwidth / 2; // half view in pixels
+	facedist = (double)focal + MINDIST;
+	halfview = viewwidth / 2;
 
-	//
-	// calculate scale value for vertical height calculations
-	// and sprite x calculations
-	//
-	scale = (fixed)(halfview * facedist / (VIEWGLOBAL / 2));
+	if (pixelangle)
+	{
+		free(pixelangle);
+		pixelangle = NULL;
+	}
 
-	//
-	// divide heightnumerator by a posts distance to get the posts height for
-	// the heightbuffer.  The pixel height is height>>2
-	//
-	heightnumerator = (TILEGLOBAL * scale) >> 6;
+	pixelangle = (short*)malloc(viewwidth * sizeof(short));
+	if (!pixelangle)
+		return;
 
-	//
-	// calculate the angle offset from view angle of each pixel's ray
-	//
+	scale = (fixed)(halfview * facedist) / (VIEWGLOBAL / 2.0);
+
+	heightnumerator = (fixed)((double)TILEGLOBAL * (double)scale) / 64.0;
 
 	for (i = 0; i < halfview; i++)
 	{
-		// start 1/2 pixel over, so viewangle bisects two middle pixels
-		tang = (int32_t)i * VIEWGLOBAL / viewwidth / facedist;
+		tang = ((double)i + 0.5) * (double)VIEWGLOBAL / (double)viewwidth / facedist;
 		angle = (float)atan(tang);
 		intang = (int)(angle * radtoint);
+
 		pixelangle[halfview - 1 - i] = intang;
 		pixelangle[halfview + i] = -intang;
 	}
@@ -922,7 +983,7 @@ void SignonScreen(void) // VGA version
 {
 	VL_SetVGAPlaneMode();
 
-	VL_MemToScreen(signon, MaxX, MaxY, scalingOffsetX, scalingOffsetY);
+	VL_MemToScreen(signon, MaxX, MaxY, scaleOffsetX, scaleOffsetY);
 }
 
 /*
@@ -937,10 +998,10 @@ void FinishSignon(void)
 {
 #ifndef SPEAR
 
-	VW_Bar(scalingOffsetX, 189 + scalingOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
-	WindowX = scalingOffsetX;
+	VW_Bar(scaleOffsetX, 189 + scaleOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
+	WindowX = scaleOffsetX;
 	WindowW = 320;
-	PrintY = 190 + scalingOffsetY;
+	PrintY = 190 + scaleOffsetY;
 
 #ifndef JAPAN
 	SETFONTCOLOR(14, 4);
@@ -959,9 +1020,9 @@ void FinishSignon(void)
 		IN_Ack();
 
 #ifndef JAPAN
-	VW_Bar(scalingOffsetX, 189 + scalingOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
+	VW_Bar(scaleOffsetX, 189 + scaleOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
 
-	PrintY = 190 + scalingOffsetY;
+	PrintY = 190 + scaleOffsetY;
 	SETFONTCOLOR(10, 4);
 
 #ifdef SPANISH
@@ -1236,7 +1297,7 @@ void DoJukebox(void)
 	SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
 	PrintY = 15;
 	WindowX = 0;
-	WindowY = originalScreenWidth;
+	WindowY = ORIGINAL_SCREEN_WIDTH;
 	US_CPrint("Robert's Jukebox");
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
@@ -1264,8 +1325,6 @@ void DoJukebox(void)
 }
 #endif
 #endif // !VIEASM
-
-
 
 /*
 ==========================
@@ -1360,10 +1419,10 @@ static void InitGame()
 	else
 #endif
 
-	//
-	// draw intro screen stuff
-	//
-	IntroScreen();
+		//
+		// draw intro screen stuff
+		//
+		IntroScreen();
 
 	//
 	// load in and lock down some basic chunks
@@ -1421,12 +1480,12 @@ boolean SetViewSize(unsigned width, unsigned height)
 	else
 	{
 		msgPrintX = ratioPrintX = (screenWidth - viewwidth) / (scaleFactor << 1) + 2;
-		msgPrintY = ((screenHeight - (scaleFactor * STATUSLINES) - viewheight) / (scaleFactor << 1)) + 2;
+		msgPrintY = (screenHeight - (scaleFactor * STATUSLINES) - viewheight) / (scaleFactor << 1) + 2;
 
 		timerPrintX = (screenWidth + viewwidth) / (scaleFactor << 1) - 36;
-		timerPrintY = ((screenHeight - (scaleFactor * STATUSLINES) - viewheight) / (scaleFactor << 1)) + 1;
+		timerPrintY = (screenHeight - (scaleFactor * STATUSLINES) - viewheight) / (scaleFactor << 1) + 1;
 
-		ratioPrintY = ((screenHeight - (scaleFactor * STATUSLINES) + viewheight) / (scaleFactor << 1)) - 10;
+		ratioPrintY = (screenHeight - (scaleFactor * STATUSLINES) + viewheight) / (scaleFactor << 1) - 10;
 	}
 
 	if ((unsigned)viewheight == screenHeight)
@@ -1467,8 +1526,8 @@ void ShowViewSize(int width)
 	}
 	else
 	{
-		viewwidth = width * 16 * screenWidth / originalScreenWidth;
-		viewheight = (int)(width * 16 * HEIGHTRATIO * screenHeight / originalScreenHeight);
+		viewwidth = width * 16 * screenWidth / ORIGINAL_SCREEN_WIDTH;
+		viewheight = (int)(width * 16 * HEIGHTRATIO * screenHeight / ORIGINAL_SCREEN_HEIGHT);
 		DrawPlayBorder();
 	}
 
@@ -1478,13 +1537,25 @@ void ShowViewSize(int width)
 
 void NewViewSize(int width)
 {
+	if (width <= 0 || width > 21)
+		width = 19;
+
 	viewsize = width;
+
 	if (viewsize == 21)
 		SetViewSize(screenWidth, screenHeight);
 	else if (viewsize == 20)
-		SetViewSize(screenWidth, screenHeight - scaleFactor * STATUSLINES);
+		SetViewSize(screenWidth, screenHeight - (scaleFactor * STATUSLINES));
 	else
-		SetViewSize(width * 16 * screenWidth / originalScreenWidth, (unsigned)(width * 16 * HEIGHTRATIO * screenHeight / originalScreenHeight));
+	{
+		int targetW = (width * 16 * screenWidth) / ORIGINAL_SCREEN_WIDTH;
+		int targetH = (int)(width * 16 * HEIGHTRATIO * screenHeight) / ORIGINAL_SCREEN_HEIGHT;
+
+		if (targetW < 64) targetW = 64;
+		if (targetH < 40) targetH = 40;
+
+		SetViewSize(targetW, targetH);
+	}
 }
 
 //===========================================================================
@@ -1703,7 +1774,7 @@ static void DemoLoop()
 			if (playstate == ex_abort)
 				break;
 			VW_FadeOut();
-			if (screenHeight % originalScreenHeight != 0)
+			if (screenHeight % ORIGINAL_SCREEN_HEIGHT != 0)
 				VL_ClearScreen(0);
 			StartCPMusic(INTROSONG);
 		}
@@ -1770,50 +1841,6 @@ param_difficulty = 0;
 			else
 				param_tedlevel = atoi(argv[i]);
 				}
-		else IFARG("--windowed")
-			fullscreen = false;
-		else IFARG("--windowed-mouse")
-		{
-			fullscreen = false;
-			forcegrabmouse = true;
-		}
-		else IFARG("--disablehdres")
-			disablehdres = true;
-		else IFARG("--disableratiofix")
-			disableratiofix = true;
-		else IFARG("--res")
-		{
-			if (i + 2 >= argc)
-			{
-				printf("The res option needs the width and/or the height argument!\n");
-				hasError = true;
-			}
-			else
-			{
-				screenWidth = atoi(argv[++i]);
-				screenHeight = atoi(argv[++i]);
-				unsigned factor = screenWidth / originalScreenWidth;
-				if (screenWidth % originalScreenWidth || screenHeight != originalScreenHeight * factor && screenHeight != 240 * factor)
-					printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
-			}
-			}
-		else IFARG("--resf")
-		{
-			if (i + 2 >= argc)
-			{
-				printf("The resf option needs the width and/or the height argument!\n");
-				hasError = true;
-			}
-			else
-			{
-				screenWidth = atoi(argv[++i]);
-				screenHeight = atoi(argv[++i]);
-				if (screenWidth < originalScreenWidth)
-					printf("Screen width must be at least 320!\n"), hasError = true;
-				if (screenHeight < originalScreenHeight)
-					printf("Screen height must be at least 200!\n"), hasError = true;
-			}
-			}
 		else IFARG("--bits")
 		{
 			if (++i >= argc)
@@ -1840,7 +1867,7 @@ param_difficulty = 0;
 			}
 			}
 		else IFARG("--nodblbuf")
-			usedoublebuffering = false;
+			doubleBuffering = false;
 		else IFARG("--extravbls")
 		{
 			if (++i >= argc)
@@ -1959,10 +1986,10 @@ param_difficulty = 0;
 		if (hasError)
 			printf("\n");
 		printf(
-			"Wolf4SDL v2.1\n"
-			"Ported by Chaos-Software, additions by the community\n"
+			"DDWolf - By DemolitionDerby - Based on Wolf4SDL\n"
+			"Original Wolf4SDL by Chaos-Software, additions by the community\n"
 			"Original Wolfenstein 3D by id Software\n\n"
-			"Usage: Wolf4SDL [options]\n"
+			"Usage: DDWolf [options]\n"
 			"Options:\n"
 			" --help                 This help page\n"
 			" --tedlevel <level>     Starts the game in the given level\n"
@@ -1971,18 +1998,10 @@ param_difficulty = 0;
 			" --normal               Sets the difficulty to normal for tedlevel\n"
 			" --hard                 Sets the difficulty to hard for tedlevel\n"
 			" --nowait               Skips intro screens\n"
-			" --windowed[-mouse]     Starts the game in a window [and grabs mouse]\n"
-			" --disablehdres		 Disables resolution detection \n"
-			" 						 (Only works in fullscreen) \n"
-			" --disableratiofix		 Disables the 4:3 aspect ratio correction"
 #ifdef VIEASM
 			" --nosound				 Turns off sound\n"
 			" --8bitsound			 Sets the sound to 8 bits (default 16 bits)\n"
 #endif
-			" --res <width> <height> Sets the screen resolution\n"
-			"                        (must be multiple of 320x200 or 320x240)\n"
-			" --resf <w> <h>         Sets any screen resolution >= 320x200\n"
-			"                        (which may result in graphic errors)\n"
 			" --bits <b>             Sets the screen color depth\n"
 			"                        (use this when you have palette/fading problems\n"
 			"                        allowed: 8, 16, 24, 32, default: \"best\" depth)\n"

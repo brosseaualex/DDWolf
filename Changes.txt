@@ -1,3 +1,40 @@
+DDWolf v1.3.0
+ [Added]
+	- Display resolution & options menu
+		- Can now change the resolution directly in game.
+		- Resolution change keeps aspect ratio in every display mode.
+		- Enable/Disable Fullscreen (exclusive & windowed mode).
+		- Enable/Disable VSync
+	- Atmosphere options menu
+		- Meant to be used by mod makers if they use certain feature flags
+			and want to allow players to have control over the options.
+				- Enable/Disable Textured floors & ceilings.
+				- Enable/Disable Shading.
+				- Enable/Disable Skybox (clouds, sky, etc...).
+				- Enable/Disable Precipitation (rain, snow).
+ [Changed]
+	- Improved scaling of Star Sky.
+	- Mouse input is now always grabbed when starting game.
+		- Mouse input was specifically not taken when starting game in windowed mode.
+			- Not an issue anymore since alt-tabbing issues are resolved.
+ [Fixed]
+	- Fixed scaling issues with Rain/Snow at higher resolutions.
+	- Fixed scaling issues on a few screens (intermission & end game).
+	- Fixed some compilation issues when using certain flags.
+	- Fixed alt-tabbing out of game.
+		- Game would fight (and win) for focus when trying to alt-tab.
+			- The game lost.
+
+ [Removed]
+	- Removed a few command line arguments that are now redundant/useless
+		- '--windowed'
+		- '--res'
+		- '--resx'
+		- '--disableratiofix'
+		- '--disablehdres'
+			- These settings can now be changed in the game menu and if
+				your settings ever break, delete config.wl6 and restart the game
+
 DDWolf v1.2.0
  [Fixed]
 	- Scaling issue in AlumiuN's Advanced Sound Manager menu.

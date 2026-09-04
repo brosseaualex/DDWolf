@@ -806,7 +806,7 @@ int DebugKeys(void)
 =============================================================================
 */
 
-#ifdef VIEWMAP
+#ifdef OVERHEAD_MAP
 
 #define COL_FLOOR 0x19   // empty area color
 #define COL_SECRET WHITE // pushwall color
@@ -991,7 +991,7 @@ void OverheadRefresh(void)
         {
             sx = (x - maporgx) * tilesize;
             sy = (y - maporgy) * tilesize;
-#ifdef REVEALMAP
+#ifdef OVERHEAD_HIDE_UNSEEN
             if (!mapseen[x][y] && !mapreveal)
             {
                 DrawMapFloor(sx, sy, BLACK);
