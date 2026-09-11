@@ -24,7 +24,11 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 // Initialization stuff
 
 #include "vieasm.h"                    // Duh.
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 const char *ASM_Verstring = "v0.9.1 Beta";  // Version string
 
