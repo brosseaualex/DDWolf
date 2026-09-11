@@ -36,7 +36,6 @@ objtype objlist[MAXACTORS];
 objtype* newobj, * obj, * player, * lastobj, * objfreelist, * killerobj;
 
 boolean singlestep, godmode, noclip, ammocheat, mapreveal;
-int extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
 bool spotvis[MAPSIZE][MAPSIZE];
@@ -1554,8 +1553,6 @@ void PlayLoop(void)
 			VW_WaitVBL(singlestep);
 			lasttimecount = GetTimeCount();
 		}
-		if (extravbls)
-			VW_WaitVBL(extravbls);
 
 		if (demoplayback)
 		{

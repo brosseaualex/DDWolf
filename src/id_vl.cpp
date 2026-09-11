@@ -28,7 +28,6 @@ Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 boolean fullscreen = true;
 boolean borderless = true;
 boolean enablevsync = true;
-boolean doubleBuffering = true;
 
 const unsigned ORIGINAL_SCREEN_WIDTH = 320;
 const unsigned ORIGINAL_SCREEN_HEIGHT = 200;
@@ -375,7 +374,7 @@ void VL_FadeOut(int start, int end, int red, int green, int blue, int steps) {
 			newptr++;
 		}
 
-		if (!doubleBuffering || screenBits == 8)
+		if (screenBits == 8)
 			VL_WaitVBL(1);
 		VL_SetPalette(palette2, true);
 	}
@@ -420,8 +419,9 @@ void VL_FadeIn(int start, int end, SDL_Color * palette, int steps) {
 			palette2[j].b = palette1[j].b + delta * i / steps;
 		}
 
-		if (!doubleBuffering || screenBits == 8)
+		if (screenBits == 8)
 			VL_WaitVBL(1);
+
 		VL_SetPalette(palette2, true);
 	}
 

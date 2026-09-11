@@ -8,7 +8,7 @@ DDWolf aims at bringing modern improvements to the Wolf4SDL engine while still p
 
 DDWolf is based on KS-Presto's Wolf4SDL.
 
-KS-Presto's Wolf4SDL is available at: https://github.com/KS-Presto/Wolf4SDL
+KS-Presto's Wolf4SDL is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (BitBucket).
 
 <h2><em>Wolf4SDL</em></h2>
 
@@ -26,10 +26,13 @@ The overall work to get to where we are would not be possible without the follow
 
 <h2><em>DDWolf Main features</em></h2>
 
-* HD Resolution support:
-  - The game will automatically detect your main monitor's resolution and be set accordingly.
-    - No more screen resolution change on launch!
-    - Can still manually specify resolution using launch parameter.
+* HD Resolution & Display menu:
+	- Display resolution & options menu
+  - Supports any resolutions.
+    - Resolution change keeps aspect ratio in every display mode.
+    - Interface/game scales accordingly.
+  - Enable/Disable Fullscreen (exclusive & windowed mode).
+  - Enable/Disable VSync
 * AlumiuN's Advanced Sound Manager:
   - Some modifications by WSJ.
   - No sounds included.
@@ -49,24 +52,23 @@ The overall work to get to where we are would not be possible without the follow
     - B : Strafe (mapped to key but not useful for now with controller)
     - Y : Run
     - X : Open door
-* Aspect ration correction:
-  - Aspect ration is automatically corrected for 4:3.
-    - Can be disabled using a launch parameter.
-* Set of 10 customizable "actions" and menu to assign/remap those buttons:
-  - For modders to add their own actions more easily.
-  - Code changes required to implement custom actions.
 
-<h2><em>DDWolf Additional Feature Flags</em></h2>
+<h2><em>DDWolf Major Feature Flags</em></h2>
 
 ```
-#USE_MODERN_CONTROLS
+#USE_MODERN_CONTROLS                  Modern WASD control scheme.
+
 #VIEASM                               AlumiuN's Advanced Sound Manager
-#SEAMLESSLEVELS                       Disables the Episode selection screen on Wolf3D
-#USE_READTHIS                         Enables help text in the main menu
-#USE_RAND                             Enables the C++ random number generator
-#WSJ_MESSAGE                          WSJ's message feature, shows on-screen messages 
-                                      for pickups, secrets and locked doors
-#SAVE_GAME_SCREENSHOT                 Shows a screenshot in the Save and Load screens
+
+#SHOW_ATMOS_OPTIONS                   Enables a menu that gives the player control over
+                                      what visual options are enabled/disabled at runtime.
+                                      Textured floor & ceiling, Shading, Skybox and Precipitation
+
+#SHOW_CUSTOM_CONTROLS                 Enables a menu with an additional 10 custom actions
+                                      that can be mapped to a keyboard key.
+                                      Custom actions needs to be implemented by modder.
+
+See version.h for all available flags.
 ```
 
 <h2><em>Wolf4SDL Additional features</em></h2>
@@ -88,9 +90,6 @@ The overall work to get to where we are would not be possible without the follow
   - This port includes the OPL2 emulator from MAME, so you can not only hear the AdLib sounds but also music without any AdLib-compatible soundcard in near to perfect quality!
 * Multichannel digitized sounds:
   - Digitized sounds play on 8 channels! So in a fire fight you will always hear, when a guard opens the door behind you ;)
-* Higher screen resolutions:
-  - Aside from the original 320x200 resolution, Wolf4SDL currently supports any resolutions being multiples of 320x200 or 320x240, the default being 640x400.
-  - Unlike some other ports, Wolf4SDL does NOT apply any bilinear or similar filtering, so the graphics are NOT blurred but pixelated just as we love it.
 
 The following versions of Wolfenstein 3D data files are currently supported by the source code (choose the version by commenting/uncommenting lines in version.h as described in that file):
 
@@ -98,7 +97,6 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Wolfenstein 3D v1.1 full Apogee
 - Wolfenstein 3D v1.4 full Apogee
 - Wolfenstein 3D v1.4 full GT/ID/Activision
-- Wolfenstein 3D v1.4 full Imagineer (Japanese)
 - Wolfenstein 3D v1.0 shareware Apogee
 - Wolfenstein 3D v1.1 shareware Apogee
 - Wolfenstein 3D v1.2 shareware Apogee
@@ -121,9 +119,7 @@ Currently supported operating systems :
 - Windows 7 (32 and 64 bits)
 - Windows 10 (32 and 64 bits)
 - Windows 11 (32 and 64 bits)
-- Linux*
-
-*Build system untested.
+- Linux - [Game runs 100%, been tested, but build system might be broken]
 ```
 
 <h2><em>How to play</em></h2>
@@ -132,9 +128,9 @@ Currently supported operating systems :
 
 <p>Please make sure, that you use the correct version of the executable with the according data files version as the differences are hardcoded into the binary!</p>
 
-<p>You also need to have SDL2.dll (2.0.18) and SDL_Mixer.dll (2.0.4) in the same directory as the EXE.</p>
+<p>You also need to have SDL2.dll (2.30.7) and SDL_Mixer.dll (2.8.0) in the same directory as the EXE.</p>
 
-<p>If you play in windowed mode (--windowed parameter), press SCROLLLOCK or F12 to grab the mouse. Press it again to release the mouse.</p>
+<p>If you want to release or grab the mouse, press SCROLLLOCK or F12 to alternate between the two options.</p>
 
 <h2><em>Usage</em></h2>
 
@@ -147,15 +143,8 @@ DDWolf supports the following command line options :
  --normal                         Sets the difficulty to normal for tedlevel
  --hard                           Sets the difficulty to hard for tedlevel
  --nowait                         Skips intro screens
- --windowed[-mouse]               Starts the game in a window [and grabs mouse]
- --disablehdres                   Disables resolution detection, only works in fullscreen
- --disableratiofix                Disables the 4:3 aspect ratio correction
- --res <width> <height>           Sets the screen resolution (must be multiple of 320x200 or 320x240)
- --resf <w> <h>                   Sets any screen resolution >= 320x200 (which may result in graphic errors)
  --bits <b>                       Sets the screen color depth (Use this when you have palette/fading problem or perhaps to optimize speed on old systems.)
                                   Allowed: 8, 16, 24, 32, default: "best" depth.
- --nodblbuf                       Don't use SDL's double buffering
- --extravbls <vbls>               Sets a delay after each frame, which may help to reduce flickering (SDL does not support vsync...)
                                   (unit is currently 8 ms, default: 0)
  --joystick <index>               Use the index-th joystick if available
  --joystickhat <index>            Enables movement with the given coolie hat
@@ -226,16 +215,18 @@ Do not forget to take care of version.h!
 
 By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
 
-If _CONFIG.WL6_ exists while you switch between the 'USE_MODERN_CONTROLS' flag, **_you have to delete the file so the game can re-create it._**
+**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time the flag is changed._**
 
-**_There will be issues with controls if this step is not done._**
+Those flags are explicitely tagged in version.h
+
+**_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
 
 <h2><em>Troubleshooting</em></h2>
 
-- Issues with controls after flag change
+- Crash on startup or issues with controls after flag change
   - Delete CONFIG.WL6
 - Low frame rate
-  - Consider using the original screen resolution (--res 320 200) or lowering the sound quality (--samplerate 22050)
+  - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
 
 <h2><em>Credits</em></h2>
 

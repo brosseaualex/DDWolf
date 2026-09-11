@@ -1469,7 +1469,6 @@ extern objtype *actorat[MAPSIZE][MAPSIZE];
 extern bool mapseen[MAPSIZE][MAPSIZE];
 #endif
 extern boolean singlestep, godmode, noclip, ammocheat, mapreveal;
-extern int extravbls;
 
 extern word mapwidth, mapheight;
 extern unsigned tics;

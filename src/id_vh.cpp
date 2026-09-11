@@ -289,10 +289,6 @@ boolean FizzleFade(SDL_Surface *source, int x1, int y1,
                     lastrndval = rndval;
             }
 
-            // If there is no double buffering, we always use the "first frame" case
-            if (doubleBuffering)
-                first = 0;
-
             VL_UnlockSurface(screen);
 
             Present(screen);

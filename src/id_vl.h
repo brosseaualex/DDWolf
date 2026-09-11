@@ -25,7 +25,7 @@ extern SDL_Renderer* renderer;
 extern SDL_Texture* texture;
 extern SDL_Rect* displayBounds;
 
-extern boolean fullscreen, borderless, doubleBuffering, enablevsync;
+extern boolean fullscreen, borderless, enablevsync;
 extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
 extern unsigned screenWidth, screenHeight, rescaledWidth, rescaledHeight, screenPitch, bufferPitch;
 
