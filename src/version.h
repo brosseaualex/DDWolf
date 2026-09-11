@@ -33,7 +33,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-//#define USE_MODERN_CONTROLS						// Enables modern controls
+#define USE_MODERN_CONTROLS						// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
 //#define SHOW_ATMOS_OPTIONS						// Enables options to enable/disable atmosphere at runtime

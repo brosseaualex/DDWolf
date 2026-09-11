@@ -26,14 +26,19 @@ DDWolf v1.3.0
 			- The game lost.
 
  [Removed]
-	- Removed a few command line arguments that are now redundant/useless
+	- Removed support for Spanish and Japanese language.
+		- I am unable to maintain those languages.
+			This is just dead code so I have decided to remove it.
+		- If anyone ever wants to support a translation, in any language,
+			I will be happy to help re-implementing what is required for it :)
+	- Removed a few command line arguments that are now redundant/useless.
 		- '--windowed'
 		- '--res'
 		- '--resx'
 		- '--disableratiofix'
 		- '--disablehdres'
 			- These settings can now be changed in the game menu and if
-				your settings ever break, delete config.wl6 and restart the game
+				your settings ever break, delete config.wl6 and restart the game.
 
 DDWolf v1.2.0
  [Fixed]
