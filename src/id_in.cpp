@@ -65,12 +65,7 @@ int JoyNumButtons;
 static int JoyNumHats;
 #endif
 
-
-
-static bool GrabInput = false;
-
-
-
+static bool GrabInput = true;
 
 /*
 =============================================================================
@@ -426,19 +421,19 @@ static int INL_GetMouseButtons(void)
 	if (rightPressed)
 		buttons |= 1 << 1;
 
-//#ifdef USE_MODERN_CONTROLS
-//	if (rightPressed)
-//		printf("\nMouse Right Pressed");
-//
-//	if (middlePressed)
-//		printf("\nMouse Middle Pressed");
-//
-//	if (mouse4Pressed)
-//		printf("\nMouse 4 Pressed");
-//
-//	if (mouse5Pressed)
-//		printf("\nMouse 5 Pressed");
-//#endif
+	//#ifdef USE_MODERN_CONTROLS
+	//	if (rightPressed)
+	//		printf("\nMouse Right Pressed");
+	//
+	//	if (middlePressed)
+	//		printf("\nMouse Middle Pressed");
+	//
+	//	if (mouse4Pressed)
+	//		printf("\nMouse 4 Pressed");
+	//
+	//	if (mouse5Pressed)
+	//		printf("\nMouse 5 Pressed");
+	//#endif
 	return buttons;
 }
 
@@ -665,118 +660,119 @@ static void processEvent(SDL_Event* event)
 {
 	switch (event->type)
 	{
-			// exit if the window is closed
-		case SDL_QUIT:
-			Quit(NULL);
+		// exit if the window is closed
+	case SDL_QUIT:
+		Quit(NULL);
 
-			// check for keypresses
-		case SDL_KEYDOWN:
+		// check for keypresses
+	case SDL_KEYDOWN:
+	{
+		SDL_Keymod mod = SDL_GetModState();
+
+		if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
 		{
-			SDL_Keymod mod = SDL_GetModState();
-
-			if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
-			{
-				GrabInput = !GrabInput;
-				SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
-				return;
-			}
-
-			LastScan = event->key.keysym.sym;
-			
-			if (Keyboard(sc_Alt))
-			{
-				if (LastScan == SDLK_F4)
-					Quit(NULL);
-			}
-
-			if (LastScan == SDLK_KP_ENTER)
-				LastScan = SDLK_RETURN;
-			else if (LastScan == SDLK_RSHIFT)
-				LastScan = SDLK_LSHIFT;
-			else if (LastScan == SDLK_RALT)
-				LastScan = SDLK_LALT;
-			else if (LastScan == SDLK_RCTRL)
-				LastScan = SDLK_LCTRL;
-			else
-			{
-				if ((mod & KMOD_NUM) == 0)
-				{
-					switch (LastScan)
-					{
-					case SDLK_KP_2:
-						LastScan = SDLK_DOWN;
-						break;
-					case SDLK_KP_4:
-						LastScan = SDLK_LEFT;
-						break;
-					case SDLK_KP_6:
-						LastScan = SDLK_RIGHT;
-						break;
-					case SDLK_KP_8:
-						LastScan = SDLK_UP;
-						break;
-					}
-				}
-			}
-
-			int sym = LastScan;
-			if (sym >= 'a' && sym <= 'z')
-				sym -= 32; // convert to uppercase
-
-			if (mod & (KMOD_SHIFT | KMOD_CAPS))
-			{
-				if (sym < lengthof(ShiftNames) && ShiftNames[sym])
-					LastASCII = ShiftNames[sym];
-			}
-			else
-			{
-				if (sym < lengthof(ASCIINames) && ASCIINames[sym])
-					LastASCII = ASCIINames[sym];
-			}
-
-			int intLastScan = LastScan;
-			KeyboardSet(intLastScan, 1);
-
-			if (LastScan == SDLK_PAUSE)
-				Paused = true;
-			break;
+			GrabInput = !GrabInput;
+			SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
+			SDL_ShowCursor(GrabInput ? SDL_FALSE : SDL_TRUE);
+			return;
 		}
 
-		case SDL_KEYUP:
+		LastScan = event->key.keysym.sym;
+
+		if (Keyboard(sc_Alt))
 		{
-			int key = event->key.keysym.sym;
-			if (key == SDLK_KP_ENTER)
-				key = SDLK_RETURN;
-			else if (key == SDLK_RSHIFT)
-				key = SDLK_LSHIFT;
-			else if (key == SDLK_RALT)
-				key = SDLK_LALT;
-			else if (key == SDLK_RCTRL)
-				key = SDLK_LCTRL;
-			else
+			if (LastScan == SDLK_F4)
+				Quit(NULL);
+		}
+
+		if (LastScan == SDLK_KP_ENTER)
+			LastScan = SDLK_RETURN;
+		else if (LastScan == SDLK_RSHIFT)
+			LastScan = SDLK_LSHIFT;
+		else if (LastScan == SDLK_RALT)
+			LastScan = SDLK_LALT;
+		else if (LastScan == SDLK_RCTRL)
+			LastScan = SDLK_LCTRL;
+		else
+		{
+			if ((mod & KMOD_NUM) == 0)
 			{
-				if ((SDL_GetModState() & KMOD_NUM) == 0)
+				switch (LastScan)
 				{
-					switch (key)
-					{
-					case SDLK_KP_2:
-						key = SDLK_DOWN;
-						break;
-					case SDLK_KP_4:
-						key = SDLK_LEFT;
-						break;
-					case SDLK_KP_6:
-						key = SDLK_RIGHT;
-						break;
-					case SDLK_KP_8:
-						key = SDLK_UP;
-						break;
-					}
+				case SDLK_KP_2:
+					LastScan = SDLK_DOWN;
+					break;
+				case SDLK_KP_4:
+					LastScan = SDLK_LEFT;
+					break;
+				case SDLK_KP_6:
+					LastScan = SDLK_RIGHT;
+					break;
+				case SDLK_KP_8:
+					LastScan = SDLK_UP;
+					break;
 				}
 			}
-
-			KeyboardSet(key, 0);
 		}
+
+		int sym = LastScan;
+		if (sym >= 'a' && sym <= 'z')
+			sym -= 32; // convert to uppercase
+
+		if (mod & (KMOD_SHIFT | KMOD_CAPS))
+		{
+			if (sym < lengthof(ShiftNames) && ShiftNames[sym])
+				LastASCII = ShiftNames[sym];
+		}
+		else
+		{
+			if (sym < lengthof(ASCIINames) && ASCIINames[sym])
+				LastASCII = ASCIINames[sym];
+		}
+
+		int intLastScan = LastScan;
+		KeyboardSet(intLastScan, 1);
+
+		if (LastScan == SDLK_PAUSE)
+			Paused = true;
+		break;
+	}
+
+	case SDL_KEYUP:
+	{
+		int key = event->key.keysym.sym;
+		if (key == SDLK_KP_ENTER)
+			key = SDLK_RETURN;
+		else if (key == SDLK_RSHIFT)
+			key = SDLK_LSHIFT;
+		else if (key == SDLK_RALT)
+			key = SDLK_LALT;
+		else if (key == SDLK_RCTRL)
+			key = SDLK_LCTRL;
+		else
+		{
+			if ((SDL_GetModState() & KMOD_NUM) == 0)
+			{
+				switch (key)
+				{
+				case SDLK_KP_2:
+					key = SDLK_DOWN;
+					break;
+				case SDLK_KP_4:
+					key = SDLK_LEFT;
+					break;
+				case SDLK_KP_6:
+					key = SDLK_RIGHT;
+					break;
+				case SDLK_KP_8:
+					key = SDLK_UP;
+					break;
+				}
+			}
+		}
+
+		KeyboardSet(key, 0);
+	}
 	}
 }
 
@@ -812,7 +808,7 @@ void IN_Startup(void)
 		return;
 
 	IN_ClearKeysDown();
-	
+
 #ifdef USE_MODERN_CONTROLS
 	GameControllerNumHats = SDL_JoystickNumHats(Joystick);
 	GameController = SDL_GameControllerOpen(param_joystickindex);
@@ -820,7 +816,7 @@ void IN_Startup(void)
 	if (GameControllerNumHats > 0) {
 		printf("\nGame Controller hats (D-Pad) found!\n");
 	}
-		
+
 #else
 	if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
 	{
@@ -1122,7 +1118,5 @@ void IN_MouseGrab(void)
 	GrabInput = true;
 
 	SDL_ShowCursor(SDL_DISABLE);
-
-	SDL_SetWindowGrab(window, SDL_TRUE);
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 }

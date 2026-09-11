@@ -33,15 +33,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS						// Enables modern controls
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
-
-//#define SHOW_ATMOS_OPTIONS						// Enables options to enable/disable atmosphere at runtime
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
-													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
-													
-
-//#define SHOW_CUSTOM_CONTROLS						// #USE_MODERN_CONTROLS REQUIRED
+#define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
 //#define VIEASM									// AlumiuN's Advanced Sound Manager
@@ -88,6 +80,18 @@
 													// (actually better, as the second demo rarely worked)
 
 //#define USE_GPL									// Replaces the MAME OPL emulator by the DosBox one, which is under a GPL license
+
+/*#########################*/
+/*###### EXTRA MENUS ######*/
+/*#########################*/
+//#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
+													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
+
+#ifdef USE_MODERN_CONTROLS
+//#define SHOW_CUSTOM_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Custom actions needs to be implemented by modder.
+#endif
 
 /*###################*/
 /*###### FIXES ######*/

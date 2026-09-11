@@ -12,14 +12,18 @@ DDWolf v1.3.0
 				- Enable/Disable Shading.
 				- Enable/Disable Skybox (clouds, sky, etc...).
 				- Enable/Disable Precipitation (rain, snow).
+
  [Changed]
 	- Improved scaling of Star Sky.
 	- Mouse input is now always grabbed when starting game.
 		- Mouse input was specifically not taken when starting game in windowed mode.
 			- Not an issue anymore since alt-tabbing issues are resolved.
+				- Press SCROLL LOCK or F12 to release/grab mouse in game.
+
  [Fixed]
 	- Fixed scaling issues with Rain/Snow at higher resolutions.
 	- Fixed scaling issues on a few screens (intermission & end game).
+	- Fixed leaking rain/snow through ceilings.
 	- Fixed some compilation issues when using certain flags.
 	- Fixed alt-tabbing out of game.
 		- Game would fight (and win) for focus when trying to alt-tab.
@@ -32,6 +36,11 @@ DDWolf v1.3.0
 		- If anyone ever wants to support a translation, in any language,
 			I will be happy to help re-implementing what is required for it :)
 	- Removed a few command line arguments that are now redundant/useless.
+		- 'doubleBuffering' - Old remnants of SDL1, SDL2 has double buffering,
+			you cannot even turn it off.
+		- 'extravbls' - Old remnants of SDL1, seems to have been used in
+			case where VSync would help. SDL2 has VSync, you can turn in
+			ON/OFF in Display menu.
 		- '--windowed'
 		- '--res'
 		- '--resx'
@@ -40,7 +49,7 @@ DDWolf v1.3.0
 			- These settings can now be changed in the game menu and if
 				your settings ever break, delete config.wl6 and restart the game.
 
-DDWolf v1.2.0
+DDWolf v1.2.0 (Sep 7, 2024)
  [Fixed]
 	- Scaling issue in AlumiuN's Advanced Sound Manager menu.
 	- SafeMalloc cast (Thanks kalnaren).
@@ -54,10 +63,10 @@ DDWolf v1.2.0
 	- Removed GP2X and Dreamcast support.
 		- Unable to provide support for those platforms.
 
-DDWolf v1.1.1
+DDWolf v1.1.1 (Mar 31, 2024)
  - Fixed issue with control mapping order.
 
-DDWolf v1.1.0
+DDWolf v1.1.0 (Mar 30, 2024)
  - HD Resolution support
 	- The game will automatically detect your main monitor's resolution and be set accordingly.
 	- No more screen resolution change on launch!

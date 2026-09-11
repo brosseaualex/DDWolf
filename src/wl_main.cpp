@@ -521,8 +521,7 @@ void DiskFlopAnim(int x, int y)
 	if (!x && !y)
 		return;
 	VWB_DrawPic(x, y, C_DISKLOADING1PIC + which);
-	if (!doubleBuffering)
-		VW_UpdateScreen(); // ADDEDFIX 4 - Chris
+	VW_UpdateScreen(); // ADDEDFIX 4 - Chris
 	which ^= 1;
 }
 
@@ -1849,25 +1848,6 @@ param_difficulty = 0;
 				}
 			}
 			}
-		else IFARG("--nodblbuf")
-			doubleBuffering = false;
-		else IFARG("--extravbls")
-		{
-			if (++i >= argc)
-			{
-				printf("The extravbls option is missing the vbls argument!\n");
-				hasError = true;
-			}
-			else
-			{
-				extravbls = atoi(argv[i]);
-				if (extravbls < 0)
-				{
-					printf("Extravbls must be positive!\n");
-					hasError = true;
-				}
-			}
-			}
 		else IFARG("--joystick")
 		{
 			if (++i >= argc)
@@ -1988,9 +1968,6 @@ param_difficulty = 0;
 			" --bits <b>             Sets the screen color depth\n"
 			"                        (use this when you have palette/fading problems\n"
 			"                        allowed: 8, 16, 24, 32, default: \"best\" depth)\n"
-			" --nodblbuf             Don't use SDL's double buffering\n"
-			" --extravbls <vbls>     Sets a delay after each frame, which may help to\n"
-			"                        reduce flickering (unit is currently 8 ms, default: 0)\n"
 			" --joystick <index>     Use the index-th joystick if available\n"
 			"                        (-1 to disable joystick, default: 0)\n"
 			" --joystickhat <index>  Enables movement with the given coolie hat\n"
