@@ -18,9 +18,6 @@
 //
 
 #include "wl_def.h"
-#if SDL_MAJOR_VERSION == 1
-#include "SDL_keysym.h"
-#endif
 /*
 =============================================================================
 
@@ -1114,9 +1111,7 @@ bool IN_IsInputGrabbed()
 
 void IN_CenterMouse()
 {
-#if SDL_MAJOR_VERSION == 1
-	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
-#endif
+	//Only code that was here was for SDL1
 }
 
 void IN_MouseGrab(void)
