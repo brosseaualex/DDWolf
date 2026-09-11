@@ -1455,27 +1455,9 @@ restartgame:
                 ClearMemory();
 
                 CheckHighScore(gamestate.score, gamestate.mapon + 1);
-#ifndef JAPAN
+
                 strcpy(MainMenu[viewscores].string, STR_VS);
-#endif
-                MainMenu[viewscores].routine = CP_ViewScores;
-                return;
-            }
-#endif
 
-#ifdef JAPDEMO
-            if (gamestate.mapon == 3)
-            {
-                died = true; // don't "get psyched!"
-
-                VW_FadeOut();
-
-                ClearMemory();
-
-                CheckHighScore(gamestate.score, gamestate.mapon + 1);
-#ifndef JAPAN
-                strcpy(MainMenu[viewscores].string, STR_VS);
-#endif
                 MainMenu[viewscores].routine = CP_ViewScores;
                 return;
             }
@@ -1549,9 +1531,9 @@ restartgame:
             ClearMemory();
 
             CheckHighScore(gamestate.score, gamestate.mapon + 1);
-#ifndef JAPAN
+
             strcpy(MainMenu[viewscores].string, STR_VS);
-#endif
+
             MainMenu[viewscores].routine = CP_ViewScores;
             return;
 
@@ -1570,9 +1552,9 @@ restartgame:
             ClearMemory();
 
             CheckHighScore(gamestate.score, gamestate.mapon + 1);
-#ifndef JAPAN
+
             strcpy(MainMenu[viewscores].string, STR_VS);
-#endif
+
             MainMenu[viewscores].routine = CP_ViewScores;
             return;
 

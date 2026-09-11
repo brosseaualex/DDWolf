@@ -51,9 +51,6 @@
     <ClInclude Include="src\gfxv_apo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gfxv_jap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\gfxv_sod.h">
       <Filter>Header Files</Filter>
     </ClInclude>

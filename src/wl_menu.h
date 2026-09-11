@@ -83,11 +83,8 @@
 #define SM_H3   3*13-7
 #endif
 
-#ifdef JAPAN
-#define CTL_Y 70
-#else
 #define CTL_Y 72
-#endif
+
 #ifdef USE_MODERN_CONTROLS
 #define CTL_X 38
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
@@ -103,11 +100,7 @@
 #endif
 
 #define OPT_X 94
-#ifdef JAPAN
-#define OPT_Y 70
-#else
 #define OPT_Y 86
-#endif
 #define OPT_W 142
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)

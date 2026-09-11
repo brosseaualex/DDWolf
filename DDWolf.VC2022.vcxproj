@@ -183,7 +183,6 @@
     <ClInclude Include="src\foreign.h" />
     <ClInclude Include="src\f_spear.h" />
     <ClInclude Include="src\gfxv_apo.h" />
-    <ClInclude Include="src\gfxv_jap.h" />
     <ClInclude Include="src\gfxv_sod.h" />
     <ClInclude Include="src\gfxv_wl6.h" />
     <ClInclude Include="src\id_ca.h" />

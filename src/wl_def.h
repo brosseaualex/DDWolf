@@ -40,15 +40,10 @@
 #ifdef UPLOAD
 #include "gfxv_apo.h"
 #else
-#ifdef JAPAN
-#include "gfxv_jap.h"
-#else
 #ifdef GOODTIMES
 #include "gfxv_wl6.h"
 #else
 #include "gfxv_apo.h"
-
-#endif
 #endif
 #endif
 #else
