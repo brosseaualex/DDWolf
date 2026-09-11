@@ -20,12 +20,10 @@ extern SDL_DisplayMode displayMode;
 extern SDL_Surface *lastGameSurface;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
-extern SDL_Window *window;
-extern SDL_Renderer *renderer;
-extern SDL_Texture *texture;
-extern SDL_Rect *displayBounds;
-#endif
+extern SDL_Window* window;
+extern SDL_Renderer* renderer;
+extern SDL_Texture* texture;
+extern SDL_Rect* displayBounds;
 
 extern boolean fullscreen, borderless, doubleBuffering, enablevsync;
 extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;

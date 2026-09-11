@@ -5809,14 +5809,9 @@ void ReadAnyControl(ControlInfo* ci)
 	if (mouseenabled && IN_IsInputGrabbed())
 	{
 		int mousex, mousey, buttons;
-#if SDL_MAJOR_VERSION == 1
-		buttons = SDL_GetMouseState(&mousex, &mousey);
-		mousex -= screenWidth / 2;
-		mousey -= screenHeight / 2;
-		IN_CenterMouse();
-#else
+
 		buttons = SDL_GetRelativeMouseState(&mousex, &mousey);
-#endif
+
 		int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 		int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
 		buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));

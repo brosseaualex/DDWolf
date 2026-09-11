@@ -74,11 +74,7 @@ void VW_MeasurePropString(const char *string, word *width, word *height)
 void VH_UpdateScreen(SDL_Surface *surface)
 {
     SDL_BlitSurface(surface, NULL, screen, NULL);
-#if SDL_MAJOR_VERSION == 1
-    SDL_Flip(screen);
-#else
     Present(screen);
-#endif
 }
 
 void VWB_DrawTile8(int x, int y, int tile)
@@ -298,11 +294,8 @@ boolean FizzleFade(SDL_Surface *source, int x1, int y1,
                 first = 0;
 
             VL_UnlockSurface(screen);
-#if SDL_MAJOR_VERSION == 1
-            SDL_Flip(screen);
-#else
+
             Present(screen);
-#endif
         }
         else
         {

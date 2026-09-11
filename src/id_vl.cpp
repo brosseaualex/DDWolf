@@ -68,11 +68,9 @@ unsigned bufferPitch;
 SDL_Surface* lastGameSurface = NULL;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Texture* texture = NULL;
-#endif
 
 boolean screenfaded;
 unsigned bordercolor;
@@ -110,11 +108,9 @@ CASSERT(lengthof(gamepal) == 256)
 
 void VL_Shutdown(void) {
 	SDL_FreeSurface(screenBuffer);
-#if SDL_MAJOR_VERSION == 2
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_DestroyTexture(texture);
-#endif
 
 	free(ylookup);
 	free(pixelangle);
@@ -263,15 +259,6 @@ void VL_SetColor(int color, int red, int green, int blue) {
 	curpal[color] = col;
 
 	if (screenBits == 8)
-#if SDL_MAJOR_VERSION == 1
-		SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
-	else
-	{
-		SDL_SetPalette(screenBuffer, SDL_LOGPAL, &col, color, 1);
-		SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-		SDL_Flip(screen);
-#else
 		SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
 	else {
 		SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
@@ -281,7 +268,6 @@ void VL_SetColor(int color, int red, int green, int blue) {
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 		SDL_DestroyTexture(texture);
-#endif
 	}
 }
 
@@ -316,17 +302,6 @@ void VL_SetPalette(SDL_Color * palette, bool forceupdate) {
 	memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
 	if (screenBits == 8)
-#if SDL_MAJOR_VERSION == 1
-		SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
-	else
-	{
-		SDL_SetPalette(screenBuffer, SDL_LOGPAL, palette, 0, 256);
-		if (forceupdate)
-		{
-			SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-
-			SDL_Flip(screen);
-#else
 		SDL_SetPaletteColors(screen->format->palette, palette, 0, 256);
 	else {
 		SDL_SetPaletteColors(screenBuffer->format->palette, palette, 0, 256);
@@ -334,7 +309,6 @@ void VL_SetPalette(SDL_Color * palette, bool forceupdate) {
 			SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 
 			Present(screen);
-#endif
 		}
 	}
 }
