@@ -18,7 +18,6 @@
 	Wolf3d Full v1.1 Apogee (with ReadThis)			- define CARMACIZED and APOGEE_1_1
 	Wolf3d Full v1.4 Apogee (with ReadThis)			- define CARMACIZED
 	Wolf3d Full v1.4 GT/ID/Activision				- define CARMACIZED and GOODTIMES
-	Wolf3d Full v1.4 Imagineer (Japanese)			- define CARMACIZED and JAPAN
 	Wolf3d Shareware v1.0							- define UPLOAD and APOGEE_1_0
 	Wolf3d Shareware v1.1							- define CARMACIZED and UPLOAD and APOGEE_1_1
 	Wolf3d Shareware v1.2							- define CARMACIZED and UPLOAD and APOGEE_1_2
@@ -34,7 +33,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS						// Enables modern controls
+//#define USE_MODERN_CONTROLS						// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
 //#define SHOW_ATMOS_OPTIONS						// Enables options to enable/disable atmosphere at runtime
@@ -57,7 +56,7 @@
 //#define USE_SHADING								// Enables shading support (see wl_shade.c)
 //#define USE_PARALLAX 16							// Enables parallax sky with 16 textures per sky (see wl_parallax.c)
 //#define USE_SKYWALLPARALLAX 16					// Enables parallax sky on walls with 16 repeats of sky texture
-//#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
+#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
 //#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
 //#define USE_RAIN									// Enables rain support (see wl_atmos.c)
 //#define USE_SNOW									// Enables snow support (see wl_atmos.c)

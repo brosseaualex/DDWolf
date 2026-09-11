@@ -3718,13 +3718,7 @@ void A_StartDeathCam(objtype *ob)
     }
     else
     {
-#ifdef JAPAN
-#ifndef JAPDEMO
-        VWB_DrawPic(0, 0, C_LETSSEEPIC);
-#endif
-#else
         Write(0, 7, STR_SEEAGAIN);
-#endif
     }
 
     VW_UpdateScreen();
