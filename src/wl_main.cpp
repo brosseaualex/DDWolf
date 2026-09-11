@@ -9,7 +9,11 @@
 #include "wl_def.h"
 #pragma hdrstop
 #include "wl_atmos.h"
+#ifdef __linux__
+#include <SDL2/SDL_syswm.h>
+#else
 #include <SDL_syswm.h>
+#endif
 
 /*
 =============================================================================

@@ -28,7 +28,11 @@
 //
 
 #include "wl_def.h"
+#ifdef __linux__
+#include <SDL2/SDL_mixer.h>
+#else
 #include <SDL_mixer.h>
+#endif
 #ifdef USE_GPL
 #include "dosbox/dbopl.h"
 #else
