@@ -52,9 +52,9 @@
 #define MENU_W 178
 #ifndef USE_MODERN_CONTROLS
 #ifdef USE_READTHIS
-#define MENU_H 13 * 10 + 6
+#define MENU_H 13 * 8 + 6
 #else
-#define MENU_H 13 * 9 + 6
+#define MENU_H 13 * 7 + 6
 #endif
 #else
 #ifdef USE_READTHIS
@@ -88,36 +88,45 @@
 #ifdef USE_MODERN_CONTROLS
 #define CTL_X 38
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-#define CTL_H 114
+#define CTL_H 13 * 8 + 8
 #else
-#define CTL_H 100
+#define CTL_H 13 * 7 + 8
 #endif
 #define CTL_W 250
 #else
 #define CTL_X 24
-#define CTL_H 60
+#define CTL_H 13 * 4 + 8
 #define CTL_W 284
 #endif
 
-#define OPT_X 94
+#define OPT_X 90
 #define OPT_Y 86
-#define OPT_W 142
-
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 72
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 60
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 34
+#define OPT_W 152
+#ifdef SHOW_ATMOS_OPTIONS
+#define OPT_H 13 * 5 + 8
 #else
-#define OPT_H 34
+#define OPT_H 13 * 4 + 8
 #endif
+
+//#ifdef USE_MODERN_CONTROLS
+//#ifdef SHOW_ATMOS_OPTIONS
+//#define OPT_H 72
+//#else
+//#define OPT_H 60	
+//#endif
+//#else
+//#ifdef  SHOW_ATMOS_OPTIONS
+//#define OPT_H 48
+//#else
+//#define OPT_H 36
+//#endif
+//#endif
 
 #ifdef SHOW_ATMOS_OPTIONS
 #define ATMOS_X 46
 #define ATMOS_Y 84
 #define ATMOS_W 244
-#define ATMOS_H 60
+#define ATMOS_H 13 * 4 + 8
 #endif
 
 #ifndef SAVE_GAME_SCREENSHOT
@@ -144,12 +153,12 @@
 #define DISPLAY_CTL_X 34
 #define DISPLAY_CTL_Y 86
 #define DISPLAY_CTL_W 262
-#define DISPLAY_CTL_H 88
+#define DISPLAY_CTL_H 13 * 6 + 8
 
 #define RES_MENU_X 44
 #define RES_MENU_Y 55
 #define RES_MENU_W 250
-#define RES_MENU_H 138
+#define RES_MENU_H 13 * 10 + 8
 
 #define NM_X 50
 #define NM_Y 100
@@ -176,7 +185,7 @@
 #define OPT_MOUSE_X 26
 #define OPT_MOUSE_Y 72
 #define OPT_MOUSE_W 284
-#define OPT_MOUSE_H 100
+#define OPT_MOUSE_H 13 * 7 + 8
 
 #define OPT_KB_MOVE_KEYS_X 190
 #define OPT_KB_MOVE_KEYS_Y 65
@@ -184,17 +193,17 @@
 #define OPT_KEYBOARD_MOVE_X 41
 #define OPT_KEYBOARD_MOVE_Y 61
 #define OPT_KEYBOARD_MOVE_W 250
-#define OPT_KEYBOARD_MOVE_H 112
+#define OPT_KEYBOARD_MOVE_H 13 * 8 + 8
 
 #define OPT_KEYBOARD_ACTION_X 41
 #define OPT_KEYBOARD_ACTION_Y 72
 #define OPT_KEYBOARD_ACTION_W 250
-#define OPT_KEYBOARD_ACTION_H 112
+#define OPT_KEYBOARD_ACTION_H 13 * 7 + 8
 
 #define OPT_KEYBOARD_MORE_ACTION_X 41
 #define OPT_KEYBOARD_MORE_ACTION_Y 60
 #define OPT_KEYBOARD_MORE_ACTION_W 250
-#define OPT_KEYBOARD_MORE_ACTION_H 126
+#define OPT_KEYBOARD_MORE_ACTION_H 13 * 8 + 8
 
 #define OPT_KEYBOARD_MORE_ACTION_TEXT_X 200
 #define OPT_KEYBOARD_MORE_ACTION_TEXT_Y 60
@@ -205,7 +214,7 @@
 #define CUS_CTL_X 26
 #define CUS_CTL_Y 50
 #define CUS_CTL_W 280
-#define CUS_CTL_H 138
+#define CUS_CTL_H 13 * 10 + 8
 
 #define CUS_CTL_TEXT_X 25
 #define CUS_CTL_TEXT_Y 55
@@ -253,7 +262,7 @@ typedef struct
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
-//Resolution typedef
+// Resolution typedef
 typedef struct {
 	int width;
 	int height;
@@ -397,14 +406,14 @@ void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
-//Resolution helper functions
+// Resolution helper functions
 void AddResIfMissing(int w, int h);
 void InitResList(int);
 void BuildResMenuItems(void);
 bool IsDisplayChanged(void);
 void RevertDisplay(void);
 
-//Resolution screens
+// Resolution screens
 int CP_Resolution(int);
 int CP_Display(int);
 
@@ -426,18 +435,9 @@ enum
 enum menuitems
 {
 	newgame,
-#ifndef USE_MODERN_CONTROLS
-	soundmenu,
-	control,
-#endif
 	loadgame,
 	savegame,
-#ifndef USE_MODERN_CONTROLS
-	changeview,
-#else
 	options,
-#endif
-
 #ifdef USE_READTHIS
 	readthis,
 #endif

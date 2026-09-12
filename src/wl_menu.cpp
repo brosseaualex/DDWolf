@@ -62,35 +62,10 @@ char endStrings[9][80] = {
 	ENDSTR9 };
 
 CP_itemtype MainMenu[] = {
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
 	{1, STR_NG, CP_NewGame},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-	{1, STR_NG, CP_NewGame},
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_OP, CP_Options},
-#else
-	{1, STR_NG, CP_NewGame},
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_CV, CP_ChangeView},
-#endif
-#else
-	{1, STR_NG, CP_NewGame},
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_OP, CP_Options},
-#endif
 #ifdef USE_READTHIS
 	{2, "Read This!", CP_ReadThis},
 #endif
@@ -232,13 +207,13 @@ enum
 #endif
 
 CP_itemtype CtlMenu[] = {
-	{ 0, STR_MOUSEEN, 0 },
+	{0, STR_MOUSEEN, 0},
 #ifndef USE_MODERN_CONTROLS
 	{0, STR_SENS, MouseSensitivity},
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{ 0, STR_JOYEN, 0 },
+	{0, STR_JOYEN, 0},
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -393,6 +368,16 @@ CP_itemtype DisplayMenu[] = {
 	{1, STR_DISPLAY_APPLY, 0}
 };
 
+CP_itemtype OptMenu[] = {
+	{1, STR_DISPLAY_TITLE, CP_Display},
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
+	{1, STR_ATMOS_TITLE, CP_Atmos},
+#endif
+	{1, STR_CV, CP_ChangeView},
+};
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 CP_itemtype AtmosOptMenu[] = {
 	{1, STR_ATMOS_TEXTURED, 0},
@@ -402,24 +387,9 @@ CP_itemtype AtmosOptMenu[] = {
 };
 #endif
 
-CP_itemtype OptMenu[] = {
-#if defined(USE_MODERN_CONTROLS)
-	{1, STR_DISPLAY_TITLE, CP_Display},
-	{1, STR_OP_SND, CP_Sound},
-	{1, STR_OP_CTL, CP_Control},
-#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-{1, STR_ATMOS_TITLE, CP_Atmos},
-#endif
-	{1, STR_CV, CP_ChangeView},
-#else
-	{1, STR_DISPLAY_TITLE, CP_Display},
-	{1, STR_CV, CP_ChangeView},
-#endif
-};
-
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
-OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 24 },
+OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 26 },
 DisplayItems = { DISPLAY_CTL_X, DISPLAY_CTL_Y, lengthof(DisplayMenu), 0, 54 },
 ResItems = { RES_MENU_X, RES_MENU_Y, lengthof(ResMenu), 0, 32 },
 
@@ -818,6 +788,7 @@ int CP_Resolution(int blank)
 
 				if (targetResIdx < numResolutions && targetResIdx != activeResIdx)
 				{
+					VW_FadeOut();
 					IN_ClearKeysDown();
 
 					VL_SetDisplayResolution(DynamicResolutions[targetResIdx].width, DynamicResolutions[targetResIdx].height);
@@ -826,7 +797,7 @@ int CP_Resolution(int blank)
 					selectedResIdx = targetResIdx;
 
 					DrawResolutionMenu();
-					VW_UpdateScreen();
+					//VW_UpdateScreen();
 				}
 			}
 
@@ -848,12 +819,12 @@ int CP_Resolution(int blank)
 void DrawMainMenu(void)
 {
 	ClearMScreen();
-
-	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
 	VWB_DrawPic(84, -scaleOffsetY, C_OPTIONSPIC);
-
+	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(MENU_X - 8, MENU_Y - 3, MENU_W, MENU_H, BKGDCOLOR);
+
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 	//
 	// CHANGE "GAME" AND "DEMO"
@@ -1296,7 +1267,7 @@ void DrawNewGame(void)
 
 	PrintX += scaleOffsetX;
 	PrintY += scaleOffsetY;
-	
+
 	US_Print("How tough are you?");
 
 	DrawWindow(NM_X - 5, NM_Y - 10, NM_W, NM_H, BKGDCOLOR);
@@ -4116,7 +4087,7 @@ void DrawKeyboardActionCtlScreen(void)
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H - 13, BKGDCOLOR);
+	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardActionItems);
 
 	DrawMenu(&CusKeyboardActionItems, CtlKeyboardActionMenu);
@@ -4171,7 +4142,7 @@ void DrawKeyboardMoreActionCtlScreen(void)
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	DrawWindow(OPT_KEYBOARD_MORE_ACTION_X - 8, OPT_KEYBOARD_MORE_ACTION_Y - 5, OPT_KEYBOARD_MORE_ACTION_W, OPT_KEYBOARD_MORE_ACTION_H - 13, BKGDCOLOR);
+	DrawWindow(OPT_KEYBOARD_MORE_ACTION_X - 8, OPT_KEYBOARD_MORE_ACTION_Y - 5, OPT_KEYBOARD_MORE_ACTION_W, OPT_KEYBOARD_MORE_ACTION_H, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardMoreActionItems);
 
 	DrawMenu(&CusKeyboardMoreActionItems, CtlKeyboardMoreActionMenu);
@@ -4196,7 +4167,6 @@ void DrawKeyboardMoreActionCtlScreen(void)
 }
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-
 ////////////////////////
 //
 // DRAW CUSTOM CONTROLS SCREEN
@@ -5084,7 +5054,7 @@ void ClearMScreen(void)
 #ifndef SPEAR
 	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
 #else
-	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, 0);
+	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
 	VWB_DrawPic(0, 0, C_BACKDROPPIC);
 #endif
 }
@@ -6353,8 +6323,8 @@ void DrawStripes(int y)
 	VWB_Bar(0, y, rescaledWidth, 24, 0);
 	VWB_Hlin(0, rescaledWidth - 1, y + 22, STRIPE);
 #else
-	VWB_Bar(0, y, 320, 22, 0);
-	VWB_Hlin(0, 319, y + 23, 0);
+	VWB_Bar(0, y, rescaledWidth, 22, 0);
+	VWB_Hlin(0, rescaledWidth - 1, y + 23, 0);
 #endif
 }
 
@@ -6446,9 +6416,9 @@ void CheckForEpisodes(void)
 		}
 	}
 
-//
-// ENGLISH
-//
+	//
+	// ENGLISH
+	//
 #ifdef UPLOAD
 	if (!stat("vswap.wl1", &statbuf))
 		strcpy(extension, "wl1");
