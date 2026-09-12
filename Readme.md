@@ -4,25 +4,25 @@
 
 <h1 align="center"><!--<em>Wolf3D Redux</em>--></h1>
 
-Wolf3D Redux (originally named DDWolf) aims at bringing modern improvements to the Wolf4SDL engine while still preserving the game as pure and close to the original as possible.
+***Wolf3D Redux*** (originally named ***DDWolf***) aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
 
-Please look at the bottom of this page for credits and special thanks!
+Please look at the **bottom** of this page for **credits and special thanks!**
 
 <h2><em>Main features</em></h2>
 
-* HD resolution support & Display menu:
-	- Display resolution & options menu
+* HD resolution support & Display menu
+	- Display resolution & options menu.
   - Supports any resolutions.
     - Resolution change keeps aspect ratio in every display mode.
     - Interface/game scales accordingly.
   - Enable/Disable Fullscreen (exclusive & windowed mode).
-  - Enable/Disable VSync
-* Modern control scheme:
+  - Enable/Disable VSync.
+* Modern control scheme
   - WASD controls.
   - Can disable mouse Y axis.
   - #MODERN_CONTROL flag in version.h to enable or disable.
     - Original control scheme available.
-* Better controller support:
+* Better controller support
   - Left analog stick : Move/Strafe
   - Right analog stick : Rotate
   - Left / Right shoulders : Previous and Next weapon
@@ -32,7 +32,7 @@ Please look at the bottom of this page for credits and special thanks!
     - B : Strafe (mapped to key but not useful for now with controller)
     - Y : Run
     - X : Open door
-* AlumiuN's Advanced Sound Manager:
+* AlumiuN's Advanced Sound Manager
   - Some modifications by WSJ.
   - No sounds included.
   - Disabled by default.
@@ -55,8 +55,9 @@ Please look at the bottom of this page for credits and special thanks!
 See version.h for all available flags.
 ```
 
-The following versions of Wolfenstein 3D data files are currently supported by the source code (choose the version by commenting/uncommenting lines in version.h as described in that file):
+<h2><em>Wolfenstein 3D data files support</em></h2>
 
+The following versions of Wolfenstein 3D data files are currently supported by the source code (choose the version by commenting/uncommenting lines in version.h as described in that file)
 ```
 - Wolfenstein 3D v1.1 full Apogee
 - Wolfenstein 3D v1.4 full Apogee
@@ -73,7 +74,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 
 <h2><em>Operating system support</em></h2>
 
-Currently supported operating systems : 
+Currently supported operating systems
 ```
 - Windows 98
 - Windows ME
@@ -88,17 +89,17 @@ Currently supported operating systems :
 
 <h2><em>How to play</em></h2>
 
-<p>To play Wolfenstein 3D with Wolf3D Redux, you just have to copy the original data files (e.g. *.WL6) into the same directory as the Wolf3D Redux executable.</p>
+To play Wolfenstein 3D with Wolf3D Redux, you just have to copy the original data files (e.g. *.WL6) into the same directory as the Wolf3D Redux executable.
 
-<p>Please make sure, that you use the correct version of the executable with the according data files version as the differences are hardcoded into the binary!</p>
+Please make sure, that you use the correct version of the executable with the according data files version as the differences are hardcoded into the binary!
 
-<p>You also need to have SDL2.dll (2.30.7) and SDL_Mixer.dll (2.8.0) in the same directory as the EXE.</p>
+You also need to have SDL2.dll (2.30.7) and SDL_Mixer.dll (2.8.0) in the same directory as the EXE.
 
-<p>If you want to release or grab the mouse, press SCROLLLOCK or F12 to alternate between the two options.</p>
+If you want to release or grab the mouse, press SCROLLLOCK or F12 to alternate between the two options.
 
 <h2><em>Usage</em></h2>
 
-Wolf3D Redux supports the following command line options :
+Wolf3D Redux supports the following command line options
 ```
  --help                           This help page
  --tedlevel <level>               Starts the game in the given level
@@ -115,7 +116,7 @@ Wolf3D Redux supports the following command line options :
  --samplerate <rate>              Sets the sound sample rate (given in Hz)
  --audiobuffer <size>             Sets the size of the audio buffer (-> sound latency, given in bytes)
  --ignorenumchunks                Ignores the number of chunks in VGAHEAD.* (may be useful for some broken mods)
- --configdir <dir>                Directory where config file and save games are stored (Windows default: current directory, others: $HOME/.Wolf3D Redux)
+ --configdir <dir>                Directory where config file and save games are stored (Windows default: current directory, others: $HOME/.Wolf3D-Redux)
 
 = Additional launch parameters =
 
@@ -137,7 +138,7 @@ The current version of the source code is available on GitHub at: https://github
 - C++ Compiler
 - SDL 2 Libraries
 
-**_Preferred methods for compiling the source code:_**
+**_Preferred methods for compiling the source code_**
 
 - Code::Blocks 20.03 - ***Supported***
   - Wolf3D-Redux_x86.cbp (Requires 32-bits compiler)
@@ -209,9 +210,9 @@ The overall work to get to where we are would not be possible without the follow
 
 <h2><em>Base fork</em></h2>
 
-Wolf3D Redux is based on the official Wolf4SDL fork currently maintained by KS-Presto.
+***Wolf3D Redux*** is based on the official ***Wolf4SDL*** fork currently maintained by KS-Presto.
 
-Wolf4SDL is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (Bitbucket).
+***Wolf4SDL*** is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (Bitbucket).
 
 <h2><em>Credits & special thanks</em></h2>
 
