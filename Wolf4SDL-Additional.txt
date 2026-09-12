@@ -1,0 +1,34 @@
+Wolf4SDL Additional features
+
+* High-resolution texture support:
+  - Wolf4SDL supports textures up to 256x256.
+  - See version.h for details.
+* Two additional view sizes:
+  - Wolf4SDL supports one view size using the full width of the screen and
+	showing the status bar, like in Mac-enstein, and one view size filling
+	the whole screen (press TAB to see the status bar).
+* (Nearly) unlimited sound and song lengths:
+  - Mod developers are not restricted to 64kB for digitized sounds
+	and IMF songs anymore, so longer songs and digitized sounds with
+	better quality are possible.
+* Resuming ingame music:
+  - When you come back to the game from the menu or load a save game,
+	the music will be resumed where it was suspended rather than started
+	from the beginning.
+* Freely movable pushwalls: 
+  - Moving pushwalls can be viewed from all sides, allowing mod 
+	developers to place them with fewer restrictions. The player 
+	can also follow the pushwall directly instead of having to wait 
+	until the pushwall has left a whole tile.
+* Optional integrated features for mod developers:
+  - Wolf4SDL already contains the shading, directional 3D sprites, 
+	floor and ceiling textures, high resolution textures/sprites, 
+	parallax sky, cloud sky and outside atmosphere features, which 
+	can be easily activated in version.h.
+* AdLib sounds and music:
+  - This port includes the OPL2 emulator from MAME, so you can not 
+	only hear the AdLib sounds but also music without any AdLib-compatible 
+	soundcard in near to perfect quality!
+* Multichannel digitized sounds:
+  - Digitized sounds play on 8 channels! So in a fire fight you will 
+	always hear, when a guard opens the door behind you ;)
