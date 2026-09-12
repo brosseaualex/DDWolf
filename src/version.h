@@ -36,7 +36,7 @@
 #define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
-//#define VIEASM									// AlumiuN's Advanced Sound Manager
+//#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
 													
 
@@ -84,6 +84,7 @@
 /*#########################*/
 /*###### EXTRA MENUS ######*/
 /*#########################*/
+
 //#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
 													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
