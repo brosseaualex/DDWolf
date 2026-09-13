@@ -218,11 +218,9 @@ Those flags are explicitely tagged in version.h
 - Low frame rate
   - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
 
-<h2><em>Wolf4SDL</em></h2>
-
-<!--<p align="center">
-  <img src="images/wolf4sdl_logo.png" width="120">
-</p>-->
+<p align="center">
+  <img src="images/readme/wolf4sdl.png" width="400">
+</p>
 
 Wolf4SDL is an open-source port of id Software's classic first-person shooter Wolfenstein 3D to the cross-platform multimedia library "Simple DirectMedia Layer (SDL)" (http://www.libsdl.org).
 
