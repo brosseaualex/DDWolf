@@ -94,10 +94,11 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
 {
     if (ASM_IsOpen())       // Device is already open!
         return false;
-#ifdef VERBOSE
+
     int channels;
     Uint16 null;
     SDL_version compile_version;
+#ifdef VERBOSE
 
     printf("----------\n"
            "Vodka-Induced Entertainment Advanced Sound Manager %s\n"
