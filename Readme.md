@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/wolf3d-redux-logo.png" width="400">
+  <img src="images/wolf3d-redux-logo.png" width="600">
 </p>
 
 <h1 align="center"><!--<em>Wolf3D Redux</em>--></h1>
@@ -8,7 +8,9 @@
 
 Please look at the **bottom** of this page for **credits and special thanks!**
 
-<h2><em>Main features</em></h2>
+<p align="center">
+  <img src="images/readme/main-features.png" width="400">
+</p>
 
 * HD resolution support & Display menu
 	- Display resolution & options menu.
@@ -37,7 +39,9 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - No sounds included.
   - Disabled by default.
 
-<h2><em>Major feature flags</em></h2>
+<p align="center">
+  <img src="images/readme/major-feature-flags.png" width="400">
+</p>
 
 ```
 #USE_MODERN_CONTROLS                  Modern WASD control scheme.
@@ -55,7 +59,9 @@ Please look at the **bottom** of this page for **credits and special thanks!**
 See version.h for all available flags.
 ```
 
-<h2><em>Wolfenstein 3D data files support</em></h2>
+<p align="center">
+  <img src="images/readme/data-file-support.png" width="400">
+</p>
 
 The following versions of Wolfenstein 3D data files are currently supported by the source code (choose the version by commenting/uncommenting lines in version.h as described in that file)
 ```
@@ -72,22 +78,27 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Spear of Destiny - Mission 3: Ultimate Challenge
 ```
 
-<h2><em>Operating system support</em></h2>
+<p align="center">
+  <img src="images/readme/os-support.png" width="400">
+</p>
 
-Currently supported operating systems
 ```
-- Windows 98
-- Windows ME
-- Windows 2000
-- Windows XP
+- Windows 98*
+- Windows ME*
+- Windows 2000*
+- Windows XP*ish?
 - Windows Vista (32 and 64 bits)
 - Windows 7 (32 and 64 bits)
 - Windows 10 (32 and 64 bits)
 - Windows 11 (32 and 64 bits)
 - Linux - [Game runs 100%, been tested, but build system might be broken]
+
+* SDL1 support only, which is not supported for the moment, but planned to be reimplemented.
 ```
 
-<h2><em>How to play</em></h2>
+<p align="center">
+  <img src="images/readme/how-to-play.png" width="400">
+</p>
 
 To play Wolfenstein 3D with Wolf3D Redux, you just have to copy the original data files (e.g. *.WL6) into the same directory as the Wolf3D Redux executable.
 
@@ -97,7 +108,9 @@ You also need to have SDL2.dll (2.30.7) and SDL_Mixer.dll (2.8.0) in the same di
 
 If you want to release or grab the mouse, press SCROLLLOCK or F12 to alternate between the two options.
 
-<h2><em>Usage</em></h2>
+<p align="center">
+  <img src="images/readme/usage.png" width="400">
+</p>
 
 Wolf3D Redux supports the following command line options
 ```
@@ -129,7 +142,9 @@ Spear of Destiny
 --goodtimes                       Disable copy protection quiz
 ```
 
-<h2><em>Compiling from source code</em></h2>
+<p align="center">
+  <img src="images/readme/compiling.png" width="400">
+</p>
 
 The current version of the source code is available on GitHub at: https://github.com/brosseaualex/DDWolf
 
@@ -151,19 +166,25 @@ The current version of the source code is available on GitHub at: https://github
 - [CLion] CMakeList (Tested with MingW) - ***No support provided***
 - [Outdated] Makefile (for Linux, BSD variants and MinGW/MSYS) - ***No support provided***
 
-<h2><em>SDL libraries</em></h2>
+<p align="center">
+  <img src="images/readme/sdl_libraries.png" width="400">
+</p>
 
 Batch files that automatically downloads and places the correct SDL2 and SDL2_Mixer libraries in the required folders are included in the repository.
 
 You only need to run the script and open the project you want to use.
 
-<h4>WARNING</h4>
+<p align="center">
+  <img src="images/readme/warning.png" width="400">
+</p>
 
 *This script **DOES NOT WORK** with admin privileges (Run as administrator), make sure to clone the repository somewhere where elevation is **NOT** required.*
 
 *Tested in a directory under 'C:\Users\Username'.*
 
-<h4>Script files</h4>
+<p align="center">
+  <img src="images/readme/script-files.png" width="400">
+</p>
 
 ```
 - _get-libs-mingw.bat (Code::Blocks/MingW libraries)
@@ -174,7 +195,9 @@ The SDL and SDL_Mixer versions used in this project are the following :
 - SDL2 2.30.7 (https://www.libsdl.org/release/)
 - SDL2_mixer 2.8.0 (https://www.libsdl.org/projects/SDL_mixer/release/)
 
-<h2><em>Important</em></h2>
+<p align="center">
+  <img src="images/readme/important.png" width="400">
+</p>
 
 Do not forget to take care of version.h!
 
@@ -186,7 +209,9 @@ Those flags are explicitely tagged in version.h
 
 **_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
 
-<h2><em>Troubleshooting</em></h2>
+<p align="center">
+  <img src="images/readme/troubleshooting.png" width="400">
+</p>
 
 - Crash on startup or issues with controls after flag change
   - Delete CONFIG.WL6
@@ -208,13 +233,17 @@ The overall work to get to where we are would not be possible without the follow
 - Modifications to r262 by Andy_Nonymous and others (http://diehardwolfers.areyep.com/viewtopic.php?t=6693)
 
 
-<h2><em>Base fork</em></h2>
+<p align="center">
+  <img src="images/readme/base-fork.png" width="400">
+</p>
 
 ***Wolf3D Redux*** is based on the official ***Wolf4SDL*** fork currently maintained by KS-Presto.
 
 ***Wolf4SDL*** is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (Bitbucket).
 
-<h2><em>Credits & special thanks</em></h2>
+<p align="center">
+  <img src="images/readme/credits-thanks.png" width="400">
+</p>
 
 - Special thanks to id Software! Without the source code we would still have to pelt Wolfenstein 3D with hex editors and disassemblers ;D
 - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
@@ -226,7 +255,9 @@ The overall work to get to where we are would not be possible without the follow
 - Thanks to Chris Ballinger for the Mac OS X support!
 - Thanks to Xilinx, Inc. for providing a list of maximum-length LFSR counters used for higher resolutions of fizzle fade!
 
-<h2><em>Licenses</em></h2>
+<p align="center">
+  <img src="images/readme/licenses.png" width="400">
+</p>
 
 - The original source code of Wolfenstein 3D (at your choice) :
   - license-id.txt
