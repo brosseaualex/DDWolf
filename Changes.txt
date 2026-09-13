@@ -1,4 +1,4 @@
-Wolf3D Redux v1.3.0
+Wolf3D Redux v1.3.0 (Sep 13, 2026)
  [Added]
 	- Display resolution & options menu
 		- Can now change the resolution directly in game.
