@@ -63,10 +63,6 @@ char endStrings[9][80] = {
 
 CP_itemtype MainMenu[] = {
 	{1, STR_NG, CP_NewGame},
-#ifndef USE_MODERN_CONTROLS
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
-#endif
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
@@ -211,13 +207,13 @@ enum
 #endif
 
 CP_itemtype CtlMenu[] = {
-	{ 0, STR_MOUSEEN, 0 },
+	{0, STR_MOUSEEN, 0},
 #ifndef USE_MODERN_CONTROLS
 	{0, STR_SENS, MouseSensitivity},
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{ 0, STR_JOYEN, 0 },
+	{0, STR_JOYEN, 0},
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -374,10 +370,8 @@ CP_itemtype DisplayMenu[] = {
 
 CP_itemtype OptMenu[] = {
 	{1, STR_DISPLAY_TITLE, CP_Display},
-#if defined(USE_MODERN_CONTROLS)
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
-#endif
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 	{1, STR_ATMOS_TITLE, CP_Atmos},
 #endif
@@ -4092,7 +4086,7 @@ void DrawKeyboardActionCtlScreen(void)
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H - 13, BKGDCOLOR);
+	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardActionItems);
 
 	DrawMenu(&CusKeyboardActionItems, CtlKeyboardActionMenu);
@@ -4147,7 +4141,7 @@ void DrawKeyboardMoreActionCtlScreen(void)
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	DrawWindow(OPT_KEYBOARD_MORE_ACTION_X - 8, OPT_KEYBOARD_MORE_ACTION_Y - 5, OPT_KEYBOARD_MORE_ACTION_W, OPT_KEYBOARD_MORE_ACTION_H - 13, BKGDCOLOR);
+	DrawWindow(OPT_KEYBOARD_MORE_ACTION_X - 8, OPT_KEYBOARD_MORE_ACTION_Y - 5, OPT_KEYBOARD_MORE_ACTION_W, OPT_KEYBOARD_MORE_ACTION_H, BKGDCOLOR);
 	DrawMenuGun(&CusKeyboardMoreActionItems);
 
 	DrawMenu(&CusKeyboardMoreActionItems, CtlKeyboardMoreActionMenu);
@@ -4172,7 +4166,6 @@ void DrawKeyboardMoreActionCtlScreen(void)
 }
 
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-
 ////////////////////////
 //
 // DRAW CUSTOM CONTROLS SCREEN
