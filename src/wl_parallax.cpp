@@ -52,24 +52,29 @@ int GetParallaxStartTexture(void)
 void DrawParallax(void)
 {
     int x, y;
-    byte *dest, *skysource;
-    word texture;
+    byte* dest, * skysource;
     int16_t angle;
     int16_t skypage, curskypage;
     int16_t lastskypage;
-    int16_t xtex;
+    int16_t xtex, ytex;
     int16_t toppix;
+    int texX, texY;
+
+    if (!vbuf)
+        return;
 
     skypage = GetParallaxStartTexture();
-    skypage += USE_PARALLAX - 1;
     lastskypage = -1;
+    skysource = NULL;
 
     for (x = 0; x < viewwidth; x++)
     {
         toppix = centery - (wallheight[x] >> 3);
 
         if (toppix <= 0)
-            continue; // nothing to draw
+            continue;
+        if (toppix > viewheight)
+            toppix = viewheight;
 
         angle = pixelangle[x] + midangle;
 
@@ -78,19 +83,34 @@ void DrawParallax(void)
         else if (angle >= FINEANGLES)
             angle -= FINEANGLES;
 
-        xtex = ((angle * USE_PARALLAX) << TEXTURESHIFT) / FINEANGLES;
-        curskypage = xtex >> TEXTURESHIFT;
+        xtex = ((int32_t)angle * USE_PARALLAX * TEXTURESIZE) / FINEANGLES;
+        curskypage = (xtex / TEXTURESIZE) % USE_PARALLAX;
+
+        if (curskypage < 0)
+            curskypage += USE_PARALLAX;
 
         if (lastskypage != curskypage)
         {
             lastskypage = curskypage;
-            skysource = PM_GetPage(skypage - curskypage);
+            skysource = PM_GetPage(skypage + curskypage);
         }
 
-        texture = TEXTUREMASK - ((xtex & (TEXTURESIZE - 1)) << TEXTURESHIFT);
+        if (!skysource)
+            continue;
 
-        for (y = 0, dest = &vbuf[x]; y < toppix; y++, dest += bufferPitch)
-            *dest = skysource[texture + ((y << TEXTURESHIFT) / centery)];
+        texX = xtex & (TEXTURESIZE - 1);
+
+        dest = &vbuf[ylookup[0] + x];
+
+        for (y = 0; y < toppix; y++)
+        {
+            texY = (y * TEXTURESIZE) / centery;
+            if (texY >= TEXTURESIZE)
+                texY = TEXTURESIZE - 1;
+
+            *dest = skysource[(texX << TEXTURESHIFT) + texY];
+            dest += bufferPitch;
+        }
     }
 }
 

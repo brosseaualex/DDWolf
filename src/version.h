@@ -48,7 +48,7 @@
 //#define USE_SHADING								// Enables shading support (see wl_shade.c)
 //#define USE_PARALLAX 16							// Enables parallax sky with 16 textures per sky (see wl_parallax.c)
 //#define USE_SKYWALLPARALLAX 16					// Enables parallax sky on walls with 16 repeats of sky texture
-#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
+//#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
 //#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
 //#define USE_RAIN									// Enables rain support (see wl_atmos.c)
 //#define USE_SNOW									// Enables snow support (see wl_atmos.c)
@@ -85,12 +85,12 @@
 /*###### EXTRA MENUS ######*/
 /*#########################*/
 
-#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
+//#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
 													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
 
 #ifdef USE_MODERN_CONTROLS
-#define SHOW_CUSTOM_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
+//#define SHOW_CUSTOM_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Custom actions needs to be implemented by modder.
 #endif
 
@@ -108,6 +108,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif

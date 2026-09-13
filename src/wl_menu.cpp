@@ -788,6 +788,7 @@ int CP_Resolution(int blank)
 
 				if (targetResIdx < numResolutions && targetResIdx != activeResIdx)
 				{
+					VW_FadeOut();
 					IN_ClearKeysDown();
 
 					VL_SetDisplayResolution(DynamicResolutions[targetResIdx].width, DynamicResolutions[targetResIdx].height);
@@ -796,7 +797,7 @@ int CP_Resolution(int blank)
 					selectedResIdx = targetResIdx;
 
 					DrawResolutionMenu();
-					VW_UpdateScreen();
+					//VW_UpdateScreen();
 				}
 			}
 
@@ -5053,7 +5054,7 @@ void ClearMScreen(void)
 #ifndef SPEAR
 	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
 #else
-	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, 0);
+	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
 	VWB_DrawPic(0, 0, C_BACKDROPPIC);
 #endif
 }
@@ -6322,8 +6323,8 @@ void DrawStripes(int y)
 	VWB_Bar(0, y, rescaledWidth, 24, 0);
 	VWB_Hlin(0, rescaledWidth - 1, y + 22, STRIPE);
 #else
-	VWB_Bar(0, y, 320, 22, 0);
-	VWB_Hlin(0, 319, y + 23, 0);
+	VWB_Bar(0, y, rescaledWidth, 22, 0);
+	VWB_Hlin(0, rescaledWidth - 1, y + 23, 0);
 #endif
 }
 
