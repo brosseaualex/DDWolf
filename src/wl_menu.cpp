@@ -62,35 +62,14 @@ char endStrings[9][80] = {
 	ENDSTR9 };
 
 CP_itemtype MainMenu[] = {
-#if (defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)) || (defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS))
 	{1, STR_NG, CP_NewGame},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_OP, CP_Options},
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-	{1, STR_NG, CP_NewGame},
+#ifndef USE_MODERN_CONTROLS
 	{1, STR_SD, CP_Sound},
 	{1, STR_CL, CP_Control},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_OP, CP_Options},
-#else
-	{1, STR_NG, CP_NewGame},
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
-	{1, STR_LG, CP_LoadGame},
-	{0, STR_SG, CP_SaveGame},
-	{1, STR_CV, CP_ChangeView},
 #endif
-#else
-	{1, STR_NG, CP_NewGame},
-	{1, STR_SD, CP_Sound},
-	{1, STR_CL, CP_Control},
 	{1, STR_LG, CP_LoadGame},
 	{0, STR_SG, CP_SaveGame},
 	{1, STR_OP, CP_Options},
-#endif
 #ifdef USE_READTHIS
 	{2, "Read This!", CP_ReadThis},
 #endif
@@ -393,6 +372,18 @@ CP_itemtype DisplayMenu[] = {
 	{1, STR_DISPLAY_APPLY, 0}
 };
 
+CP_itemtype OptMenu[] = {
+	{1, STR_DISPLAY_TITLE, CP_Display},
+#if defined(USE_MODERN_CONTROLS)
+	{1, STR_SD, CP_Sound},
+	{1, STR_CL, CP_Control},
+#endif
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
+	{1, STR_ATMOS_TITLE, CP_Atmos},
+#endif
+	{1, STR_CV, CP_ChangeView},
+};
+
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 CP_itemtype AtmosOptMenu[] = {
 	{1, STR_ATMOS_TEXTURED, 0},
@@ -402,24 +393,9 @@ CP_itemtype AtmosOptMenu[] = {
 };
 #endif
 
-CP_itemtype OptMenu[] = {
-#if defined(USE_MODERN_CONTROLS)
-	{1, STR_DISPLAY_TITLE, CP_Display},
-	{1, STR_OP_SND, CP_Sound},
-	{1, STR_OP_CTL, CP_Control},
-#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-{1, STR_ATMOS_TITLE, CP_Atmos},
-#endif
-	{1, STR_CV, CP_ChangeView},
-#else
-	{1, STR_DISPLAY_TITLE, CP_Display},
-	{1, STR_CV, CP_ChangeView},
-#endif
-};
-
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
-OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 24 },
+OptItems = { OPT_X, OPT_Y, lengthof(OptMenu), 0, 26 },
 DisplayItems = { DISPLAY_CTL_X, DISPLAY_CTL_Y, lengthof(DisplayMenu), 0, 54 },
 ResItems = { RES_MENU_X, RES_MENU_Y, lengthof(ResMenu), 0, 32 },
 
@@ -848,12 +824,12 @@ int CP_Resolution(int blank)
 void DrawMainMenu(void)
 {
 	ClearMScreen();
-
-	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
 	VWB_DrawPic(84, -scaleOffsetY, C_OPTIONSPIC);
-
+	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(MENU_X - 8, MENU_Y - 3, MENU_W, MENU_H, BKGDCOLOR);
+
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 	//
 	// CHANGE "GAME" AND "DEMO"
@@ -1296,7 +1272,7 @@ void DrawNewGame(void)
 
 	PrintX += scaleOffsetX;
 	PrintY += scaleOffsetY;
-	
+
 	US_Print("How tough are you?");
 
 	DrawWindow(NM_X - 5, NM_Y - 10, NM_W, NM_H, BKGDCOLOR);
@@ -6446,9 +6422,9 @@ void CheckForEpisodes(void)
 		}
 	}
 
-//
-// ENGLISH
-//
+	//
+	// ENGLISH
+	//
 #ifdef UPLOAD
 	if (!stat("vswap.wl1", &statbuf))
 		strcpy(extension, "wl1");

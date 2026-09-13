@@ -99,18 +99,22 @@
 #define CTL_W 284
 #endif
 
-#define OPT_X 94
+#define OPT_X 90
 #define OPT_Y 86
-#define OPT_W 142
+#define OPT_W 152
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
+#ifdef USE_MODERN_CONTROLS
+#ifdef SHOW_ATMOS_OPTIONS
 #define OPT_H 72
-#elif defined(USE_MODERN_CONTROLS) && !defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 60
-#elif !defined(USE_MODERN_CONTROLS) && defined(SHOW_ATMOS_OPTIONS)
-#define OPT_H 34
 #else
-#define OPT_H 34
+#define OPT_H 60	
+#endif
+#else
+#ifdef  SHOW_ATMOS_OPTIONS
+#define OPT_H 48
+#else
+#define OPT_H 36
+#endif
 #endif
 
 #ifdef SHOW_ATMOS_OPTIONS
@@ -432,12 +436,7 @@ enum menuitems
 #endif
 	loadgame,
 	savegame,
-#ifndef USE_MODERN_CONTROLS
-	changeview,
-#else
 	options,
-#endif
-
 #ifdef USE_READTHIS
 	readthis,
 #endif
