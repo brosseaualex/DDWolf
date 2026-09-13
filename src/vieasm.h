@@ -18,7 +18,7 @@ BY GERARD 'ALUMIUN' WATSON
 #include <string.h>    // For memset
 #include <stdio.h>     // For printf
 
-#define VERBOSE        // Verbose mode?
+//#define VERBOSE        // Verbose mode?
 
 typedef struct
 {

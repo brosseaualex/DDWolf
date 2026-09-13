@@ -69,11 +69,11 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "Modernized port of Wolf4SDL"
             VALUE "FileVersion", "1.1.1.0"
-            VALUE "InternalName", "DDWolf"
+            VALUE "InternalName", "Wolf3D Redux"
             VALUE "LegalCopyright", "Original Wolfenstein 3D is copyrighted by id Software"
             VALUE "LegalTrademarks", "Wolfenstein 3D is a trademark of id Software"
-            VALUE "OriginalFilename", "DDWolf.exe"
-            VALUE "ProductName", "DDWolf"
+            VALUE "OriginalFilename", "Wolf3D-Redux.exe"
+            VALUE "ProductName", "Wolf3D Redux"
             VALUE "ProductVersion", "1.1.1.0"
         END
     END
@@ -91,7 +91,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_WOLF4SDL            ICON                    "DDWolf.ico"
+IDI_WOLF4SDL            ICON                    "Wolf3D-Redux.ico"
 
 #endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////

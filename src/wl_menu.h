@@ -253,7 +253,7 @@ typedef struct
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
-//Resolution typedef
+// Resolution typedef
 typedef struct {
 	int width;
 	int height;
@@ -397,14 +397,14 @@ void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
-//Resolution helper functions
+// Resolution helper functions
 void AddResIfMissing(int w, int h);
 void InitResList(int);
 void BuildResMenuItems(void);
 bool IsDisplayChanged(void);
 void RevertDisplay(void);
 
-//Resolution screens
+// Resolution screens
 int CP_Resolution(int);
 int CP_Display(int);
 
