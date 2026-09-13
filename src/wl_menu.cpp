@@ -788,8 +788,9 @@ int CP_Resolution(int blank)
 
 				if (targetResIdx < numResolutions && targetResIdx != activeResIdx)
 				{
-					VW_FadeOut();
 					IN_ClearKeysDown();
+
+					VW_FadeOut();
 
 					VL_SetDisplayResolution(DynamicResolutions[targetResIdx].width, DynamicResolutions[targetResIdx].height);
 
@@ -797,7 +798,6 @@ int CP_Resolution(int blank)
 					selectedResIdx = targetResIdx;
 
 					DrawResolutionMenu();
-					//VW_UpdateScreen();
 				}
 			}
 
