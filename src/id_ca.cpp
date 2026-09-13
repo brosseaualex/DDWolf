@@ -479,7 +479,7 @@ void CAL_SetupGrFile(void)
     int expectedsize = lengthof(grstarts);
 
     if (!param_ignorenumchunks && headersize / 3 != (long)expectedsize)
-        Quit("Wolf3D Redux was not compiled for these data files:\n"
+        Quit("DDWolf was not compiled for these data files:\n"
              "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
              "Please check whether you are using the right executable!\n"
              "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
@@ -673,7 +673,7 @@ void CA_Startup(void)
 
 void CA_Shutdown(void)
 {
-    int i, start;
+    int i;
 
     if (maphandle != -1)
         close(maphandle);

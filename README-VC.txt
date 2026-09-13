@@ -10,7 +10,7 @@
 	- DO NOT EXECUTE IN A FOLDER WHERE ADMINISTRATOR ACCESS IS REQUIRED.
 		- Run in User folder (Desktop, My Documents etc...)
 
-- Open Wolf3D-Redux.VC2019.sln or Wolf3D-Redux.VC2022.sln
+- Open DDWolf.VC2019.sln or DDWolf.VC2022.sln
 
 - In the toolbar, make sure you are set on 'Release' (not 'Debug')
 

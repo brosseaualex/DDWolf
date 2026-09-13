@@ -2,7 +2,7 @@
 | CodeBlocks |
 --------------
 
-This file explains how you can compile Wolf3D-Redux using CodeBlocks 20.03 with MinGW.
+This file explains how you can compile DDWolf using CodeBlocks 20.03 with MinGW.
 
 The steps explained in this document have been tested on Windows 10 and 11 x64.
 
@@ -45,10 +45,10 @@ the file should you get any issues when compiling.
 | CodeBlocks Settings |
 -----------------------
 - If you are using 32 bits compiler
-	- Open "Wolf3D-Redux_x86.cbp"
+	- Open "DDWolf_x86.cbp"
 
 - If you are using 64 bits compiler
-	- Open "Wolf3D-Redux_x64.cbp"
+	- Open "DDWolf_x64.cbp"
 
 - Go to "Settings" -> "Compiler".
 
@@ -59,9 +59,9 @@ the file should you get any issues when compiling.
   - Path should be the Code::Blocks path with "[Code::Blocks Path]\MinGW".
   - See Troubleshooting if getting another message.
    
----------------------------
-| Compiling Wolf3D-Redux: |
----------------------------
+--------------------
+| Compiling DDWolf |
+--------------------
 - Compile via "Build" -> "Build"
 - No errors should be displayed
 

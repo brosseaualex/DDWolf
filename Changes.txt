@@ -1,4 +1,12 @@
-Wolf3D Redux v1.3.0
+DDWolf v1.3.1 (xxx XX, 2026)
+ [Added]
+	- Visual Studio 2026 Solution.
+	
+ [Changed]
+	- Default resolution when starting the game for the
+	first time set to 320x200 instead of monitor resolution.
+
+DDWolf v1.3.0 (Sep 13, 2026)
  [Added]
 	- Display resolution & options menu
 		- Can now change the resolution directly in game.
@@ -21,6 +29,7 @@ Wolf3D Redux v1.3.0
 				- Press SCROLL LOCK or F12 to release/grab mouse in game.
 
  [Fixed]
+	- Fixed distant sound issue in VIEASM.
 	- Fixed scaling issues with Rain/Snow at higher resolutions.
 	- Fixed scaling issues on a few screens (intermission & end game).
 	- Fixed leaking rain/snow through ceilings.
@@ -49,7 +58,7 @@ Wolf3D Redux v1.3.0
 			- These settings can now be changed in the game menu and if
 				your settings ever break, delete config.wl6 and restart the game.
 
-Wolf3D Redux v1.2.0 (Sep 7, 2024)
+DDWolf v1.2.0 (Sep 7, 2024)
  [Fixed]
 	- Scaling issue in AlumiuN's Advanced Sound Manager menu.
 	- SafeMalloc cast (Thanks kalnaren).
@@ -63,10 +72,10 @@ Wolf3D Redux v1.2.0 (Sep 7, 2024)
 	- Removed GP2X and Dreamcast support.
 		- Unable to provide support for those platforms.
 
-Wolf3D Redux v1.1.1 (Mar 31, 2024)
+DDWolf v1.1.1 (Mar 31, 2024)
  - Fixed issue with control mapping order.
 
-Wolf3D Redux v1.1.0 (Mar 30, 2024)
+DDWolf v1.1.0 (Mar 30, 2024)
  - HD Resolution support
 	- The game will automatically detect your main monitor's resolution and be set accordingly.
 	- No more screen resolution change on launch!
@@ -88,7 +97,7 @@ Wolf3D Redux v1.1.0 (Mar 30, 2024)
 	- #SAVE_GAME_SCREENSHOT
 		- Shows a screenshot in the Save and Load screens
 
-Wolf3D Redux (Originally DDWolf) v1.0.0
+DDWolf v1.0.0
  - Dedicated strafing keys
    - WASD controls
  - Can disable Y axis on mouse

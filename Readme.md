@@ -1,16 +1,14 @@
-<p align="center">
-  <img src="images/wolf3d-redux-logo.png" width="600">
-</p>
+<h1 align="center"><em>DDWolf</em></h1>
 
-<h1 align="center"><!--<em>Wolf3D Redux</em>--></h1>
+***DDWolf*** (originally named ***DDWolf***) aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
 
-***Wolf3D Redux*** (originally named ***DDWolf***) aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
+One of the goal is also to **make the game friendlier for modders** by including a lot of major and minor features that are made to be easily readable and modifiable.
+
+A consistent effort is also made to preserve the structure of the engine so older tutorials can be adapted easily.
 
 Please look at the **bottom** of this page for **credits and special thanks!**
 
-<p align="center">
-  <img src="images/readme/main-features.png" width="400">
-</p>
+<h2><em>Main features</em></h2>
 
 * HD resolution support & Display menu
 	- Display resolution & options menu.
@@ -39,29 +37,27 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - No sounds included.
   - Disabled by default.
 
-<p align="center">
-  <img src="images/readme/major-feature-flags.png" width="400">
-</p>
+<h2><em>Modder oriented features</em></h2>
 
 ```
-#USE_MODERN_CONTROLS                  Modern WASD control scheme.
+#SHOW_CUSTOM_CONTROLS                 Enables a menu with an additional
+                                      10 custom actions that can be mapped
+                                      to a keyboard key.
+                                      Custom actions can be implemented
+                                      with minor code changes.
 
-#VIEASM                               AlumiuN's Advanced Sound Manager
-
-#SHOW_ATMOS_OPTIONS                   Enables a menu that gives the player control over
-                                      what visual options are enabled/disabled at runtime.
-                                      Textured floor & ceiling, Shading, Skybox and Precipitation
-
-#SHOW_CUSTOM_CONTROLS                 Enables a menu with an additional 10 custom actions
-                                      that can be mapped to a keyboard key.
-                                      Custom actions needs to be implemented by modder.
+#SHOW_ATMOS_OPTIONS                   Enables a menu that gives modders
+                                      control over what visual options are 
+                                      enabled/disabled at runtime.
+                                      - Textured floor & ceiling
+                                      - Shading
+                                      - Skybox
+                                      - Precipitation
 
 See version.h for all available flags.
 ```
 
-<p align="center">
-  <img src="images/readme/data-file-support.png" width="400">
-</p>
+<h2><em>Wolfenstein 3D data file support</em></h2>
 
 The following versions of Wolfenstein 3D data files are currently supported by the source code (choose the version by commenting/uncommenting lines in version.h as described in that file)
 ```
@@ -78,9 +74,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Spear of Destiny - Mission 3: Ultimate Challenge
 ```
 
-<p align="center">
-  <img src="images/readme/os-support.png" width="400">
-</p>
+<h2><em>Operating system support</em></h2>
 
 ```
 - Windows 98*
@@ -96,11 +90,9 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 * SDL1 support only, which is not supported for the moment, but planned to be reimplemented.
 ```
 
-<p align="center">
-  <img src="images/readme/how-to-play.png" width="400">
-</p>
+<h2><em>How to play</em></h2>
 
-To play Wolfenstein 3D with Wolf3D Redux, you just have to copy the original data files (e.g. *.WL6) into the same directory as the Wolf3D Redux executable.
+To play Wolfenstein 3D with DDWolf, you just have to copy the original data files (e.g. *.WL6) into the same directory as the DDWolf executable.
 
 Please make sure, that you use the correct version of the executable with the according data files version as the differences are hardcoded into the binary!
 
@@ -108,11 +100,9 @@ You also need to have SDL2.dll (2.30.7) and SDL_Mixer.dll (2.8.0) in the same di
 
 If you want to release or grab the mouse, press SCROLLLOCK or F12 to alternate between the two options.
 
-<p align="center">
-  <img src="images/readme/usage.png" width="400">
-</p>
+<h2><em>Command line arguments</em></h2>
 
-Wolf3D Redux supports the following command line options
+DDWolf supports the following command line options
 ```
  --help                           This help page
  --tedlevel <level>               Starts the game in the given level
@@ -121,15 +111,24 @@ Wolf3D Redux supports the following command line options
  --normal                         Sets the difficulty to normal for tedlevel
  --hard                           Sets the difficulty to hard for tedlevel
  --nowait                         Skips intro screens
- --bits <b>                       Sets the screen color depth (Use this when you have palette/fading problem or perhaps to optimize speed on old systems.)
-                                  Allowed: 8, 16, 24, 32, default: "best" depth.
+ --bits <b>                       Sets the screen color depth
+                                  (Use this when you have palette/fading
+                                  problem or perhaps to optimize speed on
+                                  old systems.)
+                                  Allowed: 8, 16, 24, 32, default:
+                                  "best" depth.
                                   (unit is currently 8 ms, default: 0)
  --joystick <index>               Use the index-th joystick if available
  --joystickhat <index>            Enables movement with the given coolie hat
  --samplerate <rate>              Sets the sound sample rate (given in Hz)
- --audiobuffer <size>             Sets the size of the audio buffer (-> sound latency, given in bytes)
- --ignorenumchunks                Ignores the number of chunks in VGAHEAD.* (may be useful for some broken mods)
- --configdir <dir>                Directory where config file and save games are stored (Windows default: current directory, others: $HOME/.Wolf3D-Redux)
+ --audiobuffer <size>             Sets the size of the audio buffer
+                                  (-> sound latency, given in bytes)
+ --ignorenumchunks                Ignores the number of chunks in VGAHEAD.
+                                  (may be useful for some broken mods)
+ --configdir <dir>                Directory where config file and
+                                  save games are stored.
+                                  (Windows default: current directory,
+                                  others: $HOME/.DDWolf)
 
 = Additional launch parameters =
 
@@ -142,9 +141,7 @@ Spear of Destiny
 --goodtimes                       Disable copy protection quiz
 ```
 
-<p align="center">
-  <img src="images/readme/compiling.png" width="400">
-</p>
+<h2><em>Compiling from source code</em></h2>
 
 The current version of the source code is available on GitHub at: https://github.com/brosseaualex/DDWolf
 
@@ -156,35 +153,29 @@ The current version of the source code is available on GitHub at: https://github
 **_Preferred methods for compiling the source code_**
 
 - Code::Blocks 20.03 - ***Supported***
-  - Wolf3D-Redux_x86.cbp (Requires 32-bits compiler)
-  - Wolf3D-Redux_x64.cbp (Requires 64-bits compiler)
+  - DDWolf_x86.cbp (Requires 32-bits compiler)
+  - DDWolf_x64.cbp (Requires 64-bits compiler)
     - README-codeblocks.txt
 - Visual Studio C++ (2019/2022) - ***Supported***
-  - [VS 2022] - Wolf3D-Redux.VC2022.sln
-  - [VS 2019] - Wolf3D-Redux.VC2019.sln
+  - [VS 2022] - DDWolf.VC2022.sln
+  - [VS 2019] - DDWolf.VC2019.sln
     - README-VC.txt
 - [CLion] CMakeList (Tested with MingW) - ***No support provided***
 - [Outdated] Makefile (for Linux, BSD variants and MinGW/MSYS) - ***No support provided***
 
-<p align="center">
-  <img src="images/readme/sdl_libraries.png" width="400">
-</p>
+<h2><em>SDL Libraries</em></h2>
 
 Batch files that automatically downloads and places the correct SDL2 and SDL2_Mixer libraries in the required folders are included in the repository.
 
 You only need to run the script and open the project you want to use.
 
-<p align="center">
-  <img src="images/readme/warning.png" width="400">
-</p>
+<i><h3>!!! WARNING !!!</h3></i>
 
 *This script **DOES NOT WORK** with admin privileges (Run as administrator), make sure to clone the repository somewhere where elevation is **NOT** required.*
 
 *Tested in a directory under 'C:\Users\Username'.*
 
-<p align="center">
-  <img src="images/readme/script-files.png" width="400">
-</p>
+<h4>Script files</h4>
 
 ```
 - _get-libs-mingw.bat (Code::Blocks/MingW libraries)
@@ -195,23 +186,19 @@ The SDL and SDL_Mixer versions used in this project are the following :
 - SDL2 2.30.7 (https://www.libsdl.org/release/)
 - SDL2_mixer 2.8.0 (https://www.libsdl.org/projects/SDL_mixer/release/)
 
-<p align="center">
-  <img src="images/readme/important.png" width="400">
-</p>
+<h2><em>Important</em></h2>
 
 Do not forget to take care of version.h!
 
 By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
 
-**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time the flag is changed._**
+**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time it is changed._**
 
 Those flags are explicitely tagged in version.h
 
 **_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
 
-<p align="center">
-  <img src="images/readme/troubleshooting.png" width="400">
-</p>
+<h2><em>Troubleshooting</em></h2>
 
 - Crash on startup or issues with controls after flag change
   - Delete CONFIG.WL6
@@ -219,10 +206,6 @@ Those flags are explicitely tagged in version.h
   - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
 
 <h2><em>Wolf4SDL</em></h2>
-
-<!--<p align="center">
-  <img src="images/wolf4sdl_logo.png" width="120">
-</p>-->
 
 Wolf4SDL is an open-source port of id Software's classic first-person shooter Wolfenstein 3D to the cross-platform multimedia library "Simple DirectMedia Layer (SDL)" (http://www.libsdl.org).
 
@@ -233,17 +216,13 @@ The overall work to get to where we are would not be possible without the follow
 - Modifications to r262 by Andy_Nonymous and others (http://diehardwolfers.areyep.com/viewtopic.php?t=6693)
 
 
-<p align="center">
-  <img src="images/readme/base-fork.png" width="400">
-</p>
+<h2><em>Base fork</em></h2>
 
-***Wolf3D Redux*** is based on the official ***Wolf4SDL*** fork currently maintained by KS-Presto.
+***DDWolf*** is based on the ***official Wolf4SDL*** fork currently maintained by KS-Presto.
 
-***Wolf4SDL*** is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (Bitbucket).
+***Wolf4SDL*** is available at https://bitbucket.org/ks-presto/wolf4sdl/src/master/.
 
-<p align="center">
-  <img src="images/readme/credits-thanks.png" width="400">
-</p>
+<h2><em>Credits & special thanks</em></h2>
 
 - Special thanks to id Software! Without the source code we would still have to pelt Wolfenstein 3D with hex editors and disassemblers ;D
 - Special thanks to the DOSBox team for providing a GPL'ed OPL2/3 emulator!
@@ -255,9 +234,7 @@ The overall work to get to where we are would not be possible without the follow
 - Thanks to Chris Ballinger for the Mac OS X support!
 - Thanks to Xilinx, Inc. for providing a list of maximum-length LFSR counters used for higher resolutions of fizzle fade!
 
-<p align="center">
-  <img src="images/readme/licenses.png" width="400">
-</p>
+<h2><em>Licenses</em></h2>
 
 - The original source code of Wolfenstein 3D (at your choice) :
   - license-id.txt

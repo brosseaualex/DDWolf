@@ -32,14 +32,14 @@ extern unsigned screenWidth, screenHeight, rescaledWidth, rescaledHeight, screen
 extern unsigned screenResW;
 extern unsigned screenResH;
 
-extern int scaleFactor;
-extern int scaleOffsetX; // Used with HD scaling to calculate and center screens
-extern int scaleOffsetY;
+extern unsigned scaleFactor;
+extern unsigned scaleOffsetX;
+extern unsigned scaleOffsetY;
 
-extern float picHorizAdjust;
-extern float picVertAdjust;
-extern float printHorizAdjust;
-extern float printVertAdjust;
+extern int picHorizAdjust;
+extern int picVertAdjust;
+extern int printHorizAdjust;
+extern int printVertAdjust;
 
 extern int screenBits;
 

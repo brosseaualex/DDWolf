@@ -42,16 +42,16 @@ unsigned screenHeight;
 unsigned rescaledWidth;
 unsigned rescaledHeight;
 
-int scaleFactor;
-int scaleOffsetX; // Used with HD scaling to calculate and center screens
-int scaleOffsetY;
+unsigned scaleFactor;
+unsigned scaleOffsetX; // Used with HD scaling to calculate and center screens
+unsigned scaleOffsetY;
 
 //int ratioCorrection;
 
-float picHorizAdjust;
-float picVertAdjust;
-float printHorizAdjust;
-float printVertAdjust;
+int picHorizAdjust;
+int picVertAdjust;
+int printHorizAdjust;
+int printVertAdjust;
 
 int screenBits = -1; // use "best" color depth according to libSDL
 
@@ -135,7 +135,6 @@ void VL_Shutdown(void) {
 
 void VL_SetVGAPlaneMode(void) {
 
-	int i;
 	uint32_t a, r, g, b;
 
 	// Ensure saved screen/window configuration (if it exists)
@@ -154,8 +153,8 @@ void VL_SetVGAPlaneMode(void) {
 	if (screenResH <= 0)
 		screenResH = displayMode.h;
 
-	screenWidth = screenResW;
-	screenHeight = screenResH;
+	screenWidth = DEFAULT_SCREEN_WIDTH;
+	screenHeight = DEFAULT_SCREEN_HEIGHT;
 
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, windowFlags);
 
@@ -828,8 +827,7 @@ void VL_MemToScreenScaledCoord(byte * source, int width, int height, int destx, 
 	int i, j, sci, scj;
 	unsigned m, n;
 
-	// Guard against null buffer or completely off-screen coordinates
-	if (!screenBuffer || destx >= screenWidth || desty >= screenHeight)
+	if (!screenBuffer || (unsigned)destx >= screenWidth || (unsigned)desty >= screenHeight)
 		return;
 
 	dest = VL_LockSurface(screenBuffer);
@@ -837,21 +835,20 @@ void VL_MemToScreenScaledCoord(byte * source, int width, int height, int destx, 
 		return;
 
 	for (j = 0, scj = 0; j < height; j++, scj += scaleFactor) {
-		int py = scj + desty;
-		if (py >= screenHeight) break; // Clip bottom edge
+		unsigned py = scj + desty;
+		if (py >= screenHeight) break;
 
 		for (i = 0, sci = 0; i < width; i++, sci += scaleFactor) {
-			int px = sci + destx;
-			if (px >= screenWidth) break; // Clip right edge
+			unsigned px = sci + destx;
 
 			byte col = source[(j * width) + i];
 
-			for (m = 0; m < (unsigned)scaleFactor; m++) {
-				int targetY = py + m;
+			for (m = 0; m < scaleFactor; m++) {
+				unsigned targetY = py + m;
 				if (targetY >= screenHeight) break;
 
-				for (n = 0; n < (unsigned)scaleFactor; n++) {
-					int targetX = px + n;
+				for (n = 0; n < scaleFactor; n++) {
+					unsigned targetX = px + n;
 					if (targetX >= screenWidth) break;
 
 					dest[ylookup[targetY] + targetX] = col;
@@ -881,8 +878,7 @@ void VL_MemToScreenScaledCoord2(byte * source, int origwidth, int origheight, in
 	int i, j, sci, scj;
 	unsigned m, n;
 
-	// Guard against null buffer or completely off-screen coordinates
-	if (!screenBuffer || destx >= screenWidth || desty >= screenHeight)
+	if (!screenBuffer || (unsigned)destx >= screenWidth || (unsigned)desty >= screenHeight)
 		return;
 
 	dest = VL_LockSurface(screenBuffer);
@@ -890,25 +886,24 @@ void VL_MemToScreenScaledCoord2(byte * source, int origwidth, int origheight, in
 		return;
 
 	for (j = 0, scj = 0; j < height; j++, scj += scaleFactor) {
-		int py = scj + desty;
-		if (py >= screenHeight) break; // Clip bottom edge
+		unsigned py = scj + desty;
+		if (py >= screenHeight) break;
 
 		for (i = 0, sci = 0; i < width; i++, sci += scaleFactor) {
-			int px = sci + destx;
-			if (px >= screenWidth) break; // Clip right edge
+			unsigned px = sci + destx;
+			if (px >= screenWidth) break;
 
-			// Guard source reading bounds
 			if ((j + srcy) >= origheight || (i + srcx) >= origwidth)
 				continue;
 
 			byte col = source[((j + srcy) * origwidth) + (i + srcx)];
 
-			for (m = 0; m < (unsigned)scaleFactor; m++) {
-				int targetY = py + m;
+			for (m = 0; m < scaleFactor; m++) {
+				unsigned targetY = py + m;
 				if (targetY >= screenHeight) break;
 
-				for (n = 0; n < (unsigned)scaleFactor; n++) {
-					int targetX = px + n;
+				for (n = 0; n < scaleFactor; n++) {
+					unsigned targetX = px + n;
 					if (targetX >= screenWidth) break;
 
 					dest[ylookup[targetY] + targetX] = col;
@@ -1004,7 +999,7 @@ void VL_CreateYlookup(void)
 
 	bufferPitch = screenBuffer->pitch;
 
-	for (int i = 0; i < screenHeight; i++)
+	for (unsigned i = 0; i < screenHeight; i++)
 	{
 		ylookup[i] = i * bufferPitch;
 	}
@@ -1019,7 +1014,7 @@ void VL_CreateYlookup(void)
 */
 void VL_UpdateUIScale(int newWidth, int newHeight)
 {
-	int i = 0;
+	unsigned i = 0;
 
 	screenPitch = screen->pitch;
 	bufferPitch = screenBuffer->pitch;

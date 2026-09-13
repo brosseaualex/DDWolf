@@ -2,26 +2,26 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Wolf3D-Redux" />
+		<Option title="DDWolf" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="default">
-				<Option output="obj/Wolf3D-Redux-x64" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="obj" />
+				<Option output="obj/DDWolf" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../_workingdir/output" />
 				<Option object_output="obj" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add directory="libraries/mingw/SDL2-2.30.7/x86_64-w64-mingw32/include/SDL2" />
-					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/x86_64-w64-mingw32/include/SDL2" />
+					<Add directory="libraries/mingw/SDL2-2.30.7/i686-w64-mingw32/include/SDL2" />
+					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/i686-w64-mingw32/include/SDL2" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
 					<Add option="-lSDL2main -lSDL2" />
-					<Add directory="libraries/mingw/SDL2-2.30.7/x86_64-w64-mingw32/lib" />
-					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/x86_64-w64-mingw32/lib" />
+					<Add directory="libraries/mingw/SDL2-2.30.7/i686-w64-mingw32/lib" />
+					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/i686-w64-mingw32/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -93,10 +93,12 @@
 		<Unit filename="src/wl_utils.cpp" />
 		<Unit filename="src/wl_utils.h" />
 		<Unit filename="src/wolfpal.inc" />
-		<Unit filename="win/Wolf3D-Redux.ico" />
-		<Unit filename="win/Wolf3D-Redux.rc">
+		<Unit filename="win/DDWolf.aps" />
+		<Unit filename="win/DDWolf.ico" />
+		<Unit filename="win/DDWolf.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="win/resource.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

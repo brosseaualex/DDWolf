@@ -931,9 +931,9 @@ void CalcProjection(int32_t focal)
 	if (!pixelangle)
 		return;
 
-	scale = (fixed)(halfview * facedist) / (VIEWGLOBAL / 2.0);
+	scale = (fixed)(halfview * facedist) / (fixed)(VIEWGLOBAL / 2.0);
 
-	heightnumerator = (fixed)((double)TILEGLOBAL * (double)scale) / 64.0;
+	heightnumerator = (fixed)((TILEGLOBAL * scale) / 64.0);
 
 	for (i = 0; i < halfview; i++)
 	{
@@ -1949,10 +1949,10 @@ param_difficulty = 0;
 		if (hasError)
 			printf("\n");
 		printf(
-			"Wolf3D Redux - By DD\n"
+			"DDWolf - By DD\n"
 			"Original Wolf4SDL by Chaos-Software, additions by the community\n"
 			"Original Wolfenstein 3D by id Software\n\n"
-			"Usage: Wolf3D-Redux [options]\n"
+			"Usage: DDWolf [options]\n"
 			"Options:\n"
 			" --help                 This help page\n"
 			" --tedlevel <level>     Starts the game in the given level\n"

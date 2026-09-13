@@ -716,7 +716,7 @@ void DrawResolutionMenu(void)
 {
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(RES_MENU_X - 8, RES_MENU_Y - 5, RES_MENU_W, RES_MENU_H, BKGDCOLOR);
 	WindowX = 0;
@@ -788,8 +788,9 @@ int CP_Resolution(int blank)
 
 				if (targetResIdx < numResolutions && targetResIdx != activeResIdx)
 				{
-					VW_FadeOut();
 					IN_ClearKeysDown();
+
+					VW_FadeOut();
 
 					VL_SetDisplayResolution(DynamicResolutions[targetResIdx].width, DynamicResolutions[targetResIdx].height);
 
@@ -797,7 +798,6 @@ int CP_Resolution(int blank)
 					selectedResIdx = targetResIdx;
 
 					DrawResolutionMenu();
-					//VW_UpdateScreen();
 				}
 			}
 
@@ -820,7 +820,7 @@ void DrawMainMenu(void)
 {
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(84, -scaleOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(84, -(int)scaleOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(MENU_X - 8, MENU_Y - 3, MENU_W, MENU_H, BKGDCOLOR);
 
@@ -873,7 +873,6 @@ int CP_ReadThis(int blank)
 void BossKey(void)
 {
 	int i, lastBlinkTime;
-	ControlInfo ci;
 
 	SD_MusicOff();
 
@@ -1549,8 +1548,8 @@ DrawSoundVols(bool curmode)
 	{
 		SETFONTCOLOR(READCOLOR, BKGDCOLOR);
 	}
-	PrintX = 65 + scaleOffsetX + soundvol * 2 - strlen(soundstr) * 4;
-	PrintY = 84 + scaleOffsetY;
+	PrintX = 65 + scaleOffsetX + soundvol * 2 - (word)strlen(soundstr) * 4;
+	PrintY = 84 + (word)scaleOffsetY;
 	US_Print(soundstr);
 
 	if (!curmode)
@@ -1561,7 +1560,7 @@ DrawSoundVols(bool curmode)
 	{
 		SETFONTCOLOR(READCOLOR, BKGDCOLOR);
 	}
-	PrintX = 65 + scaleOffsetX + musicvol * 2 - strlen(musicstr) * 4;
+	PrintX = 65 + scaleOffsetX + musicvol * 2 - (word)strlen(musicstr) * 4;
 	PrintY = 134 + scaleOffsetY;
 	US_Print(musicstr);
 
@@ -2001,9 +2000,9 @@ void DrawLoadSaveScreen(int loadsave)
 	DrawStripes(10);
 
 	if (!loadsave)
-		VWB_DrawPic(60, -scaleOffsetY, C_LOADGAMEPIC);
+		VWB_DrawPic(60, -(int)scaleOffsetY, C_LOADGAMEPIC);
 	else
-		VWB_DrawPic(60, -scaleOffsetY, C_SAVEGAMEPIC);
+		VWB_DrawPic(60, -(int)scaleOffsetY, C_SAVEGAMEPIC);
 
 	for (i = 0; i < 10; i++)
 		PrintLSEntry(i, TEXTCOLOR);
@@ -2519,7 +2518,7 @@ void DrawCtlScreen(void)
 
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CONTROLPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CONTROLPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, BKGDCOLOR);
 
@@ -2613,7 +2612,7 @@ void DrawOptScreen(void)
 
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(OPT_X - 8, OPT_Y - 5, OPT_W, OPT_H, BKGDCOLOR);
 
@@ -2652,7 +2651,7 @@ void DrawDisplayOptScreen(void)
 
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(DISPLAY_CTL_X - 8, DISPLAY_CTL_Y - 5, DISPLAY_CTL_W, DISPLAY_CTL_H, BKGDCOLOR);
 
@@ -2685,9 +2684,9 @@ void DrawDisplayOptScreen(void)
 	y = y + 13;
 
 	if (enablevsync)
-		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-	else
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	//
 	// PICK FIRST AVAILABLE SPOT
@@ -2719,7 +2718,7 @@ void DrawAtmosOptScreen(void)
 
 	ClearMScreen();
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_OPTIONSPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_OPTIONSPIC);
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(ATMOS_X - 8, ATMOS_Y - 5, ATMOS_W, ATMOS_H, BKGDCOLOR);
 
@@ -3953,7 +3952,7 @@ void DrawMouseCtlScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4015,7 +4014,7 @@ void DrawKeyboardMoveCtlScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4070,7 +4069,7 @@ void DrawKeyboardActionCtlScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4125,7 +4124,7 @@ void DrawKeyboardMoreActionCtlScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4181,7 +4180,7 @@ void DrawCustomCtlScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4240,7 +4239,7 @@ void DrawJoystickScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -4297,7 +4296,7 @@ void DrawCustomScreen(void)
 	WindowW = 320;
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawStripes(10);
-	VWB_DrawPic(80, -scaleOffsetY, C_CUSTOMIZEPIC);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
 
 	//
 	// MOUSE
@@ -5403,9 +5402,8 @@ int HandleMenu(
 	void (*drawItemsFunc)(void)
 )
 {
-	char key;
 	static int lastitem = -1;
-	int x, y, basey, exit, which, status, shape;
+	int x, y, basey, exit, which, shape;
 	int32_t lastBlinkTime, timer;
 	ControlInfo ci;
 
@@ -5837,7 +5835,6 @@ void ReadAnyControl(ControlInfo* ci)
 		int a0x, a0y;
 		int a1x, a1y;
 
-		int a, b, c, d;
 		int gcb;
 
 		IN_GetGameControllerDelta(&a0x, &a0y, &a1x, &a1y);
