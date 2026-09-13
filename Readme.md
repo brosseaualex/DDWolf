@@ -146,7 +146,7 @@ Spear of Destiny
   <img src="images/readme/compiling.png" width="400">
 </p>
 
-The current version of the source code is available on GitHub at: https://github.com/brosseaualex/DDWolf
+The current version of the source code is available on GitHub at: https://github.com/brosseaualex/Wolf3D-Redux
 
 **_What you need:_**
 
