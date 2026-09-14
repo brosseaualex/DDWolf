@@ -1,6 +1,6 @@
 <h1 align="center"><em>DDWolf</em></h1>
 
-***DDWolf*** (originally named ***DDWolf***) aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
+***DDWolf*** aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
 
 One of the goal is also to **make the game friendlier for modders** by including a lot of major and minor features that are made to be easily readable and modifiable.
 
