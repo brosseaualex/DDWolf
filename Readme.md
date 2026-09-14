@@ -2,6 +2,10 @@
 
 ***DDWolf*** (originally named ***DDWolf***) aims at bringing modern improvements to the ***Wolf4SDL*** engine while still preserving the game as pure and close to the original as possible.
 
+One of the goal is also to **make the game friendlier for modders** by including a lot of major and minor features that are made to be easily readable and modifiable.
+
+A consistent effort is also made to preserve the structure of the engine so older tutorials can be adapted with minimal effort.
+
 Please look at the **bottom** of this page for **credits and special thanks!**
 
 <h2><em>Main features</em></h2>
@@ -33,20 +37,22 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - No sounds included.
   - Disabled by default.
 
-<h2><em>Additional feature flags</em></h2>
+<h2><em>Modder oriented features</em></h2>
 
 ```
-#USE_MODERN_CONTROLS                  Modern WASD control scheme.
+#SHOW_CUSTOM_CONTROLS                 Enables a menu with an additional
+                                      10 custom actions that can be mapped
+                                      to a keyboard key.
+                                      Custom actions can be implemented
+                                      with minor code changes.
 
-#VIEASM                               AlumiuN's Advanced Sound Manager
-
-#SHOW_ATMOS_OPTIONS                   Enables a menu that gives the player control over
-                                      what visual options are enabled/disabled at runtime.
-                                      Textured floor & ceiling, Shading, Skybox and Precipitation
-
-#SHOW_CUSTOM_CONTROLS                 Enables a menu with an additional 10 custom actions
-                                      that can be mapped to a keyboard key.
-                                      Custom actions needs to be implemented by modder.
+#SHOW_ATMOS_OPTIONS                   Enables a menu that gives modders
+                                      control over what visual options are 
+                                      enabled/disabled at runtime.
+                                      - Textured floor & ceiling
+                                      - Shading
+                                      - Skybox
+                                      - Precipitation
 
 See version.h for all available flags.
 ```
@@ -105,15 +111,24 @@ DDWolf supports the following command line options
  --normal                         Sets the difficulty to normal for tedlevel
  --hard                           Sets the difficulty to hard for tedlevel
  --nowait                         Skips intro screens
- --bits <b>                       Sets the screen color depth (Use this when you have palette/fading problem or perhaps to optimize speed on old systems.)
-                                  Allowed: 8, 16, 24, 32, default: "best" depth.
+ --bits <b>                       Sets the screen color depth
+                                  (Use this when you have palette/fading
+                                  problem or perhaps to optimize speed on
+                                  old systems.)
+                                  Allowed: 8, 16, 24, 32, default:
+                                  "best" depth.
                                   (unit is currently 8 ms, default: 0)
  --joystick <index>               Use the index-th joystick if available
  --joystickhat <index>            Enables movement with the given coolie hat
  --samplerate <rate>              Sets the sound sample rate (given in Hz)
- --audiobuffer <size>             Sets the size of the audio buffer (-> sound latency, given in bytes)
- --ignorenumchunks                Ignores the number of chunks in VGAHEAD.* (may be useful for some broken mods)
- --configdir <dir>                Directory where config file and save games are stored (Windows default: current directory, others: $HOME/.DDWolf)
+ --audiobuffer <size>             Sets the size of the audio buffer
+                                  (-> sound latency, given in bytes)
+ --ignorenumchunks                Ignores the number of chunks in VGAHEAD.
+                                  (may be useful for some broken mods)
+ --configdir <dir>                Directory where config file and
+                                  save games are stored.
+                                  (Windows default: current directory,
+                                  others: $HOME/.DDWolf)
 
 = Additional launch parameters =
 
@@ -177,7 +192,7 @@ Do not forget to take care of version.h!
 
 By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
 
-**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time the flag is changed._**
+**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time it is changed._**
 
 Those flags are explicitely tagged in version.h
 
@@ -203,9 +218,9 @@ The overall work to get to where we are would not be possible without the follow
 
 <h2><em>Base fork</em></h2>
 
-***DDWolf*** is based on the official ***Wolf4SDL*** fork currently maintained by KS-Presto.
+***DDWolf*** is based on the ***official Wolf4SDL*** fork currently maintained by KS-Presto.
 
-***Wolf4SDL*** is available [HERE](https://bitbucket.org/ks-presto/wolf4sdl/src/master/) (Bitbucket).
+***Wolf4SDL*** is available at https://bitbucket.org/ks-presto/wolf4sdl/src/master/.
 
 <h2><em>Credits & special thanks</em></h2>
 
