@@ -51,9 +51,6 @@
     <ClInclude Include="src\gfxv_apo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gfxv_jap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\gfxv_sod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -228,13 +225,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="win\Wolf3D-Redux.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="win\Wolf3D-Redux.rc">
+    <ResourceCompile Include="win\DDWolf.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="win\DDWolf.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

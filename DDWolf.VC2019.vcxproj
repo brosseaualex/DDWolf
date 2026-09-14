@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Wolf3D-Redux</ProjectName>
+    <ProjectName>DDWolf</ProjectName>
     <ProjectGuid>{411B026A-F58B-4E25-840B-4FE67710F762}</ProjectGuid>
     <RootNamespace>Wolf4SDL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -27,24 +27,24 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -183,6 +183,7 @@
     <ClInclude Include="src\foreign.h" />
     <ClInclude Include="src\f_spear.h" />
     <ClInclude Include="src\gfxv_apo.h" />
+    <ClInclude Include="src\gfxv_jap.h" />
     <ClInclude Include="src\gfxv_sod.h" />
     <ClInclude Include="src\gfxv_wl6.h" />
     <ClInclude Include="src\id_ca.h" />
@@ -247,10 +248,10 @@
     <None Include="src\wolfpal.inc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="win\Wolf3D-Redux.rc" />
+    <Image Include="win\DDWolf.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="win\Wolf3D-Redux.ico" />
+    <ResourceCompile Include="win\DDWolf.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

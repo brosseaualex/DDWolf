@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Wolf3D-Redux.rc
+// Used by DDWolf.rc
 //
 
 // Next default values for new objects

@@ -1888,8 +1888,8 @@ extern void EndText(void);
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
 #ifdef _WIN32
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
+//#define strcasecmp stricmp
+//#define strncasecmp strnicmp
 #define snprintf _snprintf
 #else
 static inline char *itoa(int value, char *string, int radix)
