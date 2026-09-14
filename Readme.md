@@ -33,7 +33,7 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - No sounds included.
   - Disabled by default.
 
-<h2><em>DDWolf Additional Feature Flags</em></h2>
+<h2><em>Additional feature flags</em></h2>
 
 ```
 #USE_MODERN_CONTROLS                  Modern WASD control scheme.
