@@ -23,6 +23,7 @@ loaded into the data segment
 #endif
 
 #include "wl_def.h"
+
 #pragma hdrstop
 
 #define THREEBYTEGRSTARTS
@@ -674,7 +675,9 @@ void CA_Startup(void)
 void CA_Shutdown(void)
 {
     int i;
-
+#ifndef VIEASM
+    int start = 0;
+#endif
     if (maphandle != -1)
         close(maphandle);
 #ifndef VIEASM

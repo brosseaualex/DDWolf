@@ -3487,7 +3487,10 @@ int CP_CustomCtl(int blank)
 
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type)
 {
-	int j, z, exit, tick, redraw, which, x, y, picked, lastFlashTime;
+	int j, z, exit, tick, redraw, which, x, picked, lastFlashTime;
+#ifdef USE_MODERN_CONTROLS //To avoid compiler warning
+	int y;
+#endif
 	ControlInfo ci;
 
 	int start = 0;

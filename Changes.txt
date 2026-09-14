@@ -1,4 +1,4 @@
-DDWolf v1.3.1 (xxx XX, 2026)
+DDWolf v1.3.1 (Sep 16, 2026)
  [Added]
 	- Two additional feature flags tiles.
 		- The two tiles to the left of the upper right corner of each level.
@@ -13,6 +13,12 @@ DDWolf v1.3.1 (xxx XX, 2026)
  [Changed]
 	- Default resolution when starting the game for the
 	first time set to 320x200 instead of monitor resolution.
+	- Default viewsize is back at 19.
+		- The game now looks exactly like it did during
+		the DOS days the first time you launch it.
+	
+ [Fixed]
+	- Fixed shade table issue when loading a save from another level.
 
 DDWolf v1.3.0 (Sep 13, 2026)
  [Added]

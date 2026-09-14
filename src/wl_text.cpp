@@ -704,7 +704,7 @@ void EndText(void)
 #endif
     char *text;
 #ifndef ARTSEXTERN
-    void *layout;
+    void *layout = nullptr;
 #endif
 
     ClearMemory();
