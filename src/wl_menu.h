@@ -235,6 +235,15 @@
 #define MAX_RESOLUTIONS 64
 #define RES_LIST_MAX_VISIBLE 10
 
+const int MORE_ACTIONS_ARRAY_START = 5;
+const int MORE_ACTIONS_ARRAY_END = 12;
+
+#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+const int MAX_CUSTOM_CONTROLS = 10;
+const int CUS_CTL_ARRAY_RANGE_START = 19;
+const int CUS_CTL_ARRAY_RANGE_END = 29;
+#endif
+
 //
 // TYPEDEFS
 //
@@ -262,17 +271,15 @@ typedef struct
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
-// Resolution typedef
-typedef struct {
-	int width;
-	int height;
-	char label[32];
-} ScreenResolution;
-
-static ScreenResolution DynamicResolutions[MAX_RESOLUTIONS];
-static int numResolutions = 0;
-static int selectedResIdx = 0;
-static int activeResIdx = 0;
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+extern boolean atmosTexturedEnabled;
+extern boolean atmosShadingEnabled;
+extern boolean atmosSkyboxEnabled;
+extern boolean atmosPrecipitationEnabled;
+#endif
 
 //
 // FUNCTION PROTOTYPES
@@ -460,15 +467,6 @@ extern LRstruct LevelRatios[];
 void Write(int x, int y, const char* string);
 void NonShareware(void);
 int GetYorN(int x, int y, int pic);
-#endif
-
-const int MORE_ACTIONS_ARRAY_START = 5;
-const int MORE_ACTIONS_ARRAY_END = 12;
-
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
 #endif
 
 #ifdef VIEASM

@@ -22,6 +22,18 @@
 extern int lastgamemusicoffset;
 int menuExit = 0;
 
+// Resolution typedef
+typedef struct {
+	int width;
+	int height;
+	char label[32];
+} ScreenResolution;
+
+static ScreenResolution DynamicResolutions[MAX_RESOLUTIONS];
+static int numResolutions = 0;
+static int selectedResIdx = 0;
+static int activeResIdx = 0;
+
 //
 // atmosphere options
 //
@@ -32,9 +44,9 @@ boolean atmosSkyboxEnabled = true;
 boolean atmosPrecipitationEnabled = true;
 #endif
 
-boolean orig_fullscreen;
-boolean orig_borderless;
-boolean orig_aspectcorrection;
+boolean orig_fullScreen;
+boolean orig_borderlessFs;
+boolean orig_enableVsync;
 
 //
 // PRIVATE PROTOTYPES
@@ -2305,9 +2317,9 @@ int CP_Display(int blank)
 {
 	int which;
 
-	orig_fullscreen = fullscreen;
-	orig_borderless = borderless;
-	orig_aspectcorrection = enablevsync;
+	orig_fullScreen = fullScreen;
+	orig_borderlessFs = borderlessFs;
+	orig_enableVsync = enableVsync;
 
 	DrawDisplayOptScreen();
 	MenuFadeIn();
@@ -2325,15 +2337,15 @@ int CP_Display(int blank)
 			MenuFadeOut();
 			return 0;
 		case DISPLAY_FULLSCREEN_EXCLUSIVE:
-			fullscreen ^= 1;
+			fullScreen ^= 1;
 			DrawDisplayOptScreen();
 			break;
 		case DISPLAY_FULLSCREEN_BORDERLESS:
-			borderless ^= 1;
+			borderlessFs ^= 1;
 			DrawDisplayOptScreen();
 			break;
 		case DISPLAY_VSYNC:
-			enablevsync ^= 1;
+			enableVsync ^= 1;
 			DrawDisplayOptScreen();
 			break;
 		case DISPLAY_APPLY + 1: // Blank space above
@@ -2659,7 +2671,7 @@ void DrawDisplayOptScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-	if (fullscreen)
+	if (fullScreen)
 		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 1;
 	else
 		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 0;
@@ -2669,21 +2681,21 @@ void DrawDisplayOptScreen(void)
 	x = DISPLAY_CTL_X + DisplayItems.indent - 24;
 	y = DISPLAY_CTL_Y + 15;
 
-	if (fullscreen)
+	if (fullScreen)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	y = y + 13;
 
-	if (borderless)
+	if (borderlessFs)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
 	y = y + 13;
 
-	if (enablevsync)
+	if (enableVsync)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
@@ -5032,15 +5044,15 @@ void InitResList(int displayIndex)
 }
 
 bool IsDisplayChanged(void) {
-	if (orig_fullscreen == fullscreen && orig_borderless == borderless && orig_aspectcorrection == enablevsync)
+	if (orig_fullScreen == fullScreen && orig_borderlessFs == borderlessFs && orig_enableVsync == enableVsync)
 		return false;
 	return true;
 }
 
 void RevertDisplay(void) {
-	fullscreen = orig_fullscreen;
-	borderless = orig_borderless;
-	enablevsync = orig_aspectcorrection;
+	fullScreen = orig_fullScreen;
+	borderlessFs = orig_borderlessFs;
+	enableVsync = orig_enableVsync;
 }
 
 ////////////////////////////////////////////////////////////////////

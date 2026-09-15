@@ -158,9 +158,9 @@ void ReadConfig(void)
 		read(file, &screenResW, sizeof(screenResW));
 		read(file, &screenResH, sizeof(screenResH));
 
-		read(file, &fullscreen, sizeof(fullscreen));
-		read(file, &borderless, sizeof(borderless));
-		read(file, &enablevsync, sizeof(enablevsync));
+		read(file, &fullScreen, sizeof(fullScreen));
+		read(file, &borderlessFs, sizeof(borderlessFs));
+		read(file, &enableVsync, sizeof(enableVsync));
 
 		read(file, Scores, sizeof(HighScore) * MaxScores);
 
@@ -261,14 +261,14 @@ void ReadConfig(void)
 		else if (viewsize > 21)
 			viewsize = 21;
 
-		if (fullscreen)
-			fullscreen = true;
+		if (fullScreen)
+			fullScreen = true;
 
-		if (borderless)
-			borderless = true;
+		if (borderlessFs)
+			borderlessFs = true;
 
-		if (enablevsync)
-			enablevsync = true;
+		if (enableVsync)
+			enableVsync = true;
 
 #ifdef VIEASM
 		if (soundvol > 100) soundvol = 100;
@@ -395,9 +395,9 @@ void ReadDisplayConfig(void)
 	read(file, &screenResW, sizeof(screenResW));
 	read(file, &screenResH, sizeof(screenResH));
 
-	read(file, &fullscreen, sizeof(fullscreen));
-	read(file, &borderless, sizeof(borderless));
-	read(file, &enablevsync, sizeof(enablevsync));
+	read(file, &fullScreen, sizeof(fullScreen));
+	read(file, &borderlessFs, sizeof(borderlessFs));
+	read(file, &enableVsync, sizeof(enableVsync));
 
 	close(file);
 }
@@ -428,9 +428,9 @@ void WriteConfig(void)
 		write(file, &screenResW, sizeof(screenResW));
 		write(file, &screenResH, sizeof(screenResH));
 
-		write(file, &fullscreen, sizeof(fullscreen));
-		write(file, &borderless, sizeof(borderless));
-		write(file, &enablevsync, sizeof(enablevsync));
+		write(file, &fullScreen, sizeof(fullScreen));
+		write(file, &borderlessFs, sizeof(borderlessFs));
+		write(file, &enableVsync, sizeof(enableVsync));
 
 		write(file, Scores, sizeof(HighScore) * MaxScores);
 

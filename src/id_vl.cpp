@@ -25,43 +25,21 @@
 Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-boolean fullscreen = true;
-boolean borderless = true;
-boolean enablevsync = true;
+boolean fullScreen = true, borderlessFs = true, enableVsync = true;
 
-const unsigned ORIGINAL_SCREEN_WIDTH = 320;
-const unsigned ORIGINAL_SCREEN_HEIGHT = 200;
-const unsigned DEFAULT_SCREEN_WIDTH = 320;
-const unsigned DEFAULT_SCREEN_HEIGHT = 200;
+const unsigned ORIGINAL_SCREEN_WIDTH = 320, ORIGINAL_SCREEN_HEIGHT = 200, DEFAULT_SCREEN_WIDTH = 320, DEFAULT_SCREEN_HEIGHT = 200;
 
-unsigned screenResW;
-unsigned screenResH;
-
-unsigned screenWidth;
-unsigned screenHeight;
-unsigned rescaledWidth;
-unsigned rescaledHeight;
-
-unsigned scaleFactor;
-unsigned scaleOffsetX; // Used with HD scaling to calculate and center screens
-unsigned scaleOffsetY;
-
-//int ratioCorrection;
-
-int picHorizAdjust;
-int picVertAdjust;
-int printHorizAdjust;
-int printVertAdjust;
+unsigned screenResW, screenResH;
+unsigned scaleFactor, scaleOffsetX, scaleOffsetY;
+unsigned screenWidth, screenHeight, rescaledWidth, rescaledHeight, screenPitch, bufferPitch;
+unsigned picHorizAdjust, picVertAdjust, printHorizAdjust, printVertAdjust;
 
 int screenBits = -1; // use "best" color depth according to libSDL
 
 SDL_DisplayMode displayMode;
 
 SDL_Surface* screen = NULL;
-unsigned screenPitch;
-
 SDL_Surface* screenBuffer = NULL;
-unsigned bufferPitch;
 
 #ifdef SAVE_GAME_SCREENSHOT
 SDL_Surface* lastGameSurface = NULL;
@@ -166,7 +144,7 @@ void VL_SetVGAPlaneMode(void) {
 		exit(1);
 	}
 
-	if (enablevsync)
+	if (enableVsync)
 		rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 
 	renderer = SDL_CreateRenderer(window, -1, rendererFlags);
@@ -1064,9 +1042,9 @@ void VL_ApplyDisplaySettings(void)
 	if (!window || !renderer)
 		return;
 
-	if (fullscreen)
+	if (fullScreen)
 	{
-		if (borderless)
+		if (borderlessFs)
 		{
 			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		}
@@ -1087,7 +1065,7 @@ void VL_ApplyDisplaySettings(void)
 	}
 
 	//VSync
-	SDL_RenderSetVSync(renderer, enablevsync ? 1 : 0);
+	SDL_RenderSetVSync(renderer, enableVsync ? 1 : 0);
 }
 
 /*

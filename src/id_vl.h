@@ -15,31 +15,24 @@ void Quit(const char *error, ...);
 //===========================================================================
 
 extern SDL_Surface* screen, * screenBuffer;
-extern SDL_DisplayMode displayMode;
 #ifdef SAVE_GAME_SCREENSHOT
-extern SDL_Surface *lastGameSurface;
+extern SDL_Surface* lastGameSurface;
 #endif
+extern SDL_DisplayMode displayMode;
 
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern SDL_Texture* texture;
 extern SDL_Rect* displayBounds;
 
-extern boolean fullscreen, borderless, enablevsync;
+extern boolean fullScreen, borderlessFs, enableVsync;
+
 extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
+
+extern unsigned screenResW, screenResH;
+extern unsigned scaleFactor, scaleOffsetX, scaleOffsetY;
 extern unsigned screenWidth, screenHeight, rescaledWidth, rescaledHeight, screenPitch, bufferPitch;
-
-extern unsigned screenResW;
-extern unsigned screenResH;
-
-extern unsigned scaleFactor;
-extern unsigned scaleOffsetX;
-extern unsigned scaleOffsetY;
-
-extern int picHorizAdjust;
-extern int picVertAdjust;
-extern int printHorizAdjust;
-extern int printVertAdjust;
+extern unsigned picHorizAdjust, picVertAdjust, printHorizAdjust, printVertAdjust;
 
 extern int screenBits;
 

@@ -42,7 +42,10 @@ boolean spearflag;
 #endif
 
 #ifdef USE_FEATUREFLAGS
-int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
+int ffDataTopLeft;
+int ffDataTopRight, ffDataLeftFromTopRight, ffDataSecondLeftFromTopRight;
+int ffDataBottomLeft;
+int ffDataBottomRight;
 #endif
 
 //
@@ -658,14 +661,22 @@ void SetupGameLevel(void)
 #ifdef USE_FEATUREFLAGS
 // Temporary definition to make things clearer
 #define MXX MAPSIZE - 1
-
-    // Read feature flags data from map corners and overwrite corners with adjacent tiles
+// Read feature flags data from map corners and overwrite corners with adjacent tiles
     ffDataTopLeft = MAPSPOT(0, 0, 0);
     MAPSPOT(0, 0, 0) = MAPSPOT(1, 0, 0);
+
     ffDataTopRight = MAPSPOT(MXX, 0, 0);
     MAPSPOT(MXX, 0, 0) = MAPSPOT(MXX, 1, 0);
+
+    ffDataLeftFromTopRight = MAPSPOT(MXX - 1, 0, 0);
+    MAPSPOT(MXX - 1, 0, 0) = MAPSPOT(MXX - 1, 1, 0);
+
+    ffDataSecondLeftFromTopRight = MAPSPOT(MXX - 2, 0, 0);
+    MAPSPOT(MXX - 2, 0, 0) = MAPSPOT(MXX - 2, 1, 0);
+
     ffDataBottomRight = MAPSPOT(MXX, MXX, 0);
     MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX, 0);
+
     ffDataBottomLeft = MAPSPOT(0, MXX, 0);
     MAPSPOT(0, MXX, 0) = MAPSPOT(0, MXX - 1, 0);
 

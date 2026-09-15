@@ -1517,15 +1517,6 @@ extern boolean demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
 extern void *demobuffer;
 
-//
-// atmosphere options
-//
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-extern boolean atmosTexturedEnabled;
-extern boolean atmosShadingEnabled;
-extern boolean atmosSkyboxEnabled;
-extern boolean atmosPrecipitationEnabled;
-#endif
 
 void InitActorList(void);
 void GetNewActor(void);
@@ -1924,20 +1915,39 @@ static inline char *ltoa(long value, char *string, int radix)
 // The ffData... variables contain the 16-bit values of the according corners of the current level.
 // The corners are overwritten with adjacent tiles after initialization in SetupGameLevel
 // to avoid interpretation as e.g. doors.
-extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
+extern int ffDataTopLeft;
+extern int ffDataTopRight, ffDataLeftFromTopRight, ffDataSecondLeftFromTopRight;
+extern int ffDataBottomLeft;
+extern int ffDataBottomRight;
 
 /*************************************************************
  * Current usage of ffData... variables:
- * ffDataTopLeft:     lower 8-bit: ShadeDefID
- * ffDataTopRight:    FeatureFlags
- * ffDataBottomLeft:  CloudSkyDefID or ParallaxStartTexture
- * ffDataBottomRight: high byte: ceiling texture - low byte: floor texture
+ * ffDataTopLeft:					lower 8-bit: ShadeDefID
+ * ffDataTopRight:					FeatureFlags
+ * ffDataLeftFromTopRight:			FeatureFlags
+ * ffDataSecondLeftFromTopRight:	FeatureFlags
+ * ffDataBottomLeft:				CloudSkyDefID or ParallaxStartTexture
+ * ffDataBottomRight:				high byte: ceiling texture - low byte: floor texture
  *************************************************************/
 
 // The feature flags are stored as a wall in the upper right corner of each level
 static inline word GetFeatureFlags(void)
 {
 	return ffDataTopRight;
+}
+
+// The second feature flags are stored as a wall in the left tile from the upper right corner of each level
+// (the second tile starting from the top right)
+static inline word GetSecondFeatureFlags(void)
+{
+	return ffDataLeftFromTopRight;
+}
+
+// The thirs feature flags are stored as a wall in the second left tile from the upper right corner of each level
+// (the third tile starting from the top right)
+static inline word GetThirdFeatureFlags(void)
+{
+	return ffDataSecondLeftFromTopRight;
 }
 
 #endif
