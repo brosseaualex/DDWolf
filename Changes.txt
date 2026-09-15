@@ -21,6 +21,7 @@ DDWolf v1.3.0 (Sep 13, 2026)
 				- Press SCROLL LOCK or F12 to release/grab mouse in game.
 
  [Fixed]
+	- Fixed distant sound issue in VIEASM.
 	- Fixed scaling issues with Rain/Snow at higher resolutions.
 	- Fixed scaling issues on a few screens (intermission & end game).
 	- Fixed leaking rain/snow through ceilings.

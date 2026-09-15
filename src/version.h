@@ -33,7 +33,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS							// Enables modern controls
+//#define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			
 
 //#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager

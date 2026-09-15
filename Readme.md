@@ -4,7 +4,7 @@
 
 One of the goal is also to **make the game friendlier for modders** by including a lot of major and minor features that are made to be easily readable and modifiable.
 
-A consistent effort is also made to preserve the structure of the engine so older tutorials can be adapted with minimal effort.
+A consistent effort is also made to preserve the structure of the engine so older tutorials can be adapted easily.
 
 Please look at the **bottom** of this page for **credits and special thanks!**
 
