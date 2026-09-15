@@ -267,7 +267,7 @@ void InitSky(void)
                 if (index < 0)
                     index = 0; // don't go below the first color
 
-                colormap[calcedCols++] = index;
+                colormap[calcedCols++] = (byte)index;
             }
         }
         else
@@ -277,7 +277,7 @@ void InitSky(void)
                 if (index > 255)
                     index = 255; // don't go above the last color
 
-                colormap[calcedCols++] = index;
+                colormap[calcedCols++] = (byte)index;
             }
         }
     }

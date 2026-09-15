@@ -77,7 +77,7 @@ void PM_Startup(void)
         if (!pageOffsets[i])
             continue; // sparse page
 
-        if (pageOffsets[i] < pageOffsets[0] || pageOffsets[i] >= filesize)
+        if (pageOffsets[i] < pageOffsets[0] || pageOffsets[i] >= (uint32_t)filesize)
             Quit("PM_Startup: Illegal page offset for page %i: %u (filesize: %u)", i, pageOffsets[i], filesize);
     }
 

@@ -923,7 +923,7 @@ void DrawHighScores(void)
 	ClearMScreen();
 	DrawStripes(10);
 
-	VWB_DrawPic(48, -scaleOffsetY, HIGHSCORESPIC);
+	VWB_DrawPic(48, -(int)scaleOffsetY, HIGHSCORESPIC);
 
 #ifndef APOGEE_1_0
 	VWB_DrawPic(4 * 8, 68, C_NAMEPIC);

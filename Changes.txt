@@ -1,3 +1,11 @@
+DDWolf v1.3.1 (xxx XX, 2026)
+ [Added]
+	- Visual Studio 2026 Solution.
+	
+ [Changed]
+	- Default resolution when starting the game for the
+	first time set to 320x200 instead of monitor resolution.
+
 DDWolf v1.3.0 (Sep 13, 2026)
  [Added]
 	- Display resolution & options menu

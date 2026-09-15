@@ -41,8 +41,8 @@ void Present(SDL_Surface* screen)
 		SDL_Color* palette = screen->format->palette->colors;
 
 		int dstPitchPixels = texPitch / sizeof(Uint32);
-		int heightToDraw = (screen->h < screenHeight) ? screen->h : screenHeight;
-		int widthToDraw = (screen->w < screenWidth) ? screen->w : screenWidth;
+		int heightToDraw = ((unsigned int)screen->h < screenHeight) ? screen->h : screenHeight;
+		int widthToDraw = ((unsigned int)screen->w < screenWidth) ? screen->w : screenWidth;
 
 		for (int y = 0; y < heightToDraw; y++)
 		{

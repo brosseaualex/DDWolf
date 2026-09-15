@@ -673,7 +673,7 @@ void CA_Startup(void)
 
 void CA_Shutdown(void)
 {
-    int i, start;
+    int i;
 
     if (maphandle != -1)
         close(maphandle);

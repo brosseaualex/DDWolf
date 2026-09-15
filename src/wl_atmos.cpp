@@ -18,6 +18,8 @@ typedef struct
 #define MAXPOINTS 400
 point3d_t points[MAXPOINTS];
 
+const float BASE_CENTERY = 100.0f;
+
 byte moon[100] =
     {
         0,
@@ -136,8 +138,6 @@ void Init3DPoints(void)
     float length;
     point3d_t* pt;
 
-    const float BASE_CENTERY = 100.0f;
-
     for (i = 0; i < MAXPOINTS; i++)
     {
         pt = &points[i];
@@ -179,8 +179,7 @@ void DrawStarSky(void)
     fixed x, y, z;
     fixed xx, yy;
 
-    const float scaleRatio = (float)viewheight / 200.0f;
-    const int starSize = (int)(1.0f * scaleRatio);
+    const int starSize = (int)(1.0f * scaleFactor);
 
     dest = vbuf;
     for (i = 0; i < centery; i++, dest += bufferPitch)
@@ -192,7 +191,7 @@ void DrawStarSky(void)
 
         x = pt->x * viewcos + pt->z * viewsin;
 
-        y = (int32_t)((pt->y << 16) * scaleRatio);
+        y = (int32_t)((pt->y << 16) * scaleFactor);
         z = ((pt->z * viewcos - pt->x * viewsin)) >> 8;
 
         if (z <= 0)
@@ -226,11 +225,10 @@ void DrawStarSky(void)
 
     xx = ((x / z) * scaleFactor) + (centerx + 1);
 
-    int32_t baseCenterY = 100;
-    int32_t rawMoonY = (((baseCenterY - (baseCenterY >> 3)) << 22) / z);
-    yy = centery - (int32_t)(rawMoonY * scaleRatio);
+    int32_t rawMoonY = ((((int32_t)BASE_CENTERY - ((int32_t)BASE_CENTERY >> 3)) << 22) / z);
+    yy = centery - (int32_t)(rawMoonY * scaleFactor);
 
-    int moonScale = scaleFactor * (int)scaleRatio;
+    int moonScale = scaleFactor * (int)scaleFactor;
     if (moonScale < 1) moonScale = 1;
 
     if (xx > (moonScale * -10) && xx < viewwidth)
@@ -296,8 +294,7 @@ void DrawRain(void)
     int32_t ax, az, x, y, z, xx, yy, height, actheight;
     fixed px, pz;
 
-    const float scaleRatio = (float)viewheight / 200.0f;
-    const int streakSize = (int)(1.0f * scaleRatio);
+    const int rainStreakSize = (int)(1.0f * scaleFactor);
 
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;
     pz = (player->x - FixedMul(0x7900, viewcos)) >> 6;
@@ -315,7 +312,7 @@ void DrawRain(void)
         x = (ax * viewcos) + (az * viewsin);
 
         int32_t rawY = (((pt->y << 6) + rainpos) & 0x0ffff);
-        y = -(heightnumerator << 7) + (int32_t)(rawY * 2048.0f * scaleRatio);
+        y = -(heightnumerator << 7) + (int32_t)(rawY * 2048.0f * scaleFactor);
 
         z = ((az * viewcos) - (ax * viewsin)) >> 8;
 
@@ -339,11 +336,11 @@ void DrawRain(void)
         if (actheight < 0)
             actheight = -actheight;
 
-        int32_t wallThresh = (int32_t)((wallheight[xx] >> 3) * scaleRatio);
+        int32_t wallThresh = (int32_t)((wallheight[xx] >> 3) * scaleFactor);
         if (actheight < wallThresh && height < wallheight[xx])
             continue;
 
-        if (xx >= 0 && xx < viewwidth && (yy - (streakSize * 3)) >= 0 && yy < viewheight)
+        if (xx >= 0 && xx < viewwidth && (yy - (rainStreakSize * 3)) >= 0 && yy < viewheight)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)
             prestep = centerx - xx + 1;
@@ -369,23 +366,23 @@ void DrawRain(void)
             }
 #endif
 
-            for (int s = 0; s < streakSize; s++)
+            for (int s = 0; s < rainStreakSize; s++)
             {
                 int ypos = yy - s;
                 if (ypos >= 0 && ypos < viewheight)
                     vbuf[ylookup[ypos] + xx] = shade + 15;
             }
 
-            for (int s = 0; s < streakSize; s++)
+            for (int s = 0; s < rainStreakSize; s++)
             {
-                int ypos = yy - streakSize - s;
+                int ypos = yy - rainStreakSize - s;
                 if (ypos >= 0 && ypos < viewheight)
                     vbuf[ylookup[ypos] + xx] = shade + 16;
             }
 
-            for (int s = 0; s < streakSize; s++)
+            for (int s = 0; s < rainStreakSize; s++)
             {
-                int ypos = yy - (streakSize * 2) - s;
+                int ypos = yy - (rainStreakSize * 2) - s;
                 if (ypos >= 0 && ypos < viewheight)
                     vbuf[ylookup[ypos] + xx] = shade + 17;
             }
@@ -421,8 +418,7 @@ void DrawSnow(void)
     int32_t ax, az, x, y, z, xx, yy, height, actheight;
     fixed px, pz;
 
-    const float scaleRatio = (float)viewheight / 200.0f;
-    const int snowflakeSize = (int)(1.0f * scaleRatio);
+    const int snowFlakeSize = (int)(1.0f * scaleFactor);
 
     px = (player->y + FixedMul(0x7900, viewsin)) >> 6;
     pz = (player->x - FixedMul(0x7900, viewcos)) >> 6;
@@ -440,7 +436,7 @@ void DrawSnow(void)
         x = (ax * viewcos) + (az * viewsin);
 
         int32_t rawY = (((pt->y << 6) + rainpos) & 0x0ffff);
-        y = -(heightnumerator << 7) + (int32_t)(rawY * 2048.0f * scaleRatio);
+        y = -(heightnumerator << 7) + (int32_t)(rawY * 2048.0f * scaleFactor);
 
         z = ((az * viewcos) - (ax * viewsin)) >> 8;
 
@@ -464,11 +460,11 @@ void DrawSnow(void)
         if (actheight < 0)
             actheight = -actheight;
 
-        int32_t wallThresh = (int32_t)((wallheight[xx] >> 3) * scaleRatio);
+        int32_t wallThresh = (int32_t)((wallheight[xx] >> 3) * scaleFactor);
         if (actheight < wallThresh && height < wallheight[xx])
             continue;
 
-        int maxOffset = (shade < 10) ? (snowflakeSize * 2) : snowflakeSize;
+        int maxOffset = (shade < 10) ? (snowFlakeSize * 2) : snowFlakeSize;
 
         if (xx >= maxOffset && xx < viewwidth - maxOffset && yy >= maxOffset && yy < viewheight - maxOffset)
         {
@@ -498,14 +494,14 @@ void DrawSnow(void)
 
             if (shade < 10)
             {
-                for (int dy = 0; dy < snowflakeSize; dy++)
+                for (int dy = 0; dy < snowFlakeSize; dy++)
                 {
-                    for (int dx = 0; dx < snowflakeSize; dx++)
+                    for (int dx = 0; dx < snowFlakeSize; dx++)
                     {
                         int y1 = yy - dy;
-                        int y2 = yy - snowflakeSize - dy;
+                        int y2 = yy - snowFlakeSize - dy;
                         int x1 = xx - dx;
-                        int x2 = xx - snowflakeSize - dx;
+                        int x2 = xx - snowFlakeSize - dx;
 
                         if (y1 >= 0 && y1 < viewheight && y2 >= 0 && y2 < viewheight &&
                             x1 >= 0 && x1 < viewwidth && x2 >= 0 && x2 < viewwidth)
@@ -520,9 +516,9 @@ void DrawSnow(void)
             }
             else
             {
-                for (int dy = 0; dy < snowflakeSize; dy++)
+                for (int dy = 0; dy < snowFlakeSize; dy++)
                 {
-                    for (int dx = 0; dx < snowflakeSize; dx++)
+                    for (int dx = 0; dx < snowFlakeSize; dx++)
                     {
                         int y1 = yy - dy;
                         int x1 = xx - dx;

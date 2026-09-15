@@ -931,9 +931,9 @@ void CalcProjection(int32_t focal)
 	if (!pixelangle)
 		return;
 
-	scale = (fixed)(halfview * facedist) / (VIEWGLOBAL / 2.0);
+	scale = (fixed)(halfview * facedist) / (fixed)(VIEWGLOBAL / 2.0);
 
-	heightnumerator = (fixed)((double)TILEGLOBAL * (double)scale) / 64.0;
+	heightnumerator = (fixed)((TILEGLOBAL * scale) / 64.0);
 
 	for (i = 0; i < halfview; i++)
 	{

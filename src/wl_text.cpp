@@ -667,7 +667,9 @@ char helpfilename[13] = "HELPART.",
 */
 void HelpScreens(void)
 {
+#ifdef ARTSEXTERN
     int artnum;
+#endif
     char *text;
 #ifndef ARTSEXTERN
     void *layout;
@@ -697,7 +699,9 @@ void HelpScreens(void)
 //
 void EndText(void)
 {
+#ifdef ARTSEXTERN
     int artnum;
+#endif
     char *text;
 #ifndef ARTSEXTERN
     void *layout;
