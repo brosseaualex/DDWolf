@@ -1,5 +1,13 @@
 DDWolf v1.3.1 (xxx XX, 2026)
  [Added]
+	- Two additional feature flags tiles.
+		- The two tiles to the left of the upper right corner of each level.
+			- Gives a total of 3 feature flags.
+			- This is to enable easy combination of different flags.
+				- Ex: Clouds & Rain
+			- Flags will not "cumulate" if you put the same flag multiple times.
+				- They are applied only once.
+			- Some flags might not render well together.
 	- Visual Studio 2026 Solution.
 	
  [Changed]

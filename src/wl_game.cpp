@@ -2,7 +2,7 @@
 
 #include <math.h>
 #include "wl_def.h"
-
+#include "wl_shade.h"
 #ifdef __linux__
 #include <SDL2/SDL_mixer.h>
 #else
@@ -679,7 +679,6 @@ void SetupGameLevel(void)
 
     ffDataBottomLeft = MAPSPOT(0, MXX, 0);
     MAPSPOT(0, MXX, 0) = MAPSPOT(0, MXX - 1, 0);
-
 #undef MXX
 #endif
 
@@ -790,6 +789,10 @@ void SetupGameLevel(void)
 //
 #if defined(USE_FLOORCEILINGTEX) && !defined(USE_MULTIFLATS)
     GetFlatTextures();
+#endif
+
+#ifdef USE_SHADING
+    InitLevelShadeTable();
 #endif
 
     //

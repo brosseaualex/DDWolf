@@ -126,13 +126,13 @@ void VL_SetVGAPlaneMode(void) {
 	const char* title = "Wolfenstein 3D";
 #endif
 	if (screenResW <= 0)
-		screenResW = displayMode.w;
+		screenResW = DEFAULT_SCREEN_WIDTH;
 
 	if (screenResH <= 0)
-		screenResH = displayMode.h;
+		screenResH = DEFAULT_SCREEN_HEIGHT;
 
-	screenWidth = DEFAULT_SCREEN_WIDTH;
-	screenHeight = DEFAULT_SCREEN_HEIGHT;
+	screenWidth = screenResW;
+	screenHeight = screenResH;
 
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, windowFlags);
 

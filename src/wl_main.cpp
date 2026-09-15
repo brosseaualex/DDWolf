@@ -319,7 +319,7 @@ void ReadConfig(void)
 		if (IN_JoyPresent())
 			joystickenabled = true;
 #endif
-		viewsize = 20; // start with a good size
+		viewsize = 19; // start with a good size
 		mouseadjustment = 5;
 
 		//Atmosphere options

@@ -2,9 +2,8 @@
 
 #include "wl_def.h"
 #pragma hdrstop
-
 #include "wl_cloudsky.h"
-#include "wl_shade.h"
+
 
 /*
 =============================================================================
@@ -1483,10 +1482,6 @@ void PlayLoop(void)
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
 	if (GetFeatureFlags() & FF_CLOUDSKY)
 		InitSky();
-#endif
-
-#ifdef USE_SHADING
-	InitLevelShadeTable();
 #endif
 
 	playstate = ex_stillplaying;
