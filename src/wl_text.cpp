@@ -672,7 +672,7 @@ void HelpScreens(void)
 #endif
     char *text;
 #ifndef ARTSEXTERN
-    void *layout;
+    void *layout = nullptr;
 #endif
 
 #ifdef ARTSEXTERN

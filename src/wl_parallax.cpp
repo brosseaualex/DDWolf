@@ -56,7 +56,7 @@ void DrawParallax(void)
     int16_t angle;
     int16_t skypage, curskypage;
     int16_t lastskypage;
-    int16_t xtex, ytex;
+    int16_t xtex;
     int16_t toppix;
     int texX, texY;
 

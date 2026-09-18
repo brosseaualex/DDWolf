@@ -385,7 +385,6 @@ void ScalePost(void)
 void ScaleSkyPost(void)
 {
 	int ywcount, yoffs, yendoffs, texoffs;
-	byte col;
 	int midy, y, skyheight;
 
 	skyheight = viewheight;
