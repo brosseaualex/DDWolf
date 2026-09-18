@@ -102,6 +102,16 @@ boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
 
+//
+// atmosphere options
+//
+#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
+boolean atmosTexturedEnabled = true;
+boolean atmosShadingEnabled = true;
+boolean atmosSkyboxEnabled = true;
+boolean atmosPrecipitationEnabled = true;
+#endif
+
 //===========================================================================
 
 void CenterWindow(word w, word h);
