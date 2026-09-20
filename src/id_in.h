@@ -179,11 +179,8 @@ extern boolean MousePresent;
 extern volatile boolean Paused;
 extern volatile char LastASCII;
 extern volatile ScanCode LastScan;
-#ifdef USE_MODERN_CONTROLS
 extern int GameControllerNumButtons;
-#else
 extern int JoyNumButtons;
-#endif
 
 // Function prototypes
 #define IN_KeyDown(code) (Keyboard((code)))
@@ -218,11 +215,10 @@ void IN_ProcessEvents();
 
 int IN_MouseButtons(void);
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 void IN_GetGameControllerDelta(int* analog0X, int* analog0Y, int* analog1X, int* analog1Y);
 //void IN_GetGameControllerHat(int* dpadUp, int* dpadDown, int* dpadLeft, int* dpadRight);
 int IN_GameControllerButtons(void);
-
 boolean IN_ControllerPresent();
 #else
 int IN_JoyButtons(void);

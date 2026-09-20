@@ -35,6 +35,7 @@ objtype objlist[MAXACTORS];
 objtype* newobj, * obj, * player, * lastobj, * objfreelist, * killerobj;
 
 boolean singlestep, godmode, noclip, ammocheat, mapreveal;
+int extravbls;
 
 tiletype tilemap[MAPSIZE][MAPSIZE]; // wall values only
 bool spotvis[MAPSIZE][MAPSIZE];
@@ -52,11 +53,7 @@ unsigned tics;
 //
 // control info
 //
-#ifdef USE_MODERN_CONTROLS
-boolean mouseenabled, mouseYAxis, controllerEnabled, alwaysRun;
-#else
-boolean mouseenabled, joystickenabled;
-#endif
+boolean mouseenabled, joystickenabled, controllerEnabled, mouseYAxis, alwaysRun;
 
 #ifdef USE_MODERN_CONTROLS
 int dirscan[6] = { sc_W, sc_E, sc_S, sc_Q, sc_StrafeLeft, sc_StrafeRight };
@@ -71,17 +68,14 @@ int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc
 int dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 #endif
 int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
-#ifdef USE_MODERN_CONTROLS
 int buttoncontroller[15] = {
 	bt_attack, bt_strafe, bt_use, bt_run, bt_esc, bt_nobutton, bt_pause, bt_nobutton, bt_nobutton, bt_prevweapon, bt_nextweapon, bt_nobutton, bt_nobutton,
 	bt_strafeleft, bt_straferight };
-#else
 int buttonjoy[32] = {
 	bt_attack, bt_strafe, bt_use, bt_run, bt_esc, bt_pause, bt_nobutton, bt_nobutton, bt_nobutton, bt_prevweapon, bt_nextweapon,
 	bt_nobutton, bt_nobutton, bt_strafeleft, bt_straferight,
 	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
 	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton };
-#endif
 
 int viewsize;
 
@@ -308,7 +302,7 @@ void PollMouseButtons(void)
 		buttonstate[buttonmouse[2]] = true;
 }
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 /*
 ===================
 =
@@ -488,7 +482,7 @@ void PollMouseMove(void)
 #endif
 }
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 /*
 ===================
 =
@@ -669,7 +663,7 @@ void PollControls(void)
 	if (mouseenabled && IN_IsInputGrabbed())
 		PollMouseButtons();
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (controllerEnabled)
 		PollGameControllerButtons();
 #else
@@ -689,7 +683,7 @@ void PollControls(void)
 	if (mouseenabled && IN_IsInputGrabbed())
 		PollMouseMove();
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (controllerEnabled)
 		PollGameControllerMove();
 #else
@@ -1558,6 +1552,9 @@ void PlayLoop(void)
 			VW_WaitVBL(singlestep);
 			lasttimecount = GetTimeCount();
 		}
+
+		if (extravbls)
+			VW_WaitVBL(extravbls);
 
 		if (demoplayback)
 		{

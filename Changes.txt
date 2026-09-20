@@ -1,3 +1,24 @@
+DDWolf v1.4.0 (xxx XX, 2026)
+ [Added]
+	- Added back SDL1 support.
+		- Also modernized its implementation.
+			- Everything should work almost the exact same as the SDL2
+			implementation except a few things.
+			- No borderless fullscreen in SDL1.
+			- No VSync in SDL1 for 2D surfaces.
+				- Replaced with "Double Buffering".
+	- Added back some older command line args and some new ones.
+		- '--res <width> <height>'
+		- '--forcewindowed'
+		- '--extravbls <vbls>'
+		- '--nodblbuf' (SDL1 only)
+	
+ [Changed]
+	- 
+	
+ [Fixed]
+	- 
+
 DDWolf v1.3.1 (Sep 16, 2026)
  [Added]
 	- Two additional feature flags tiles.

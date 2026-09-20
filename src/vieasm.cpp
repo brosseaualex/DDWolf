@@ -130,6 +130,8 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
            "----------\n"
            , frequency, channels, maxchan, buffersize, sndvolume, musvolume, (reverse) ? "true" : "false");
 #endif
+
+#if SDL_MAJOR_VERSION == 2
     if (Mix_OpenAudioDevice(frequency, MIX_DEFAULT_FORMAT, 2, buffersize, NULL, NULL) == -1)
     {
 #ifdef VERBOSE
@@ -137,6 +139,15 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
 #endif
         return false;
     }
+#elif SDL_MAJOR_VERSION == 1
+    if (Mix_OpenAudio(frequency, MIX_DEFAULT_FORMAT, 2, buffersize) == -1)
+    {
+#ifdef VERBOSE
+        printf("ASM_Open: %s\n", Mix_GetError());
+#endif
+        return false;
+    }
+#endif
 
     if ((maxchan > ASM_ABSMAXCHANNELS) || (channels > maxchan))
     {

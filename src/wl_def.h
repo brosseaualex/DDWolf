@@ -1384,6 +1384,9 @@ extern int param_audiobuffer;
 extern int param_mission;
 extern boolean param_goodtimes;
 extern boolean param_ignorenumchunks;
+extern boolean param_forcewindowed;
+extern unsigned param_resx;
+extern unsigned param_resy;
 
 #ifdef VIEASM
 extern boolean param_8bitsound;
@@ -1469,6 +1472,7 @@ extern objtype *actorat[MAPSIZE][MAPSIZE];
 extern bool mapseen[MAPSIZE][MAPSIZE];
 #endif
 extern boolean singlestep, godmode, noclip, ammocheat, mapreveal;
+extern int extravbls;
 
 extern word mapwidth, mapheight;
 extern unsigned tics;
@@ -1477,13 +1481,9 @@ extern int lastgamemusicoffset;
 //
 // control info
 //
-#ifdef USE_MODERN_CONTROLS
-extern boolean mouseenabled, mouseYAxis, controllerEnabled, alwaysRun;
+extern boolean mouseenabled, joystickenabled, controllerEnabled, mouseYAxis, alwaysRun;
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 extern int customControls[10];
-#endif
-#else
-extern boolean mouseenabled, joystickenabled;
 #endif
 
 #ifdef USE_MODERN_CONTROLS
@@ -1494,11 +1494,8 @@ extern int dirscan[4];
 extern int buttonscan[NUMBUTTONS];
 extern int buttonmouse[4];
 
-#ifdef USE_MODERN_CONTROLS
 extern int buttoncontroller[15];
-#else
 extern int buttonjoy[32];
-#endif
 
 extern boolean buttonheld[NUMBUTTONS];
 

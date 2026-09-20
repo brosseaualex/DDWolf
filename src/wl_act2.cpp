@@ -3700,6 +3700,11 @@ void A_StartDeathCam(objtype *ob)
         return;
     }
 
+#if SDL_MAJOR_VERSION == 1
+    if (doubleBufferingEnabled)
+        VW_UpdateScreen();
+#endif
+
     gamestate.victoryflag = true;
     unsigned fadeheight = viewsize != 21 ? screenHeight - scaleFactor * STATUSLINES : screenHeight;
     VL_BarScaledCoord(0, 0, screenWidth, fadeheight, bordercol);
@@ -3719,6 +3724,11 @@ void A_StartDeathCam(objtype *ob)
     }
 
     VW_UpdateScreen();
+
+#if SDL_MAJOR_VERSION == 1
+    if (doubleBufferingEnabled)
+        VW_UpdateScreen();
+#endif
 
     IN_UserInput(300);
 

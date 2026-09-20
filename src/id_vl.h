@@ -14,18 +14,25 @@ void Quit(const char *error, ...);
 
 //===========================================================================
 
-extern SDL_Surface* screen, * screenBuffer;
+extern SDL_Surface* screen;
+extern SDL_Surface* screenBuffer;
+
 #ifdef SAVE_GAME_SCREENSHOT
 extern SDL_Surface* lastGameSurface;
 #endif
-extern SDL_DisplayMode displayMode;
 
+#if SDL_MAJOR_VERSION == 2
+extern SDL_DisplayMode displayMode;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern SDL_Texture* texture;
-extern SDL_Rect* displayBounds;
+extern boolean borderlessFs;
+extern boolean vsyncEnabled;
+#elif SDL_MAJOR_VERSION == 1
+extern boolean doubleBufferingEnabled;
+#endif
 
-extern boolean fullScreen, borderlessFs, enableVsync;
+extern boolean fullScreen;
 
 extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
 
@@ -96,5 +103,9 @@ void VL_CreateYlookup(void);
 void VL_UpdateUIScale(int newWidth, int newHeight);
 void VL_ApplyDisplaySettings(void);
 void VL_SetDisplayResolution(int newWidth, int newHeight);
+
+#if SDL_MAJOR_VERSION == 1
+float VL_GetTargetAspectRatio(int srcW, int srcH);
+#endif
 
 #endif

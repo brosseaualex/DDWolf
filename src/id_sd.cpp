@@ -919,11 +919,19 @@ void SD_Startup(void)
 
     memset(SoundChunks, 0, sizeof(SoundChunks));
 
+#if SDL_MAJOR_VERSION == 2
     if (Mix_OpenAudioDevice(param_samplerate, AUDIO_S16, 2, param_audiobuffer, NULL, NULL))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;
     }
+#elif SDL_MAJOR_VERSION == 1
+    if (Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer))
+    {
+        printf("Unable to open audio: %s\n", Mix_GetError());
+        return;
+    }
+#endif
 
     Mix_ReserveChannels(2);                    // reserve player and boss weapon channels
     Mix_GroupChannels(2, MIX_CHANNELS - 1, 1); // group remaining channels

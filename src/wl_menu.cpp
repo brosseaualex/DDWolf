@@ -34,19 +34,13 @@ static int numResolutions = 0;
 static int selectedResIdx = 0;
 static int activeResIdx = 0;
 
-//
-// atmosphere options
-//
-#if defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
-boolean atmosTexturedEnabled = true;
-boolean atmosShadingEnabled = true;
-boolean atmosSkyboxEnabled = true;
-boolean atmosPrecipitationEnabled = true;
-#endif
-
 boolean orig_fullScreen;
 boolean orig_borderlessFs;
-boolean orig_enableVsync;
+boolean orig_vsyncEnabled;
+
+#if SDL_MAJOR_VERSION == 1
+boolean orig_doubleBuffEnabled;
+#endif
 
 //
 // PRIVATE PROTOTYPES
@@ -203,8 +197,12 @@ enum
 {
 	DISPLAY_RESOLUTION,
 	DISPLAY_FULLSCREEN_EXCLUSIVE,
+#if SDL_MAJOR_VERSION == 2
 	DISPLAY_FULLSCREEN_BORDERLESS,
 	DISPLAY_VSYNC,
+#else
+	DISPLAY_DOUBLE_BUFFERING,
+#endif	
 	DISPLAY_APPLY
 };
 
@@ -225,7 +223,7 @@ CP_itemtype CtlMenu[] = {
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{0, STR_JOYEN, 0},
+	{ 0, STR_JOYEN, 0 },
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -374,8 +372,12 @@ CP_itemtype ResMenu[MAX_RESOLUTIONS];
 CP_itemtype DisplayMenu[] = {
 	{1, STR_DISPLAY_RESOLUTION, CP_Resolution},
 	{1, STR_DISPLAY_FULLSCREEN_EXCLUSIVE, 0},
-	{1, STR_DISPLAY_FULLSCREEN_BORDERLESS, 0},
-	{1, STR_DISPLAY_VSYNC, 0},
+#if SDL_MAJOR_VERSION == 2
+	{ 1, STR_DISPLAY_FULLSCREEN_BORDERLESS, 0 },
+	{ 1, STR_DISPLAY_VSYNC, 0 },
+#else
+	{ 1, STR_DISPLAY_DOUBLE_BUFFERING, 0 },
+#endif
 	{0, "", 0},
 	{1, STR_DISPLAY_APPLY, 0}
 };
@@ -767,6 +769,9 @@ int CP_Resolution(int blank)
 			break;
 		}
 	}
+
+	if (param_forcewindowed == true)
+		fullScreen = false;
 
 	MenuFadeOut();
 	DrawResolutionMenu();
@@ -2318,8 +2323,13 @@ int CP_Display(int blank)
 	int which;
 
 	orig_fullScreen = fullScreen;
+
+#if SDL_MAJOR_VERSION == 2
 	orig_borderlessFs = borderlessFs;
-	orig_enableVsync = enableVsync;
+	orig_vsyncEnabled = vsyncEnabled;
+#elif SDL_MAJOR_VERSION == 1
+	orig_doubleBuffEnabled = doubleBufferingEnabled;
+#endif
 
 	DrawDisplayOptScreen();
 	MenuFadeIn();
@@ -2340,14 +2350,21 @@ int CP_Display(int blank)
 			fullScreen ^= 1;
 			DrawDisplayOptScreen();
 			break;
+#if SDL_MAJOR_VERSION == 2
 		case DISPLAY_FULLSCREEN_BORDERLESS:
 			borderlessFs ^= 1;
 			DrawDisplayOptScreen();
 			break;
 		case DISPLAY_VSYNC:
-			enableVsync ^= 1;
+			vsyncEnabled ^= 1;
 			DrawDisplayOptScreen();
 			break;
+#elif SDL_MAJOR_VERSION == 1
+		case DISPLAY_DOUBLE_BUFFERING:
+			doubleBufferingEnabled ^= 1;
+			DrawDisplayOptScreen();
+			break;
+#endif
 		case DISPLAY_APPLY + 1: // Blank space above
 			if (IsDisplayChanged())
 				VL_ApplyDisplaySettings();
@@ -2538,10 +2555,10 @@ void DrawCtlScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (IN_ControllerPresent())
 		CtlMenu[CTL_JOYENABLE].active = 1;
-#else
+#else	
 	if (IN_JoyPresent())
 		CtlMenu[CTL_JOYENABLE].active = 1;
 #endif
@@ -2671,10 +2688,10 @@ void DrawDisplayOptScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
+#if SDL_MAJOR_VERSION == 2
 	if (fullScreen)
 		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 1;
-	else
-		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 0;
+#endif
 
 	DrawMenu(&DisplayItems, DisplayMenu);
 
@@ -2688,6 +2705,7 @@ void DrawDisplayOptScreen(void)
 
 	y = y + 13;
 
+#if SDL_MAJOR_VERSION == 2
 	if (borderlessFs)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
@@ -2695,10 +2713,16 @@ void DrawDisplayOptScreen(void)
 
 	y = y + 13;
 
-	if (enableVsync)
+	if (vsyncEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#else
+	if (doubleBufferingEnabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
+#endif
 
 	//
 	// PICK FIRST AVAILABLE SPOT
@@ -4906,13 +4930,12 @@ void IntroScreen(void)
 	if (MousePresent)
 		VWB_Bar(164 + scaleOffsetX, 82 + scaleOffsetY, 12, 2, FILLCOLOR);
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (IN_ControllerPresent())
-		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, FILLCOLOR);
 #else
 	if (IN_JoyPresent())
-		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, FILLCOLOR);
 #endif
+		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, FILLCOLOR);
 
 #ifndef VIEASM
 	if (AdLibPresent && !SoundBlasterPresent)
@@ -4953,9 +4976,13 @@ void AddResIfMissing(int w, int h)
 		DynamicResolutions[numResolutions].height = h;
 
 		const char* aspect = "";
-		if (w * 9 == h * 16) aspect = " (16:9)";
+		if (w * 3 == h * 4) aspect = " (4:3)";
+		else if (w * 4 == h * 5) aspect = " (5:4)";
+		else if (w * 2 == h * 3) aspect = " (3:2)";
+		else if (w * 9 == h * 16) aspect = " (16:9)";
 		else if (w * 10 == h * 16) aspect = " (16:10)";
-		else if (w * 3 == h * 4) aspect = " (4:3)";
+		else if (w * 9 == h * 21) aspect = " (21:9)";
+		else if (w * 9 == h * 32) aspect = " (32:9)";
 
 		snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
 		numResolutions++;
@@ -4967,6 +4994,7 @@ void AddResIfMissing(int w, int h)
 // Creates the resolution list
 //
 ////////////////////////////////////////////////////////////////////
+#if SDL_MAJOR_VERSION == 2
 void InitResList(int displayIndex)
 {
 	numResolutions = 0;
@@ -4998,13 +5026,11 @@ void InitResList(int displayIndex)
 
 			bool isDuplicate = false;
 			for (int j = 0; j < numResolutions; j++)
-			{
 				if (DynamicResolutions[j].width == mode.w && DynamicResolutions[j].height == mode.h)
 				{
 					isDuplicate = true;
 					break;
 				}
-			}
 
 			if (!isDuplicate && numResolutions < MAX_RESOLUTIONS)
 			{
@@ -5012,9 +5038,13 @@ void InitResList(int displayIndex)
 				DynamicResolutions[numResolutions].height = mode.h;
 
 				const char* aspect = "";
-				if (mode.w * 9 == mode.h * 16) aspect = " (16:9)";
+				if (mode.w * 3 == mode.h * 4) aspect = " (4:3)";
+				else if (mode.w * 4 == mode.h * 5) aspect = " (5:4)";
+				else if (mode.w * 2 == mode.h * 3) aspect = " (3:2)";
+				else if (mode.w * 9 == mode.h * 16) aspect = " (16:9)";
 				else if (mode.w * 10 == mode.h * 16) aspect = " (16:10)";
-				else if (mode.w * 3 == mode.h * 4) aspect = " (4:3)";
+				else if (mode.w * 9 == mode.h * 21) aspect = " (21:9)";
+				else if (mode.w * 9 == mode.h * 32) aspect = " (32:9)";
 
 				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", mode.w, mode.h, aspect);
 
@@ -5029,6 +5059,82 @@ void InitResList(int displayIndex)
 	AddResIfMissing(640, 480);
 
 	//Sorting - ASC
+	for (int i = 0; i < numResolutions - 1; i++)
+		for (int j = i + 1; j < numResolutions; j++)
+		{
+			int areaI = DynamicResolutions[i].width * DynamicResolutions[i].height;
+			int areaJ = DynamicResolutions[j].width * DynamicResolutions[j].height;
+
+			if (areaI > areaJ)
+			{
+				ScreenResolution temp = DynamicResolutions[i];
+				DynamicResolutions[i] = DynamicResolutions[j];
+				DynamicResolutions[j] = temp;
+			}
+		}
+}
+#elif SDL_MAJOR_VERSION == 1
+void InitResList(int displayIndex)
+{
+	numResolutions = 0;
+
+	SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
+
+	if (modes == (SDL_Rect**)0)
+	{
+		DynamicResolutions[0].width = 320;
+		DynamicResolutions[0].height = 200;
+		snprintf(DynamicResolutions[0].label, sizeof(DynamicResolutions[0].label), "320x200 (16:10)");
+		numResolutions = 1;
+		return;
+	}
+	else
+	{
+		for (int i = 0; modes[i] != NULL; i++)
+		{
+			int w = modes[i]->w;
+			int h = modes[i]->h;
+
+			if (w < 320 || h < 200)
+				continue;
+
+			bool isDuplicate = false;
+			for (int j = 0; j < numResolutions; j++)
+			{
+				if (DynamicResolutions[j].width == w && DynamicResolutions[j].height == h)
+				{
+					isDuplicate = true;
+					break;
+				}
+			}
+
+			if (!isDuplicate && numResolutions < MAX_RESOLUTIONS)
+			{
+				DynamicResolutions[numResolutions].width = w;
+				DynamicResolutions[numResolutions].height = h;
+
+				const char* aspect = "";
+				if (w * 3 == h * 4)       aspect = " (4:3)";
+				else if (w * 4 == h * 5)  aspect = " (5:4)";
+				else if (w * 2 == h * 3)  aspect = " (3:2)";
+				else if (w * 9 == h * 16) aspect = " (16:9)";
+				else if (w * 10 == h * 16) aspect = " (16:10)";
+				else if (w * 9 == h * 21) aspect = " (21:9)";
+				else if (w * 9 == h * 32) aspect = " (32:9)";
+
+				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
+
+				numResolutions++;
+			}
+		}
+	}
+
+	AddResIfMissing(320, 200);
+	AddResIfMissing(320, 240);
+	AddResIfMissing(640, 400);
+	AddResIfMissing(640, 480);
+
+	// Sorting - ASC
 	for (int i = 0; i < numResolutions - 1; i++)
 	{
 		for (int j = i + 1; j < numResolutions; j++)
@@ -5045,17 +5151,30 @@ void InitResList(int displayIndex)
 		}
 	}
 }
+#endif
 
-bool IsDisplayChanged(void) {
-	if (orig_fullScreen == fullScreen && orig_borderlessFs == borderlessFs && orig_enableVsync == enableVsync)
+bool IsDisplayChanged(void)
+{
+#if SDL_MAJOR_VERSION == 2
+	if (orig_fullScreen == fullScreen && orig_borderlessFs == borderlessFs && orig_vsyncEnabled == vsyncEnabled)
 		return false;
+#elif SDL_MAJOR_VERSION == 1
+	if (orig_fullScreen == fullScreen && orig_doubleBuffEnabled == doubleBufferingEnabled)
+		return false;
+#endif
 	return true;
 }
 
-void RevertDisplay(void) {
+void RevertDisplay(void)
+{
+#if SDL_MAJOR_VERSION == 2
 	fullScreen = orig_fullScreen;
 	borderlessFs = orig_borderlessFs;
-	enableVsync = orig_enableVsync;
+	vsyncEnabled = orig_vsyncEnabled;
+#elif SDL_MAJOR_VERSION == 1
+	fullScreen = orig_fullScreen;
+	doubleBufferingEnabled = orig_doubleBuffEnabled;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -5844,7 +5963,7 @@ void ReadAnyControl(ControlInfo* ci)
 		}
 	}
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (controllerEnabled && !mouseactive)
 	{
 		int a0x, a0y;
@@ -6229,12 +6348,6 @@ IN_GetScanName(ScanCode scan)
 		return "F11";
 	case (SDLK_F12):
 		return "F12";
-	case (SDLK_NUMLOCKCLEAR):
-		return "NumLk";
-	case (SDLK_CAPSLOCK):
-		return "CapsLk";
-	case (SDLK_SCROLLLOCK):
-		return "ScrlLk";
 	case (SDLK_RSHIFT):
 		return "RShft";
 	case (SDLK_LSHIFT):
@@ -6247,6 +6360,13 @@ IN_GetScanName(ScanCode scan)
 		return "RAlt";
 	case (SDLK_LALT):
 		return "Alt";
+	case (SDLK_CAPSLOCK):
+		return "CapsLk";
+#if SDL_MAJOR_VERSION == 2
+	case (SDLK_NUMLOCKCLEAR):
+		return "NumLk";
+	case (SDLK_SCROLLLOCK):
+		return "ScrlLk";
 	case (SDLK_PRINTSCREEN):
 		return "PrtSc";
 	case (SDLK_KP_0):
@@ -6269,6 +6389,34 @@ IN_GetScanName(ScanCode scan)
 		return "KP 8";
 	case (SDLK_KP_9):
 		return "KP 9";
+#elif SDL_MAJOR_VERSION == 1
+	case (SDLK_NUMLOCK):
+		return "NumLk";
+	case (SDLK_SCROLLOCK):
+		return "ScrlLk";
+	case (SDLK_PRINT):
+		return "PrtSc";
+	case (SDLK_KP0):
+		return "KP 0";
+	case (SDLK_KP1):
+		return "KP 1";
+	case (SDLK_KP2):
+		return "KP 2";
+	case (SDLK_KP3):
+		return "KP 3";
+	case (SDLK_KP4):
+		return "KP 4";
+	case (SDLK_KP5):
+		return "KP 5";
+	case (SDLK_KP6):
+		return "KP 6";
+	case (SDLK_KP7):
+		return "KP 7";
+	case (SDLK_KP8):
+		return "KP 8";
+	case (SDLK_KP9):
+		return "KP 9";
+#endif
 	case (SDLK_KP_DIVIDE):
 		return "KP /";
 	case (SDLK_KP_MULTIPLY):
@@ -6403,7 +6551,7 @@ void CheckForEpisodes(void)
 		{
 			Quit("Your $HOME directory is not defined. You must set this before playing.");
 		}
-#define WOLFDIR "/.wolf4sdl"
+#define WOLFDIR "/.ddwolf"
 		if (strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
 		{
 			Quit("Your $HOME directory path is too long. It cannot be used for saving games.");

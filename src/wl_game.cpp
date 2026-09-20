@@ -1114,6 +1114,11 @@ void RecordDemo(void)
     SetupGameLevel();
     StartMusic();
 
+#if SDL_MAJOR_VERSION == 1
+    if (doubleBufferingEnabled)
+        VW_UpdateScreen();
+#endif
+
     fizzlein = true;
 
     PlayLoop();
@@ -1305,6 +1310,11 @@ void Died(void)
     // fade to red
     //
     FinishPaletteShifts();
+
+#if SDL_MAJOR_VERSION == 1
+    if (doubleBufferingEnabled)
+        VW_UpdateScreen();
+#endif
 
     VL_BarScaledCoord(viewscreenx, viewscreeny, viewwidth, viewheight, 4);
 

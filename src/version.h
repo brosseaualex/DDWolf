@@ -33,7 +33,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS							// Enables modern controls
+//#define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
 
 //#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
@@ -108,6 +108,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif

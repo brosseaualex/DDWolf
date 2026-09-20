@@ -105,6 +105,10 @@ int param_mission = 0;
 boolean param_goodtimes = false;
 boolean param_ignorenumchunks = false;
 
+boolean param_forcewindowed = false;
+unsigned param_resx = 0;
+unsigned param_resy = 0;
+
 #ifdef VIEASM
 boolean param_8bitsound = false;
 bool noSound = false;
@@ -159,8 +163,12 @@ void ReadConfig(void)
 		read(file, &screenResH, sizeof(screenResH));
 
 		read(file, &fullScreen, sizeof(fullScreen));
+#if SDL_MAJOR_VERSION == 2
 		read(file, &borderlessFs, sizeof(borderlessFs));
-		read(file, &enableVsync, sizeof(enableVsync));
+		read(file, &vsyncEnabled, sizeof(vsyncEnabled));
+#else
+		read(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
+#endif
 
 		read(file, Scores, sizeof(HighScore) * MaxScores);
 
@@ -171,15 +179,13 @@ void ReadConfig(void)
 #endif
 
 		read(file, &mouseenabled, sizeof(mouseenabled));
-#ifdef USE_MODERN_CONTROLS
 		read(file, &mouseYAxis, sizeof(mouseYAxis));
 		read(file, &alwaysRun, sizeof(alwaysRun));
-		read(file, &controllerEnabled, sizeof(controllerEnabled));
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-		read(file, customControls, sizeof(customControls));
-#endif
-#else
 		read(file, &joystickenabled, sizeof(joystickenabled));
+		read(file, &controllerEnabled, sizeof(controllerEnabled));
+
+#if defined(SHOW_CUSTOM_CONTROLS)
+		read(file, customControls, sizeof(customControls));
 #endif
 
 		boolean dummyJoypadEnabled;
@@ -192,11 +198,8 @@ void ReadConfig(void)
 		read(file, dirscan, sizeof(dirscan));
 		read(file, buttonscan, sizeof(buttonscan));
 		read(file, buttonmouse, sizeof(buttonmouse));
-#ifdef USE_MODERN_CONTROLS
 		read(file, buttoncontroller, sizeof(buttoncontroller));
-#else
 		read(file, buttonjoy, sizeof(buttonjoy));
-#endif
 		read(file, &viewsize, sizeof(viewsize));
 		read(file, &mouseadjustment, sizeof(mouseadjustment));
 
@@ -226,9 +229,12 @@ void ReadConfig(void)
 
 		// make sure values are correct
 
+		if (!MousePresent)
+			mouseenabled = false;
+
 		if (mouseenabled)
 			mouseenabled = true;
-#ifdef USE_MODERN_CONTROLS
+
 		if (mouseYAxis)
 			mouseYAxis = true;
 
@@ -237,20 +243,18 @@ void ReadConfig(void)
 
 		if (controllerEnabled)
 			controllerEnabled = true;
-#else
+
 		if (joystickenabled)
 			joystickenabled = true;
-#endif
-		if (!MousePresent)
-			mouseenabled = false;
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 		if (!IN_ControllerPresent())
 			controllerEnabled = false;
 #else
 		if (!IN_JoyPresent())
 			joystickenabled = false;
 #endif
+
 		if (mouseadjustment < 0)
 			mouseadjustment = 0;
 		else if (mouseadjustment > 9)
@@ -264,11 +268,17 @@ void ReadConfig(void)
 		if (fullScreen)
 			fullScreen = true;
 
+#if SDL_MAJOR_VERSION == 2
 		if (borderlessFs)
 			borderlessFs = true;
 
-		if (enableVsync)
-			enableVsync = true;
+		if (vsyncEnabled)
+			vsyncEnabled = true;
+#else
+		if (doubleBufferingEnabled)
+			doubleBufferingEnabled = true;
+#endif
+
 
 #ifdef VIEASM
 		if (soundvol > 100) soundvol = 100;
@@ -308,17 +318,17 @@ void ReadConfig(void)
 		if (MousePresent)
 		{
 			mouseenabled = true;
-#ifdef USE_MODERN_CONTROLS
 			mouseYAxis = false;
-#endif
 		}
-#ifdef USE_MODERN_CONTROLS
+
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 		if (IN_ControllerPresent())
 			controllerEnabled = true;
 #else
 		if (IN_JoyPresent())
 			joystickenabled = true;
 #endif
+
 		viewsize = 19; // start with a good size
 		mouseadjustment = 5;
 
@@ -396,8 +406,13 @@ void ReadDisplayConfig(void)
 	read(file, &screenResH, sizeof(screenResH));
 
 	read(file, &fullScreen, sizeof(fullScreen));
+
+#if SDL_MAJOR_VERSION == 2
 	read(file, &borderlessFs, sizeof(borderlessFs));
-	read(file, &enableVsync, sizeof(enableVsync));
+	read(file, &vsyncEnabled, sizeof(vsyncEnabled));
+#elif SDL_MAJOR_VERSION == 1
+	read(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
+#endif
 
 	close(file);
 }
@@ -429,8 +444,12 @@ void WriteConfig(void)
 		write(file, &screenResH, sizeof(screenResH));
 
 		write(file, &fullScreen, sizeof(fullScreen));
+#if SDL_MAJOR_VERSION == 2
 		write(file, &borderlessFs, sizeof(borderlessFs));
-		write(file, &enableVsync, sizeof(enableVsync));
+		write(file, &vsyncEnabled, sizeof(vsyncEnabled));
+#else
+		write(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
+#endif
 
 		write(file, Scores, sizeof(HighScore) * MaxScores);
 
@@ -439,17 +458,14 @@ void WriteConfig(void)
 #ifndef VIEASM
 		write(file, &DigiMode, sizeof(DigiMode));
 #endif
-
 		write(file, &mouseenabled, sizeof(mouseenabled));
-#ifdef USE_MODERN_CONTROLS
 		write(file, &mouseYAxis, sizeof(mouseYAxis));
 		write(file, &alwaysRun, sizeof(alwaysRun));
+		write(file, &joystickenabled, sizeof(joystickenabled));
 		write(file, &controllerEnabled, sizeof(controllerEnabled));
+
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 		write(file, customControls, sizeof(customControls));
-#endif
-#else
-		write(file, &joystickenabled, sizeof(joystickenabled));
 #endif
 
 		boolean dummyJoypadEnabled = false;
@@ -462,11 +478,8 @@ void WriteConfig(void)
 		write(file, dirscan, sizeof(dirscan));
 		write(file, buttonscan, sizeof(buttonscan));
 		write(file, buttonmouse, sizeof(buttonmouse));
-#ifdef USE_MODERN_CONTROLS
 		write(file, buttoncontroller, sizeof(buttoncontroller));
-#else
 		write(file, buttonjoy, sizeof(buttonjoy));
-#endif
 		write(file, &viewsize, sizeof(viewsize));
 		write(file, &mouseadjustment, sizeof(mouseadjustment));
 
@@ -521,7 +534,10 @@ void DiskFlopAnim(int x, int y)
 	if (!x && !y)
 		return;
 	VWB_DrawPic(x, y, C_DISKLOADING1PIC + which);
-	VW_UpdateScreen(); // ADDEDFIX 4 - Chris
+#if SDL_MAJOR_VERSION == 1
+	if (!doubleBufferingEnabled)
+#endif
+		VW_UpdateScreen(); // ADDEDFIX 4 - Chris
 	which ^= 1;
 }
 
@@ -1797,14 +1813,14 @@ void CheckParameters(int argc, char* argv[])
 	for (i = 1; i < argc; i++)
 	{
 		char* arg = argv[i];
-#ifndef SPEAR
-		IFARG("--goobers")
-#else
-		IFARG("--debugmode")
-#endif
-			param_debugmode = true;
-else IFARG("--baby")
-param_difficulty = 0;
+		#ifndef SPEAR
+				IFARG("--goobers")
+		#else
+				IFARG("--debugmode")
+		#endif
+		param_debugmode = true;
+		else IFARG("--baby")
+		param_difficulty = 0;
 		else IFARG("--easy")
 			param_difficulty = 1;
 		else IFARG("--normal")
@@ -1823,6 +1839,25 @@ param_difficulty = 0;
 			else
 				param_tedlevel = atoi(argv[i]);
 				}
+		else IFARG("--res")
+		{
+			if (i + 2 >= argc)
+			{
+				printf("The res option needs the width and/or the height argument!\n");
+				hasError = true;
+			}
+			else
+			{
+				param_resx = atoi(argv[++i]);
+				param_resy = atoi(argv[++i]);
+			}
+		}
+		else IFARG("--forcewindowed")
+			param_forcewindowed = true;
+#if SDL_MAJOR_VERSION == 1
+		else IFARG("--nodblbuf")
+			doubleBufferingEnabled = false;
+#endif
 		else IFARG("--bits")
 		{
 			if (++i >= argc)
@@ -1845,6 +1880,23 @@ param_difficulty = 0;
 					printf("Screen color depth must be 8, 16, 24, or 32!\n");
 					hasError = true;
 					break;
+				}
+			}
+			}
+		else IFARG("--extravbls")
+		{
+			if (++i >= argc)
+			{
+				printf("The extravbls option is missing the vbls argument!\n");
+				hasError = true;
+			}
+			else
+			{
+				extravbls = atoi(argv[i]);
+				if (extravbls < 0)
+				{
+					printf("Extravbls must be positive!\n");
+					hasError = true;
 				}
 			}
 			}
@@ -1961,6 +2013,11 @@ param_difficulty = 0;
 			" --normal               Sets the difficulty to normal for tedlevel\n"
 			" --hard                 Sets the difficulty to hard for tedlevel\n"
 			" --nowait               Skips intro screens\n"
+#if SDL_MAJOR_VERSION == 1
+			" --nodblbuf             Disable double buffering\n"
+#endif
+			" --res <width> <height> Sets the screen resolution\n"
+			" --forcewindowed        Forces the game in windowed mode\n"
 #ifdef VIEASM
 			" --nosound				 Turns off sound\n"
 			" --8bitsound			 Sets the sound to 8 bits (default 16 bits)\n"
@@ -1968,6 +2025,9 @@ param_difficulty = 0;
 			" --bits <b>             Sets the screen color depth\n"
 			"                        (use this when you have palette/fading problems\n"
 			"                        allowed: 8, 16, 24, 32, default: \"best\" depth)\n"
+
+			" --extravbls <vbls>     Sets a delay after each frame, which may help to\n"
+			"                        reduce flickering (unit is currently 8 ms, default: 0)\n"
 			" --joystick <index>     Use the index-th joystick if available\n"
 			"                        (-1 to disable joystick, default: 0)\n"
 			" --joystickhat <index>  Enables movement with the given coolie hat\n"
@@ -1980,7 +2040,7 @@ param_difficulty = 0;
 #if defined(_WIN32)
 			"                        (default: current directory)\n"
 #else
-			"                        (default: $HOME/.wolf4sdl)\n"
+			"                        (default: $HOME/.ddwolf)\n"
 #endif
 #if defined(SPEAR) && !defined(SPEARDEMO)
 			" --mission <mission>    Mission number to play (0-3)\n"

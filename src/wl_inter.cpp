@@ -470,7 +470,7 @@ void LevelCompleted(void)
 		//
 		// SPEAR OF DESTINY TIMES
 		//
-		{1.5, "01:30"},
+		{ 1.5, "01:30" },
 		{3.5, "03:30"},
 		{2.75, "02:45"},
 		{3.5, "03:30"},
@@ -582,10 +582,15 @@ void LevelCompleted(void)
 				Write(x, 7, tempstr);
 				if (!(i % (PAR_AMOUNT / 10)))
 					SD_PlaySound(ENDBONUS1SND);
+#if SDL_MAJOR_VERSION == 2
 				if (!(i % (PAR_AMOUNT / 50)))
+#elif SDL_MAJOR_VERSION == 1
+				if (!doubleBufferingEnabled || !(i % (PAR_AMOUNT / 50)))
+#endif
 					VW_UpdateScreen();
 				while (SD_SoundPlaying())
 					BJ_Breathe();
+
 				if (IN_CheckAck())
 					goto done;
 			}
@@ -610,7 +615,11 @@ void LevelCompleted(void)
 			Write(x, 14, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
+#if SDL_MAJOR_VERSION == 2
 			if (!(i & 1))
+#elif SDL_MAJOR_VERSION == 1
+			if (!doubleBufferingEnabled || !(i & 1))
+#endif
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
@@ -653,7 +662,11 @@ void LevelCompleted(void)
 			Write(x, 16, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
+#if SDL_MAJOR_VERSION == 2
 			if (!(i & 1))
+#elif SDL_MAJOR_VERSION == 1
+			if (!doubleBufferingEnabled || !(i & 1))
+#endif
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
@@ -695,10 +708,15 @@ void LevelCompleted(void)
 			Write(x, 18, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
+#if SDL_MAJOR_VERSION == 2
 			if (!(i & 1))
+#elif SDL_MAJOR_VERSION == 1
+			if (!doubleBufferingEnabled || !(i & 1))
+#endif
 				VW_UpdateScreen();
 			while (SD_SoundPlaying())
 				BJ_Breathe();
+
 			if (IN_CheckAck())
 				goto done;
 		}

@@ -55,14 +55,13 @@ static KeyboardDef KbdDefs = {
 };
 
 static SDL_Joystick* Joystick;
-
-#ifdef USE_MODERN_CONTROLS
-static SDL_GameController* GameController;
-int GameControllerNumButtons = 16;
-static int GameControllerNumHats;
-#else
 int JoyNumButtons;
 static int JoyNumHats;
+int GameControllerNumButtons = 16;
+static int GameControllerNumHats;
+
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+static SDL_GameController* GameController;
 #endif
 
 static bool GrabInput = true;
@@ -370,6 +369,7 @@ int KeyboardLookup(int key)
 		return 114;
 	case SDLK_UNDO:
 		return 115;
+#if SDL_MAJOR_VERSION == 2
 	case SDLK_KP_0:
 		return 116;
 	case SDLK_KP_1:
@@ -396,6 +396,34 @@ int KeyboardLookup(int key)
 		return 127;
 	case SDLK_SCROLLLOCK:
 		return 128;
+#elif SDL_MAJOR_VERSION == 1
+	case SDLK_KP0:
+		return 116;
+	case SDLK_KP1:
+		return 117;
+	case SDLK_KP2:
+		return 118;
+	case SDLK_KP3:
+		return 119;
+	case SDLK_KP4:
+		return 120;
+	case SDLK_KP5:
+		return 121;
+	case SDLK_KP6:
+		return 122;
+	case SDLK_KP7:
+		return 123;
+	case SDLK_KP8:
+		return 124;
+	case SDLK_KP9:
+		return 125;
+	case SDLK_PRINT:
+		return 126;
+	case SDLK_NUMLOCK:
+		return 127;
+	case SDLK_SCROLLOCK:
+		return 128;
+#endif
 	default:
 		return UNKNOWN_KEY;
 	}
@@ -437,8 +465,7 @@ static int INL_GetMouseButtons(void)
 	return buttons;
 }
 
-#ifdef USE_MODERN_CONTROLS
-
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 ///////////////////////////////////////////////////////////////////////////
 //
 //	IN_GetGameControllerDelta() - Returns the relative movement of the specified
@@ -465,7 +492,25 @@ void IN_GetGameControllerDelta(int* analog0X, int* analog0Y, int* analog1X, int*
 	int a1X = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTX);
 	int a1Y = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTY);
 
-	int hatState = SDL_JoystickGetHat(Joystick, 0);
+	//int hatState = SDL_JoystickGetHat(Joystick, 0);
+
+	//if (hatState & SDL_HAT_RIGHT)
+	//	a0X += 127;
+	//else if (hatState & SDL_HAT_LEFT)
+	//	a0X -= 127;
+	//if (hatState & SDL_HAT_DOWN)
+	//	a0Y += 127;
+	//else if (hatState & SDL_HAT_UP)
+	//	a0Y -= 127;
+
+	if (SDL_GameControllerGetButton(GameController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT))
+		a0X += 127;
+	else if (SDL_GameControllerGetButton(GameController, SDL_CONTROLLER_BUTTON_DPAD_LEFT))
+		a0X -= 127;
+	if (SDL_GameControllerGetButton(GameController, SDL_CONTROLLER_BUTTON_DPAD_DOWN))
+		a0Y += 127;
+	else if (SDL_GameControllerGetButton(GameController, SDL_CONTROLLER_BUTTON_DPAD_UP))
+		a0Y -= 127;
 
 	if (a0X & SDL_CONTROLLER_AXIS_LEFTX)
 		a0X += 127;
@@ -487,20 +532,39 @@ void IN_GetGameControllerDelta(int* analog0X, int* analog0Y, int* analog1X, int*
 	else if (SDL_CONTROLLER_AXIS_RIGHTY)
 		a1Y -= 127;
 
-	if (hatState & SDL_HAT_RIGHT)
-		a0X += 127;
-	else if (hatState & SDL_HAT_LEFT)
-		a0X -= 127;
-	if (hatState & SDL_HAT_DOWN)
-		a0Y += 127;
-	else if (hatState & SDL_HAT_UP)
-		a0Y -= 127;
-
 	*analog1X = a1X;
 	*analog1Y = a1Y;
 
 	*analog0X = a0X;
 	*analog0Y = a0Y;
+}
+
+/*
+===================
+=
+= IN_GameControllerButtons
+=
+===================
+*/
+
+int IN_GameControllerButtons()
+{
+	int i;
+	int res;
+
+	if (!GameController)
+		return 0;
+
+	SDL_GameControllerUpdate();
+	for (i = 0; i < GameControllerNumButtons && i < 16; i++)
+		res |= SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)i) << i;
+
+	return res;
+}
+
+boolean IN_ControllerPresent()
+{
+	return GameController != NULL;
 }
 
 //Unused for now
@@ -522,34 +586,6 @@ void IN_GetGameControllerDelta(int* analog0X, int* analog0Y, int* analog1X, int*
 	}
 }*/
 
-/*
-===================
-=
-= IN_GameControllerButtons
-=
-===================
-*/
-
-int IN_GameControllerButtons()
-{
-	int i;
-
-	if (!GameController)
-		return 0;
-
-	SDL_GameControllerUpdate();
-
-	int res = 0;
-	for (i = 0; i < GameControllerNumButtons && i < 16; i++)
-		res |= SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)i) << i;
-
-	return res;
-}
-
-boolean IN_ControllerPresent()
-{
-	return GameController != NULL;
-}
 #else
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -667,6 +703,7 @@ static void processEvent(SDL_Event* event)
 		// check for keypresses
 	case SDL_KEYDOWN:
 	{
+#if SDL_MAJOR_VERSION == 2
 		SDL_Keymod mod = SDL_GetModState();
 
 		if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
@@ -676,6 +713,17 @@ static void processEvent(SDL_Event* event)
 			SDL_ShowCursor(GrabInput ? SDL_FALSE : SDL_TRUE);
 			return;
 		}
+#elif SDL_MAJOR_VERSION == 1
+		SDLMod mod = SDL_GetModState();
+
+		if (event->key.keysym.sym == SDLK_SCROLLOCK || event->key.keysym.sym == SDLK_F12)
+		{
+			GrabInput = !GrabInput;
+			SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+			SDL_ShowCursor(GrabInput ? SDL_FALSE : SDL_TRUE);
+			return;
+		}
+#endif
 
 		LastScan = event->key.keysym.sym;
 
@@ -697,6 +745,7 @@ static void processEvent(SDL_Event* event)
 		{
 			if ((mod & KMOD_NUM) == 0)
 			{
+#if SDL_MAJOR_VERSION == 2
 				switch (LastScan)
 				{
 				case SDLK_KP_2:
@@ -712,6 +761,23 @@ static void processEvent(SDL_Event* event)
 					LastScan = SDLK_UP;
 					break;
 				}
+#elif SDL_MAJOR_VERSION == 1
+				switch (LastScan)
+				{
+				case SDLK_KP2:
+					LastScan = SDLK_DOWN;
+					break;
+				case SDLK_KP4:
+					LastScan = SDLK_LEFT;
+					break;
+				case SDLK_KP6:
+					LastScan = SDLK_RIGHT;
+					break;
+				case SDLK_KP8:
+					LastScan = SDLK_UP;
+					break;
+				}
+#endif
 			}
 		}
 
@@ -755,6 +821,7 @@ static void processEvent(SDL_Event* event)
 			{
 				switch (key)
 				{
+#if SDL_MAJOR_VERSION == 2
 				case SDLK_KP_2:
 					key = SDLK_DOWN;
 					break;
@@ -767,11 +834,26 @@ static void processEvent(SDL_Event* event)
 				case SDLK_KP_8:
 					key = SDLK_UP;
 					break;
+#elif SDL_MAJOR_VERSION == 1
+				case SDLK_KP2:
+					key = SDLK_DOWN;
+					break;
+				case SDLK_KP4:
+					key = SDLK_LEFT;
+					break;
+				case SDLK_KP6:
+					key = SDLK_RIGHT;
+					break;
+				case SDLK_KP8:
+					key = SDLK_UP;
+					break;
+				}
+#endif
 				}
 			}
-		}
 
 		KeyboardSet(key, 0);
+		}
 	}
 	}
 }
@@ -809,15 +891,15 @@ void IN_Startup(void)
 
 	IN_ClearKeysDown();
 
-#ifdef USE_MODERN_CONTROLS
-	GameControllerNumHats = SDL_JoystickNumHats(Joystick);
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	GameController = SDL_GameControllerOpen(param_joystickindex);
+#else
+	GameControllerNumHats = SDL_JoystickNumHats(Joystick);
 
 	if (GameControllerNumHats > 0) {
 		printf("\nGame Controller hats (D-Pad) found!\n");
 	}
 
-#else
 	if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
 	{
 		Joystick = SDL_JoystickOpen(param_joystickindex);
@@ -853,7 +935,7 @@ void IN_Shutdown(void)
 	if (!IN_Started)
 		return;
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	if (GameController)
 		SDL_GameControllerClose(GameController);
 #else
@@ -988,9 +1070,11 @@ void IN_StartAck(void)
 
 	int buttons = 0;
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	buttons = IN_GameControllerButtons();
-#endif // USE_MODERN_CONTROLS
+#else
+	buttons = IN_JoyButtons();
+#endif
 
 	if (MousePresent)
 		buttons |= IN_MouseButtons();
@@ -1013,8 +1097,10 @@ boolean IN_CheckAck(void)
 
 	int buttons = 0;
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 	buttons = IN_GameControllerButtons() << 4;
+#else
+	buttons = IN_JoyButtons() << 4;
 #endif
 
 	if (MousePresent)
@@ -1032,9 +1118,12 @@ boolean IN_CheckAck(void)
 					IN_WaitAndProcessEvents();
 					buttons = 0;
 
-#ifdef USE_MODERN_CONTROLS
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
 					buttons = IN_GameControllerButtons() << 4;
+#else
+					buttons = IN_JoyButtons() << 4;
 #endif
+
 					if (MousePresent)
 						buttons |= IN_MouseButtons();
 				} while (buttons & (1 << i));
@@ -1107,16 +1196,18 @@ bool IN_IsInputGrabbed()
 
 void IN_CenterMouse()
 {
-	//Only code that was here was for SDL1
+#if SDL_MAJOR_VERSION == 1
+	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
+#endif
 }
 
 void IN_MouseGrab(void)
 {
-	if (!window)
-		return;
-
 	GrabInput = true;
-
 	SDL_ShowCursor(SDL_DISABLE);
+#if SDL_MAJOR_VERSION == 2
 	SDL_SetRelativeMouseMode(SDL_TRUE);
+#elif SDL_MAJOR_VERSION == 1
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+#endif
 }
