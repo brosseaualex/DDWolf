@@ -17,7 +17,8 @@ DDWolf v1.4.0 (xxx XX, 2026)
 	- 
 	
  [Fixed]
-	- 
+	- Fixed a crash when going on the ReadThis without an actual file.
+		- Now it just goes back to main menu.
 
 DDWolf v1.3.1 (Sep 16, 2026)
  [Added]

@@ -1813,14 +1813,14 @@ void CheckParameters(int argc, char* argv[])
 	for (i = 1; i < argc; i++)
 	{
 		char* arg = argv[i];
-		#ifndef SPEAR
-				IFARG("--goobers")
-		#else
-				IFARG("--debugmode")
-		#endif
-		param_debugmode = true;
-		else IFARG("--baby")
-		param_difficulty = 0;
+#ifndef SPEAR
+		IFARG("--goobers")
+#else
+		IFARG("--debugmode")
+#endif
+			param_debugmode = true;
+else IFARG("--baby")
+param_difficulty = 0;
 		else IFARG("--easy")
 			param_difficulty = 1;
 		else IFARG("--normal")
@@ -1851,7 +1851,7 @@ void CheckParameters(int argc, char* argv[])
 				param_resx = atoi(argv[++i]);
 				param_resy = atoi(argv[++i]);
 			}
-		}
+			}
 		else IFARG("--forcewindowed")
 			param_forcewindowed = true;
 #if SDL_MAJOR_VERSION == 1
@@ -2001,7 +2001,11 @@ void CheckParameters(int argc, char* argv[])
 		if (hasError)
 			printf("\n");
 		printf(
-			"DDWolf - By DD\n"
+#if SDL_MAJOR_VERSION == 2
+			"DDWolf\n"
+#elif SDL_MAJOR_VERSION == 1
+			"DDWolf Legacy\n"
+#endif
 			"Original Wolf4SDL by Chaos-Software, additions by the community\n"
 			"Original Wolfenstein 3D by id Software\n\n"
 			"Usage: DDWolf [options]\n"

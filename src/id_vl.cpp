@@ -132,7 +132,7 @@ void VL_SetVGAPlaneMode(void)
 	// are loaded before generating the window.
 	ReadDisplayConfig();
 
-	if (param_forcewindowed == true)
+	if (param_forcewindowed)
 		fullScreen = false;
 
 	if (param_resx > 0)
@@ -195,8 +195,14 @@ void VL_SetVGAPlaneMode(void)
 	// are loaded before generating the window.
 	ReadDisplayConfig();
 
-	if (forceWindowed)
+	if (param_forcewindowed)
 		fullScreen = false;
+
+	if (param_resx > 0)
+		screenResW = param_resx;
+
+	if (param_resy > 0)
+		screenResH = param_resy;
 
 	SDL_WM_SetCaption(title, NULL);
 
@@ -709,7 +715,12 @@ SDL_Surface* VL_ScaleSurface(SDL_Surface* surface, Uint16 width, Uint16 height) 
 		return nullptr;
 
 	SDL_Surface* scaledSurface = SDL_CreateRGBSurface(surface->flags, width, height, 8, 0, 0, 0, 0);
+
+#if SDL_MAJOR_VERSION == 2
 	SDL_SetPaletteColors(scaledSurface->format->palette, gamepal, 0, 256);
+#elif SDL_MAJOR_VERSION == 1
+	SDL_SetPalette(scaledSurface, SDL_LOGPAL | SDL_PHYSPAL, gamepal, 0, 256);
+#endif
 
 	double stretchFactorX = static_cast<double>(width) / static_cast<double>(surface->w);
 	double stretchFactorY = static_cast<double>(height) / static_cast<double>(surface->h);

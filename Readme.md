@@ -80,14 +80,15 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Windows 98*
 - Windows ME*
 - Windows 2000*
-- Windows XP*ish?
+- Windows XP**
 - Windows Vista (32 and 64 bits)
 - Windows 7 (32 and 64 bits)
 - Windows 10 (32 and 64 bits)
 - Windows 11 (32 and 64 bits)
 - Linux - [Game runs 100%, been tested, but build system might be broken]
 
-* SDL1 support only, which is not supported for the moment, but planned to be reimplemented.
+* Legacy (SDL1) version only.
+** Compatible with both SDL1 and SDL2
 ```
 
 <h2><em>How to play</em></h2>
@@ -111,6 +112,9 @@ DDWolf supports the following command line options
  --normal                         Sets the difficulty to normal for tedlevel
  --hard                           Sets the difficulty to hard for tedlevel
  --nowait                         Skips intro screens
+ --res <width> <height>           Sets the screen resolution
+ --forcewindowed                  Forces the game in windowed mode
+ --nodblbuf                       Disable double buffering (Legacy only)
  --bits <b>                       Sets the screen color depth
                                   (Use this when you have palette/fading
                                   problem or perhaps to optimize speed on

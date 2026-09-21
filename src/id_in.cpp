@@ -847,12 +847,10 @@ static void processEvent(SDL_Event* event)
 				case SDLK_KP8:
 					key = SDLK_UP;
 					break;
-				}
 #endif
 				}
 			}
-
-		KeyboardSet(key, 0);
+			KeyboardSet(key, 0);
 		}
 	}
 	}

@@ -770,7 +770,7 @@ int CP_Resolution(int blank)
 		}
 	}
 
-	if (param_forcewindowed == true)
+	if (param_forcewindowed)
 		fullScreen = false;
 
 	MenuFadeOut();
