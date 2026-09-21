@@ -4961,6 +4961,32 @@ void IntroScreen(void)
 
 ////////////////////////////////////////////////////////////////////
 //
+// Used to get the aspect ratio, including a tolerance to
+// ensure that rounding errors cannot prevent the ratio from 
+// being assigned
+// 
+////////////////////////////////////////////////////////////////////
+const char* GetAspectRatioLabel(int w, int h)
+{
+	if (h == 0) return "";
+
+	float ratio = (float)w / (float)h;
+	const float eps = 0.035f;
+
+	if (fabsf(ratio - (4.0f / 3.0f)) < eps) return " (4:3)";
+	if (fabsf(ratio - (5.0f / 4.0f)) < eps) return " (5:4)";
+	if (fabsf(ratio - (3.0f / 2.0f)) < eps) return " (3:2)";
+	if (fabsf(ratio - (16.0f / 10.0f)) < eps) return " (16:10)";
+	if (fabsf(ratio - (16.0f / 9.0f)) < eps) return " (16:9)";
+	if (fabsf(ratio - (9.0f / 5.0f)) < eps) return " (9:5)";
+	if (fabsf(ratio - (21.0f / 9.0f)) < eps) return " (21:9)";
+	if (fabsf(ratio - (32.0f / 9.0f)) < eps) return " (32:9)";
+
+	return "";
+}
+
+////////////////////////////////////////////////////////////////////
+//
 // Used to manually add resolutions, without duplication
 //
 ////////////////////////////////////////////////////////////////////
@@ -4975,14 +5001,7 @@ void AddResIfMissing(int w, int h)
 		DynamicResolutions[numResolutions].width = w;
 		DynamicResolutions[numResolutions].height = h;
 
-		const char* aspect = "";
-		if (w * 3 == h * 4) aspect = " (4:3)";
-		else if (w * 4 == h * 5) aspect = " (5:4)";
-		else if (w * 2 == h * 3) aspect = " (3:2)";
-		else if (w * 9 == h * 16) aspect = " (16:9)";
-		else if (w * 10 == h * 16) aspect = " (16:10)";
-		else if (w * 9 == h * 21) aspect = " (21:9)";
-		else if (w * 9 == h * 32) aspect = " (32:9)";
+		const char* aspect = GetAspectRatioLabel(w, h);
 
 		snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
 		numResolutions++;
@@ -5037,14 +5056,7 @@ void InitResList(int displayIndex)
 				DynamicResolutions[numResolutions].width = mode.w;
 				DynamicResolutions[numResolutions].height = mode.h;
 
-				const char* aspect = "";
-				if (mode.w * 3 == mode.h * 4) aspect = " (4:3)";
-				else if (mode.w * 4 == mode.h * 5) aspect = " (5:4)";
-				else if (mode.w * 2 == mode.h * 3) aspect = " (3:2)";
-				else if (mode.w * 9 == mode.h * 16) aspect = " (16:9)";
-				else if (mode.w * 10 == mode.h * 16) aspect = " (16:10)";
-				else if (mode.w * 9 == mode.h * 21) aspect = " (21:9)";
-				else if (mode.w * 9 == mode.h * 32) aspect = " (32:9)";
+				const char* aspect = GetAspectRatioLabel(mode.w, mode.h);
 
 				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", mode.w, mode.h, aspect);
 
@@ -5113,14 +5125,7 @@ void InitResList(int displayIndex)
 				DynamicResolutions[numResolutions].width = w;
 				DynamicResolutions[numResolutions].height = h;
 
-				const char* aspect = "";
-				if (w * 3 == h * 4)       aspect = " (4:3)";
-				else if (w * 4 == h * 5)  aspect = " (5:4)";
-				else if (w * 2 == h * 3)  aspect = " (3:2)";
-				else if (w * 9 == h * 16) aspect = " (16:9)";
-				else if (w * 10 == h * 16) aspect = " (16:10)";
-				else if (w * 9 == h * 21) aspect = " (21:9)";
-				else if (w * 9 == h * 32) aspect = " (32:9)";
+				const char* aspect = GetAspectRatioLabel(w, h);
 
 				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
 
