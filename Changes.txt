@@ -1,12 +1,21 @@
 DDWolf v1.4.0 (xxx XX, 2026)
  [Added]
-	- Added back SDL1 support.
-		- Also modernized its implementation.
+	- New engine variant - DDWolf-Legacy*.
+		- SDL1 has been re-implemented.
+			- Wolf3D should be compatible with every operating systems
+			known to mankind.
+			- This reinstates support for Windows 95, 98, ME, NT, 2000.
+			- Windows XP is compatible with both SDL1 and SDL2.
+			- Every other Windows version after XP requires SDL2.
+		- Modernized SDL1 implementation.
 			- Everything should work almost the exact same as the SDL2
-			implementation except a few things.
+			version, within SDL1's limitations.
+			- Aspect ratio is kept in fullscreen.
+		- Lost features
 			- No borderless fullscreen in SDL1.
 			- No VSync in SDL1 for 2D surfaces.
 				- Replaced with "Double Buffering".
+		- SDL-1.2.15 & SDL_mixer-1.2.12
 	- Added back some older command line args and some new ones.
 		- '--res <width> <height>'
 		- '--forcewindowed'
@@ -19,6 +28,9 @@ DDWolf v1.4.0 (xxx XX, 2026)
  [Fixed]
 	- Fixed a crash when going on the ReadThis without an actual file.
 		- Now it just goes back to main menu.
+
+*DDWolf-Legacy is provided 'as-is' and no support will be provided other than bug fixes.
+ The IDE projects and the builds provided on Github have been fully tested.*
 
 DDWolf v1.3.1 (Sep 16, 2026)
  [Added]

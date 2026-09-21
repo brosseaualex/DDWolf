@@ -98,8 +98,13 @@ int param_tedlevel = -1;  // default is not to start a level
 int param_joystickindex = 0;
 
 int param_joystickhat = -1;
+#if SDL_MAJOR_VERSION == 2
 int param_samplerate = 44100;
-int param_audiobuffer = 2048 / (44100 / param_samplerate);
+int param_audiobuffer = 1024;
+#elif SDL_MAJOR_VERSION == 1
+int param_samplerate = 22050;
+int param_audiobuffer = 2048;
+#endif
 
 int param_mission = 0;
 boolean param_goodtimes = false;
@@ -166,7 +171,7 @@ void ReadConfig(void)
 #if SDL_MAJOR_VERSION == 2
 		read(file, &borderlessFs, sizeof(borderlessFs));
 		read(file, &vsyncEnabled, sizeof(vsyncEnabled));
-#else
+#elif SDL_MAJOR_VERSION == 1
 		read(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
 #endif
 
@@ -274,7 +279,7 @@ void ReadConfig(void)
 
 		if (vsyncEnabled)
 			vsyncEnabled = true;
-#else
+#elif SDL_MAJOR_VERSION == 1
 		if (doubleBufferingEnabled)
 			doubleBufferingEnabled = true;
 #endif
@@ -447,7 +452,7 @@ void WriteConfig(void)
 #if SDL_MAJOR_VERSION == 2
 		write(file, &borderlessFs, sizeof(borderlessFs));
 		write(file, &vsyncEnabled, sizeof(vsyncEnabled));
-#else
+#elif SDL_MAJOR_VERSION == 1
 		write(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
 #endif
 

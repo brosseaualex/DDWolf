@@ -6,9 +6,9 @@
 #include "wl_def.h"
 #include "id_vl.h"
 
-#if SDL_MAJOR_VERSION == 2
-void Present(SDL_Surface* screen)
+void Present(SDL_Surface* surface)
 {
+#if SDL_MAJOR_VERSION == 2
 	// This prevents the rendering loop to run when minimized
 	// Resolves recurring issue with the window keeping focus when trying to alt-tab out
 	Uint32 windowFlags = SDL_GetWindowFlags(window);
@@ -18,13 +18,13 @@ void Present(SDL_Surface* screen)
 		return;
 	}
 
-	if (!renderer || !texture || !screen || !screen->pixels)
+	if (!renderer || !texture || !surface || !surface->pixels)
 		return;
 
-	if (screenBuffer && screen != screenBuffer)
-		screen = screenBuffer;
+	if (screenBuffer && surface != screenBuffer)
+		surface = screenBuffer;
 
-	if (!screen->format || !screen->format->palette || !screen->format->palette->colors || !ylookup)
+	if (!surface->format || !surface->format->palette || !surface->format->palette->colors || !ylookup)
 	{
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
@@ -37,13 +37,13 @@ void Present(SDL_Surface* screen)
 
 	if (SDL_LockTexture(texture, NULL, &texPixels, &texPitch) == 0)
 	{
-		byte* srcPixels = (byte*)screen->pixels;
+		byte* srcPixels = (byte*)surface->pixels;
 		Uint32* dst32 = (Uint32*)texPixels;
-		SDL_Color* palette = screen->format->palette->colors;
+		SDL_Color* palette = surface->format->palette->colors;
 
 		int dstPitchPixels = texPitch / sizeof(Uint32);
-		int heightToDraw = ((unsigned int)screen->h < screenHeight) ? screen->h : screenHeight;
-		int widthToDraw = ((unsigned int)screen->w < screenWidth) ? screen->w : screenWidth;
+		int heightToDraw = ((unsigned int)surface->h < screenHeight) ? surface->h : screenHeight;
+		int widthToDraw = ((unsigned int)surface->w < screenWidth) ? surface->w : screenWidth;
 
 		for (int y = 0; y < heightToDraw; y++)
 		{
@@ -91,10 +91,7 @@ void Present(SDL_Surface* screen)
 
 	SDL_RenderCopy(renderer, texture, NULL, &renderDest);
 	SDL_RenderPresent(renderer);
-}
 #elif SDL_MAJOR_VERSION == 1
-void Present(SDL_Surface* surface)
-{
 	// This prevents the rendering loop to run when minimized
 	// Resolves recurring issue with the window keeping focus when trying to alt-tab out
 	if ((SDL_GetAppState() & SDL_APPACTIVE) == 0)
@@ -109,7 +106,7 @@ void Present(SDL_Surface* surface)
 	if (!surface || !surface->pixels || !screen || !screen->pixels)
 		return;
 
-	if (!surface->format || !surface->format->palette || !surface->format->palette->colors || !ylookup)
+	if (!surface->format || !surface->format->palette || !surface->format->palette->colors)
 	{
 		SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 		SDL_UpdateRect(screen, 0, 0, 0, 0);
@@ -121,7 +118,7 @@ void Present(SDL_Surface* surface)
 	int srcW = surface->w;
 	int srcH = surface->h;
 
-	float targetAspect = VL_GetTargetAspectRatio(srcW, srcH);
+	float targetAspect = (float)srcW / (float)srcH;
 
 	int destW = winW;
 	int destH = (int)((winW / targetAspect) + 0.5f);
@@ -140,38 +137,60 @@ void Present(SDL_Surface* surface)
 
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
-	SDL_Color* pal = surface->format->palette->colors;
+	int srcBpp = surface->format->BytesPerPixel;
+	int dstBpp = screen->format->BytesPerPixel;
 
-	const int SCALE_BITS = 16;
-	int stepX = (srcW << SCALE_BITS) / destW;
-	int stepY = (srcH << SCALE_BITS) / destH;
-
-	byte* dstBase = (byte*)screen->pixels + (renderDest.y * screen->pitch) + (renderDest.x * 4);
-	int dstPitch = screen->pitch;
-
-	int currY = 0;
-	for (int y = 0; y < destH; ++y)
+	if (srcBpp == 1 && dstBpp == 1)
 	{
-		int srcY = currY >> SCALE_BITS;
-		if (srcY >= srcH) srcY = srcH - 1;
+		SDL_SetColors(screen, surface->format->palette->colors, 0, 256);
 
-		byte* srcRow = (byte*)surface->pixels + ylookup[srcY];
-		Uint32* dstRow = (Uint32*)(dstBase + (y * dstPitch));
+		if (srcW == renderDest.w && srcH == renderDest.h)
+			SDL_BlitSurface(surface, NULL, screen, &renderDest);
+		else
+			SDL_SoftStretch(surface, NULL, screen, &renderDest);
+	}
+	else if (srcBpp == 1 && dstBpp == 4)
+	{
+		const int SCALE_BITS = 16;
+		int stepX = (srcW << SCALE_BITS) / destW;
+		int stepY = (srcH << SCALE_BITS) / destH;
 
-		int currX = 0;
-		for (int x = 0; x < destW; ++x)
+		SDL_Color* pal = surface->format->palette->colors;
+		byte* dstBase = (byte*)screen->pixels + (renderDest.y * screen->pitch) + (renderDest.x * 4);
+		int dstPitch = screen->pitch;
+
+		int currY = 0;
+		for (int y = 0; y < destH; ++y)
 		{
-			int srcX = currX >> SCALE_BITS;
-			if (srcX >= srcW) srcX = srcW - 1;
+			int srcY = currY >> SCALE_BITS;
+			if (srcY >= srcH) srcY = srcH - 1;
 
-			SDL_Color c = pal[srcRow[srcX]];
-			dstRow[x] = SDL_MapRGB(screen->format, c.r, c.g, c.b);
+			byte* srcRow = ylookup ? ((byte*)surface->pixels + ylookup[srcY])
+				: ((byte*)surface->pixels + (srcY * surface->pitch));
+			Uint32* dstRow = (Uint32*)(dstBase + (y * dstPitch));
 
-			currX += stepX;
+			int currX = 0;
+			for (int x = 0; x < destW; ++x)
+			{
+				int srcX = currX >> SCALE_BITS;
+				if (srcX >= srcW) srcX = srcW - 1;
+
+				SDL_Color c = pal[srcRow[srcX]];
+				dstRow[x] = SDL_MapRGB(screen->format, c.r, c.g, c.b);
+
+				currX += stepX;
+			}
+			currY += stepY;
 		}
-		currY += stepY;
+	}
+	else
+	{
+		if (srcW == renderDest.w && srcH == renderDest.h)
+			SDL_BlitSurface(surface, NULL, screen, &renderDest);
+		else
+			SDL_SoftStretch(surface, NULL, screen, &renderDest);
 	}
 
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
+#endif	
 }
-#endif

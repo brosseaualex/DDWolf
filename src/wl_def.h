@@ -1514,7 +1514,6 @@ extern boolean demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
 extern void *demobuffer;
 
-
 void InitActorList(void);
 void GetNewActor(void);
 void PlayLoop(void);

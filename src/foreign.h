@@ -152,11 +152,8 @@
 #define STR_DISPLAY_VSYNC "VSync"
 #define STR_DISPLAY_FULLSCREEN_EXCLUSIVE "Fullscreen"
 #define STR_DISPLAY_FULLSCREEN_BORDERLESS "Borderless fullscreen"
-#define STR_DISPLAY_APPLY "Apply"
-
-#if SDL_MAJOR_VERSION == 1
 #define STR_DISPLAY_DOUBLE_BUFFERING "Double Buffering"
-#endif
+#define STR_DISPLAY_APPLY "Apply"
 
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 #define STR_ATMOS_TITLE "Atmosphere"

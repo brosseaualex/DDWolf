@@ -87,7 +87,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Windows 11 (32 and 64 bits)
 - Linux - [Game runs 100%, been tested, but build system might be broken]
 
-* Legacy (SDL1) version only.
+* DDWolf-Legacy only (SDL1).
 ** Compatible with both SDL1 and SDL2
 ```
 
@@ -208,6 +208,18 @@ Those flags are explicitely tagged in version.h
   - Delete CONFIG.WL6
 - Low frame rate
   - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
+
+<h2><em>DDWolf-Legacy</em></h2>
+
+Do not forget to take care of version.h!
+
+By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
+
+**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time it is changed._**
+
+Those flags are explicitely tagged in version.h
+
+**_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
 
 <h2><em>Wolf4SDL</em></h2>
 

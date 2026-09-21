@@ -42,6 +42,11 @@ boolean orig_vsyncEnabled;
 boolean orig_doubleBuffEnabled;
 #endif
 
+struct ModeDimensions
+{
+	int w, h;
+};
+
 //
 // PRIVATE PROTOTYPES
 //
@@ -200,7 +205,7 @@ enum
 #if SDL_MAJOR_VERSION == 2
 	DISPLAY_FULLSCREEN_BORDERLESS,
 	DISPLAY_VSYNC,
-#else
+#elif SDL_MAJOR_VERSION == 1
 	DISPLAY_DOUBLE_BUFFERING,
 #endif	
 	DISPLAY_APPLY
@@ -375,7 +380,7 @@ CP_itemtype DisplayMenu[] = {
 #if SDL_MAJOR_VERSION == 2
 	{ 1, STR_DISPLAY_FULLSCREEN_BORDERLESS, 0 },
 	{ 1, STR_DISPLAY_VSYNC, 0 },
-#else
+#elif SDL_MAJOR_VERSION == 1
 	{ 1, STR_DISPLAY_DOUBLE_BUFFERING, 0 },
 #endif
 	{0, "", 0},
@@ -2717,7 +2722,7 @@ void DrawDisplayOptScreen(void)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#else
+#elif SDL_MAJOR_VERSION == 1
 	if (doubleBufferingEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
@@ -4959,6 +4964,38 @@ void IntroScreen(void)
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
+int FetchDisplayModes(int displayIndex, ModeDimensions* outModes, int maxModes)
+{
+	int count = 0;
+
+#if SDL_MAJOR_VERSION == 2
+	int totalModes = SDL_GetNumDisplayModes(displayIndex);
+	for (int i = 0; i < totalModes && count < maxModes; ++i)
+	{
+		SDL_DisplayMode mode;
+		if (SDL_GetDisplayMode(displayIndex, i, &mode) == 0)
+		{
+			outModes[count].w = mode.w;
+			outModes[count].h = mode.h;
+			count++;
+		}
+	}
+#elif SDL_MAJOR_VERSION == 1
+	SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
+	if (modes != (SDL_Rect**)0 && modes != (SDL_Rect**)-1)
+	{
+		for (int i = 0; modes[i] != NULL && count < maxModes; ++i)
+		{
+			outModes[count].w = modes[i]->w;
+			outModes[count].h = modes[i]->h;
+			count++;
+		}
+	}
+#endif
+
+	return count;
+}
+
 ////////////////////////////////////////////////////////////////////
 //
 // Used to get the aspect ratio, including a tolerance to
@@ -5013,20 +5050,14 @@ void AddResIfMissing(int w, int h)
 // Creates the resolution list
 //
 ////////////////////////////////////////////////////////////////////
-#if SDL_MAJOR_VERSION == 2
 void InitResList(int displayIndex)
 {
 	numResolutions = 0;
 
-	SDL_DisplayMode desktopMode;
-	if (SDL_GetDesktopDisplayMode(displayIndex, &desktopMode) != 0)
-	{
-		desktopMode.w = 1920;
-		desktopMode.h = 1080;
-	}
+	ModeDimensions modes[MAX_RESOLUTIONS];
+	int modeCount = FetchDisplayModes(displayIndex, modes, MAX_RESOLUTIONS);
 
-	int numDisplayModes = SDL_GetNumDisplayModes(displayIndex);
-	if (numDisplayModes < 1)
+	if (modeCount < 1)
 	{
 		DynamicResolutions[0].width = 320;
 		DynamicResolutions[0].height = 200;
@@ -5035,102 +5066,34 @@ void InitResList(int displayIndex)
 		return;
 	}
 
-	for (int i = 0; i < numDisplayModes; i++)
+	for (int i = 0; i < modeCount; i++)
 	{
-		SDL_DisplayMode mode;
-		if (SDL_GetDisplayMode(displayIndex, i, &mode) == 0)
+		int w = modes[i].w;
+		int h = modes[i].h;
+
+		if (w < 320 || h < 200)
+			continue;
+
+		bool isDuplicate = false;
+		for (int j = 0; j < numResolutions; j++)
 		{
-			if (mode.w < 320 || mode.h < 200)
-				continue;
-
-			bool isDuplicate = false;
-			for (int j = 0; j < numResolutions; j++)
-				if (DynamicResolutions[j].width == mode.w && DynamicResolutions[j].height == mode.h)
-				{
-					isDuplicate = true;
-					break;
-				}
-
-			if (!isDuplicate && numResolutions < MAX_RESOLUTIONS)
+			if (DynamicResolutions[j].width == w && DynamicResolutions[j].height == h)
 			{
-				DynamicResolutions[numResolutions].width = mode.w;
-				DynamicResolutions[numResolutions].height = mode.h;
-
-				const char* aspect = GetAspectRatioLabel(mode.w, mode.h);
-
-				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", mode.w, mode.h, aspect);
-
-				numResolutions++;
+				isDuplicate = true;
+				break;
 			}
 		}
-	}
 
-	AddResIfMissing(320, 200);
-	AddResIfMissing(320, 240);
-	AddResIfMissing(640, 400);
-	AddResIfMissing(640, 480);
-
-	//Sorting - ASC
-	for (int i = 0; i < numResolutions - 1; i++)
-		for (int j = i + 1; j < numResolutions; j++)
+		if (!isDuplicate && numResolutions < MAX_RESOLUTIONS)
 		{
-			int areaI = DynamicResolutions[i].width * DynamicResolutions[i].height;
-			int areaJ = DynamicResolutions[j].width * DynamicResolutions[j].height;
+			DynamicResolutions[numResolutions].width = w;
+			DynamicResolutions[numResolutions].height = h;
 
-			if (areaI > areaJ)
-			{
-				ScreenResolution temp = DynamicResolutions[i];
-				DynamicResolutions[i] = DynamicResolutions[j];
-				DynamicResolutions[j] = temp;
-			}
-		}
-}
-#elif SDL_MAJOR_VERSION == 1
-void InitResList(int displayIndex)
-{
-	numResolutions = 0;
+			const char* aspect = GetAspectRatioLabel(w, h);
 
-	SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
+			snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
 
-	if (modes == (SDL_Rect**)0)
-	{
-		DynamicResolutions[0].width = 320;
-		DynamicResolutions[0].height = 200;
-		snprintf(DynamicResolutions[0].label, sizeof(DynamicResolutions[0].label), "320x200 (16:10)");
-		numResolutions = 1;
-		return;
-	}
-	else
-	{
-		for (int i = 0; modes[i] != NULL; i++)
-		{
-			int w = modes[i]->w;
-			int h = modes[i]->h;
-
-			if (w < 320 || h < 200)
-				continue;
-
-			bool isDuplicate = false;
-			for (int j = 0; j < numResolutions; j++)
-			{
-				if (DynamicResolutions[j].width == w && DynamicResolutions[j].height == h)
-				{
-					isDuplicate = true;
-					break;
-				}
-			}
-
-			if (!isDuplicate && numResolutions < MAX_RESOLUTIONS)
-			{
-				DynamicResolutions[numResolutions].width = w;
-				DynamicResolutions[numResolutions].height = h;
-
-				const char* aspect = GetAspectRatioLabel(w, h);
-
-				snprintf(DynamicResolutions[numResolutions].label, sizeof(DynamicResolutions[numResolutions].label), "%dx%d%s", w, h, aspect);
-
-				numResolutions++;
-			}
+			numResolutions++;
 		}
 	}
 
@@ -5156,7 +5119,6 @@ void InitResList(int displayIndex)
 		}
 	}
 }
-#endif
 
 bool IsDisplayChanged(void)
 {
@@ -6367,7 +6329,6 @@ IN_GetScanName(ScanCode scan)
 		return "Alt";
 	case (SDLK_CAPSLOCK):
 		return "CapsLk";
-#if SDL_MAJOR_VERSION == 2
 	case (SDLK_NUMLOCKCLEAR):
 		return "NumLk";
 	case (SDLK_SCROLLLOCK):
@@ -6394,34 +6355,6 @@ IN_GetScanName(ScanCode scan)
 		return "KP 8";
 	case (SDLK_KP_9):
 		return "KP 9";
-#elif SDL_MAJOR_VERSION == 1
-	case (SDLK_NUMLOCK):
-		return "NumLk";
-	case (SDLK_SCROLLOCK):
-		return "ScrlLk";
-	case (SDLK_PRINT):
-		return "PrtSc";
-	case (SDLK_KP0):
-		return "KP 0";
-	case (SDLK_KP1):
-		return "KP 1";
-	case (SDLK_KP2):
-		return "KP 2";
-	case (SDLK_KP3):
-		return "KP 3";
-	case (SDLK_KP4):
-		return "KP 4";
-	case (SDLK_KP5):
-		return "KP 5";
-	case (SDLK_KP6):
-		return "KP 6";
-	case (SDLK_KP7):
-		return "KP 7";
-	case (SDLK_KP8):
-		return "KP 8";
-	case (SDLK_KP9):
-		return "KP 9";
-#endif
 	case (SDLK_KP_DIVIDE):
 		return "KP /";
 	case (SDLK_KP_MULTIPLY):

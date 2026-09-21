@@ -9,11 +9,7 @@ BY GERARD 'ALUMIUN' WATSON
 #ifdef __linux__
 #include <SDL2/SDL_mixer.h>
 #else
-#ifdef __linux__
-#include <SDL2/SDL_mixer.h>
-#else
 #include <SDL_mixer.h> // Duh.
-#endif
 #endif
 #include <string.h>    // For memset
 #include <stdio.h>     // For printf

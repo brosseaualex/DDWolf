@@ -1589,6 +1589,13 @@ void Setup3DView(void)
 
 //==========================================================================
 
+#if defined(USE_FEATUREFLAGS)
+inline bool HasFeatureFlag(uint32_t flag)
+{
+	return ((GetFeatureFlags() | GetSecondFeatureFlags() | GetThirdFeatureFlags()) & flag) != 0;
+}
+#endif
+
 /*
 ========================
 =
@@ -1625,36 +1632,32 @@ void ThreeDRefresh(void)
 	// follow the walls from there to the right, drawing as we go
 	//
 	VGAClearScreen();
+
 #if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
-	if (atmosSkyboxEnabled)
-		if (GetFeatureFlags() & FF_STARSKY)
-			DrawStarSky();
-		else if (GetSecondFeatureFlags() & FF_STARSKY)
-			DrawStarSky();
-		else if (GetThirdFeatureFlags() & FF_STARSKY)
-			DrawStarSky();
+	if (atmosSkyboxEnabled && HasFeatureFlag(FF_STARSKY))
+		DrawStarSky();
 #endif
 
 	WallRefresh();
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
-	if (atmosSkyboxEnabled)
-		if (GetFeatureFlags() & FF_PARALLAXSKY)
-			DrawParallax();
-		else if (GetSecondFeatureFlags() & FF_PARALLAXSKY)
-			DrawParallax();
-		else if (GetThirdFeatureFlags() & FF_PARALLAXSKY)
-			DrawParallax();
+	if (atmosSkyboxEnabled && HasFeatureFlag(FF_PARALLAXSKY))
+		DrawParallax();
 #endif
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
-	if (atmosSkyboxEnabled)
-		if (GetFeatureFlags() & FF_CLOUDSKY)
-			DrawCloudPlanes();
-		else if (GetSecondFeatureFlags() & FF_CLOUDSKY)
-			DrawCloudPlanes();
-		else if (GetThirdFeatureFlags() & FF_CLOUDSKY)
-			DrawCloudPlanes();
+	if (atmosSkyboxEnabled && HasFeatureFlag(FF_CLOUDSKY))
+		DrawCloudPlanes();
+#endif
+
+#if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
+	if (atmosPrecipitationEnabled && HasFeatureFlag(FF_RAIN))
+		DrawRain();
+#endif
+
+#if defined(USE_FEATUREFLAGS) && defined(USE_SNOW)
+	if (atmosPrecipitationEnabled && HasFeatureFlag(FF_SNOW))
+		DrawSnow();
 #endif
 
 #ifdef USE_FLOORCEILINGTEX
@@ -1666,25 +1669,6 @@ void ThreeDRefresh(void)
 	// draw all the scaled images
 	//
 	DrawScaleds(); // draw scaled stuff
-
-#if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
-	if (atmosPrecipitationEnabled)
-		if (GetFeatureFlags() & FF_RAIN)
-			DrawRain();
-		else if (GetSecondFeatureFlags() & FF_RAIN)
-			DrawRain();
-		else if (GetThirdFeatureFlags() & FF_RAIN)
-			DrawRain();
-#endif
-#if defined(USE_FEATUREFLAGS) && defined(USE_SNOW)
-	if (atmosPrecipitationEnabled)
-		if (GetFeatureFlags() & FF_SNOW)
-			DrawSnow();
-		else if (GetSecondFeatureFlags() & FF_SNOW)
-			DrawSnow();
-		else if (GetThirdFeatureFlags() & FF_SNOW)
-			DrawSnow();
-#endif
 
 	DrawPlayerWeapon(); // draw player's hands
 

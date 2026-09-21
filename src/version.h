@@ -36,7 +36,7 @@
 #define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
 
-//#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
+#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
 
 

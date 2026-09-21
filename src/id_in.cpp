@@ -369,7 +369,6 @@ int KeyboardLookup(int key)
 		return 114;
 	case SDLK_UNDO:
 		return 115;
-#if SDL_MAJOR_VERSION == 2
 	case SDLK_KP_0:
 		return 116;
 	case SDLK_KP_1:
@@ -396,34 +395,6 @@ int KeyboardLookup(int key)
 		return 127;
 	case SDLK_SCROLLLOCK:
 		return 128;
-#elif SDL_MAJOR_VERSION == 1
-	case SDLK_KP0:
-		return 116;
-	case SDLK_KP1:
-		return 117;
-	case SDLK_KP2:
-		return 118;
-	case SDLK_KP3:
-		return 119;
-	case SDLK_KP4:
-		return 120;
-	case SDLK_KP5:
-		return 121;
-	case SDLK_KP6:
-		return 122;
-	case SDLK_KP7:
-		return 123;
-	case SDLK_KP8:
-		return 124;
-	case SDLK_KP9:
-		return 125;
-	case SDLK_PRINT:
-		return 126;
-	case SDLK_NUMLOCK:
-		return 127;
-	case SDLK_SCROLLOCK:
-		return 128;
-#endif
 	default:
 		return UNKNOWN_KEY;
 	}
@@ -703,27 +674,15 @@ static void processEvent(SDL_Event* event)
 		// check for keypresses
 	case SDL_KEYDOWN:
 	{
-#if SDL_MAJOR_VERSION == 2
-		SDL_Keymod mod = SDL_GetModState();
+		ModState mod = SDL_GetModState();
 
-		if (event->key.keysym.sym == SDLK_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
+		if (event->key.keysym.sym == KEY_SCROLLLOCK || event->key.keysym.sym == SDLK_F12)
 		{
 			GrabInput = !GrabInput;
-			SDL_SetRelativeMouseMode(GrabInput ? SDL_TRUE : SDL_FALSE);
-			SDL_ShowCursor(GrabInput ? SDL_FALSE : SDL_TRUE);
+			SET_GRAB_INPUT(GrabInput);
+			SDL_ShowCursor(GrabInput ? SDL_DISABLE : SDL_ENABLE);
 			return;
 		}
-#elif SDL_MAJOR_VERSION == 1
-		SDLMod mod = SDL_GetModState();
-
-		if (event->key.keysym.sym == SDLK_SCROLLOCK || event->key.keysym.sym == SDLK_F12)
-		{
-			GrabInput = !GrabInput;
-			SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-			SDL_ShowCursor(GrabInput ? SDL_FALSE : SDL_TRUE);
-			return;
-		}
-#endif
 
 		LastScan = event->key.keysym.sym;
 
@@ -745,7 +704,6 @@ static void processEvent(SDL_Event* event)
 		{
 			if ((mod & KMOD_NUM) == 0)
 			{
-#if SDL_MAJOR_VERSION == 2
 				switch (LastScan)
 				{
 				case SDLK_KP_2:
@@ -761,23 +719,6 @@ static void processEvent(SDL_Event* event)
 					LastScan = SDLK_UP;
 					break;
 				}
-#elif SDL_MAJOR_VERSION == 1
-				switch (LastScan)
-				{
-				case SDLK_KP2:
-					LastScan = SDLK_DOWN;
-					break;
-				case SDLK_KP4:
-					LastScan = SDLK_LEFT;
-					break;
-				case SDLK_KP6:
-					LastScan = SDLK_RIGHT;
-					break;
-				case SDLK_KP8:
-					LastScan = SDLK_UP;
-					break;
-				}
-#endif
 			}
 		}
 
@@ -821,7 +762,6 @@ static void processEvent(SDL_Event* event)
 			{
 				switch (key)
 				{
-#if SDL_MAJOR_VERSION == 2
 				case SDLK_KP_2:
 					key = SDLK_DOWN;
 					break;
@@ -834,20 +774,6 @@ static void processEvent(SDL_Event* event)
 				case SDLK_KP_8:
 					key = SDLK_UP;
 					break;
-#elif SDL_MAJOR_VERSION == 1
-				case SDLK_KP2:
-					key = SDLK_DOWN;
-					break;
-				case SDLK_KP4:
-					key = SDLK_LEFT;
-					break;
-				case SDLK_KP6:
-					key = SDLK_RIGHT;
-					break;
-				case SDLK_KP8:
-					key = SDLK_UP;
-					break;
-#endif
 				}
 			}
 			KeyboardSet(key, 0);
