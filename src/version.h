@@ -36,23 +36,23 @@
 #define USE_MODERN_CONTROLS							// Enables modern controls
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
 
-#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
+//#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
 
 
-#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
-#define USE_FLOORCEILINGTEX						// Enables texture-mapped floors and ceilings (see wl_plane.c)
+//#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
+//#define USE_FLOORCEILINGTEX						// Enables texture-mapped floors and ceilings (see wl_plane.c)
 													// Set TEXTURESHIFT in wl_def.h to 7 for 128x128 textures
 													// Set TEXTURESHIFT in wl_def.h to 8 for 256x256 textures
-#define USE_MULTIFLATS							// Enables floor and ceiling textures stored in the third mapplane
-#define USE_SHADING								// Enables shading support (see wl_shade.c)
-#define USE_PARALLAX 16							// Enables parallax sky with 16 textures per sky (see wl_parallax.c)
-#define USE_SKYWALLPARALLAX 16					// Enables parallax sky on walls with 16 repeats of sky texture
-#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
-#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
-#define USE_RAIN									// Enables rain support (see wl_atmos.c)
-#define USE_SNOW									// Enables snow support (see wl_atmos.c)
-#define FIXRAINSNOWLEAKS							// Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
+//#define USE_MULTIFLATS							// Enables floor and ceiling textures stored in the third mapplane
+//#define USE_SHADING								// Enables shading support (see wl_shade.c)
+//#define USE_PARALLAX 16							// Enables parallax sky with 16 textures per sky (see wl_parallax.c)
+//#define USE_SKYWALLPARALLAX 16					// Enables parallax sky on walls with 16 repeats of sky texture
+//#define USE_CLOUDSKY								// Enables cloud sky support (see wl_cloudsky.c)
+//#define USE_STARSKY								// Enables star sky support (see wl_atmos.c)
+//#define USE_RAIN									// Enables rain support (see wl_atmos.c)
+//#define USE_SNOW									// Enables snow support (see wl_atmos.c)
+//#define FIXRAINSNOWLEAKS							// Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
 
 //#define USE_DIR3DSPR								// Enables directional 3d sprites
 
@@ -60,18 +60,20 @@
 /*###### MINOR FEATURES ######*/
 /*###########################**/
 
-#define OVERHEAD_MAP								// Enables the overhead map
-#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
+//#define OVERHEAD_MAP								// Enables the overhead map
+/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
 
-#define SEAMLESSLEVELS							// Disables the Episode selection screen on Wolf3D
+//#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
 
-#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
+//#define SEAMLESSLEVELS							// Disables the Episode selection screen on Wolf3D
 
-#define USE_RAND                                  // Enables the C++ random number generator (SRAND). By Matthew
+//#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
 
-#define WSJ_MESSAGE								// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors. By WSJ
+//#define USE_RAND                                  // Enables the C++ random number generator (SRAND). By Matthew
 
-#define SAVE_GAME_SCREENSHOT						// Shows a screenshot in the Save and Load screens. By insurrectionman
+//#define WSJ_MESSAGE								// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors. By WSJ
+
+//#define SAVE_GAME_SCREENSHOT						// Shows a screenshot in the Save and Load screens. By insurrectionman
 
 //#define ARTSEXTERN
 #define DEMOSEXTERN
@@ -85,7 +87,7 @@
 /*###### EXTRA MENUS ######*/
 /*#########################*/
 
-#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
+//#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
 /*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
 													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
 
@@ -108,6 +110,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif

@@ -26,6 +26,7 @@ DDWolf v1.4.0 (xxx XX, 2026)
 	- 
 	
  [Fixed]
+	- Fixed rendering issue with rain/snow and textured ceiling.
 	- Fixed a crash when going on the ReadThis without an actual file.
 		- Now it just goes back to main menu.
 

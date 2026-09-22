@@ -162,7 +162,9 @@ enum
 	CTL_KB_MORE_ACTION_WEP4,
 	CTL_KB_MORE_ACTION_PREV_WEP,
 	CTL_KB_MORE_ACTION_NEXT_WEP,
-	//CTL_KB_MORE_ACTION_AUTOMAP,
+#ifdef OVERHEAD_MAP
+	CTL_KB_MORE_ACTION_AUTOMAP,
+#endif
 	CTL_SPACE_KB_MORE_ACTION,
 	CTL_BACK_ACTIONKEYS
 };
@@ -339,7 +341,9 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_WPN_4, 0},
 	{1, STR_PREV_WPN, 0},
 	{1, STR_NEXT_WPN, 0},
-	//{1, STR_AUTOMAP, 0},
+#ifdef OVERHEAD_MAP
+	{1, STR_AUTOMAP, 0},
+#endif
 	{0, "", 0},
 	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
 };
@@ -418,12 +422,12 @@ AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
 
 #ifdef USE_MODERN_CONTROLS
 CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
-CusKeyboardMoveItems = { OPT_KEYBOARD_MOVE_X, OPT_KEYBOARD_MOVE_Y + 4, lengthof(CtlKeyboardMoveMenu), 0, 54 },
-CusKeyboardActionItems = { OPT_KEYBOARD_ACTION_X, OPT_KEYBOARD_ACTION_Y, lengthof(CtlKeyboardActionMenu), 0, 54 },
-CusKeyboardMoreActionItems = { OPT_KEYBOARD_MORE_ACTION_X, OPT_KEYBOARD_MORE_ACTION_Y, lengthof(CtlKeyboardMoreActionMenu), 0, 54 },
-CusJoystickItems = { OPT_JOYSTICK_X, OPT_JOYSTICK_Y, lengthof(CtlJoystickMenu), 0, 54 },
+CusKeyboardMoveItems = { OPT_KEYBOARD_MOVE_X, OPT_KEYBOARD_MOVE_Y + 4, lengthof(CtlKeyboardMoveMenu), 0, 32 },
+CusKeyboardActionItems = { OPT_KEYBOARD_ACTION_X, OPT_KEYBOARD_ACTION_Y, lengthof(CtlKeyboardActionMenu), 0, 32 },
+CusKeyboardMoreActionItems = { OPT_KEYBOARD_MORE_ACTION_X, OPT_KEYBOARD_MORE_ACTION_Y, lengthof(CtlKeyboardMoreActionMenu), 0, 32 },
+CusJoystickItems = { OPT_JOYSTICK_X, OPT_JOYSTICK_Y, lengthof(CtlJoystickMenu), 0, 32 },
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-CusCtlItems = { CUS_CTL_TEXT_X, CUS_CTL_TEXT_Y, lengthof(CusCtlMenu), 0, 54 },
+CusCtlItems = { CUS_CTL_TEXT_X, CUS_CTL_TEXT_Y, lengthof(CusCtlMenu), 0, 32 },
 #endif
 #endif
 SndItems = { SM_X, SM_Y1, lengthof(SndMenu), 0, 52 },
@@ -3272,11 +3276,21 @@ enum
 	WEP2,
 	WEP3,
 	WEP4,
-	PREVWEP,
-	NEXTWEP//,
-	//AUTOMAP
+	PREVWEP,	
+#ifndef OVERHEAD_MAP
+	NEXTWEP
+#else
+	NEXTWEP,
+	AUTOMAP
+#endif
+	
 };
-int actionorder[6] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP/*, AUTOMAP*/ };
+
+#ifndef OVERHEAD_MAP
+int actionorder[6] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP };
+#else
+int actionorder[7] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP, AUTOMAP };
+#endif
 
 int CP_KeyboardMoreActionCtl(int blank)
 {
@@ -3315,10 +3329,12 @@ int CP_KeyboardMoreActionCtl(int blank)
 			DefineKeyMoreActionsBtns(6);
 			DrawMoreActionsKeys(6);
 			break;
-			//case CTL_KB_MORE_ACTION_AUTOMAP:
-			//	DefineKeyMoreActionsBtns(7);
-			//	DrawMoreActionsKeys(7);
-			//	break;
+#ifdef OVERHEAD_MAP
+		case CTL_KB_MORE_ACTION_AUTOMAP:
+			DefineKeyMoreActionsBtns(7);
+			DrawMoreActionsKeys(7);
+			break;
+#endif
 		default:
 			which = -1;
 			menuExit++;
@@ -4697,6 +4713,11 @@ void PrintMoreActionsKeys(int i)
 void DrawMoreActionsKeys(int hilight)
 {
 	int i, color;
+	int nbActions = 6;
+
+#ifdef OVERHEAD_MAP
+	nbActions = 7;
+#endif
 
 	color = TEXTCOLOR;
 	if (hilight)
@@ -4705,7 +4726,7 @@ void DrawMoreActionsKeys(int hilight)
 
 	PrintX = CTL_MOUSE_X + scaleOffsetX;
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < nbActions; i++)
 		PrintMoreActionsKeys(i);
 }
 

@@ -374,13 +374,13 @@ void PollCustomKeyboardMove(void)
 {
 	int delta = buttonstate[bt_run] || alwaysRun ? RUNMOVE * tics : BASEMOVE * tics;
 
-//#ifdef _DEBUG
-//	if (buttonstate[bt_run])
-//		printf("\nRun Button Pressed");
-//
-//	if (buttonstate[bt_strafe])
-//		printf("\nStrafe Button Pressed");
-//#endif
+	//#ifdef _DEBUG
+	//	if (buttonstate[bt_run])
+	//		printf("\nRun Button Pressed");
+	//
+	//	if (buttonstate[bt_strafe])
+	//		printf("\nStrafe Button Pressed");
+	//#endif
 
 	if (Keyboard(dirscan[di_north]))
 		controly = ((alwaysRun && buttonstate[bt_run]) || (!alwaysRun && !buttonstate[bt_run])) ? -BASEMOVE * tics : -RUNMOVE * tics;
@@ -449,7 +449,7 @@ void PollCustomControls(void)
 		if (Keyboard(buttonscan[bt_cus_ctl_10]))
 			GetMessage("Adv Ctl 10", DEF_MSG_CLR);
 #endif
-	}	
+	}
 }
 #endif
 #endif
@@ -972,7 +972,7 @@ void CheckKeys(void)
 #endif
 
 #ifdef OVERHEAD_MAP
-	if (Keyboard(sc_O))
+	if (buttonstate[bt_automap]) 
 	{
 		ViewMap();
 
