@@ -34,7 +34,7 @@ extern boolean doubleBufferingEnabled;
 
 extern boolean fullScreen;
 
-extern const unsigned ORIGINAL_SCREEN_WIDTH, ORIGINAL_SCREEN_HEIGHT, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
+extern const unsigned DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
 
 extern unsigned screenResW, screenResH;
 extern unsigned scaleFactor, scaleOffsetX, scaleOffsetY;

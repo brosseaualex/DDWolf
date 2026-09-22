@@ -22,7 +22,7 @@ void ClearSplitVWB(void)
 {
 	WindowX = 0;
 	WindowY = 0;
-	WindowW = ORIGINAL_SCREEN_WIDTH;
+	WindowW = DEFAULT_SCREEN_WIDTH;
 	WindowH = 160;
 }
 
@@ -233,7 +233,7 @@ void Victory(void)
 	IN_Ack();
 
 	VW_FadeOut();
-	if (screenHeight % ORIGINAL_SCREEN_HEIGHT != 0)
+	if (screenHeight % DEFAULT_SCREEN_HEIGHT != 0)
 		VL_ClearScreen(0);
 
 	MainMenu[savegame].active = 0; // ADDEDFIX 3 - Tricob

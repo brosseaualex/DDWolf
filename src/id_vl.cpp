@@ -44,10 +44,9 @@ int desktopWidth = 0;
 int desktopHeight = 0;
 boolean doubleBufferingEnabled = true;
 #endif
-
 boolean fullScreen = true;
 
-const unsigned ORIGINAL_SCREEN_WIDTH = 320, ORIGINAL_SCREEN_HEIGHT = 200, DEFAULT_SCREEN_WIDTH = 320, DEFAULT_SCREEN_HEIGHT = 200;
+const unsigned DEFAULT_SCREEN_WIDTH = 320, DEFAULT_SCREEN_HEIGHT = 200;
 
 unsigned screenResW, screenResH;
 unsigned scaleFactor, scaleOffsetX, scaleOffsetY;
@@ -1085,20 +1084,20 @@ void VL_UpdateUIScale(int newWidth, int newHeight)
 	screenWidth = newWidth;
 	screenHeight = newHeight;
 
-	int scaleX = screenWidth / ORIGINAL_SCREEN_WIDTH;
-	int scaleY = screenHeight / ORIGINAL_SCREEN_HEIGHT;
+	int scaleX = screenWidth / DEFAULT_SCREEN_WIDTH;
+	int scaleY = screenHeight / DEFAULT_SCREEN_HEIGHT;
 
 	scaleFactor = (scaleX < scaleY) ? scaleX : scaleY;
 
 	if (scaleFactor < 1) scaleFactor = 1;
-	if (screenHeight / ORIGINAL_SCREEN_HEIGHT < scaleFactor)
-		scaleFactor = screenHeight / ORIGINAL_SCREEN_HEIGHT;
+	if (screenHeight / DEFAULT_SCREEN_HEIGHT < scaleFactor)
+		scaleFactor = screenHeight / DEFAULT_SCREEN_HEIGHT;
 
 	printHorizAdjust = picHorizAdjust / scaleFactor;
 	printVertAdjust = picVertAdjust / scaleFactor;
 
-	scaleOffsetX = (screenWidth - scaleFactor * ORIGINAL_SCREEN_WIDTH) / (2 * scaleFactor);
-	scaleOffsetY = (screenHeight - scaleFactor * ORIGINAL_SCREEN_HEIGHT) / (2 * scaleFactor);
+	scaleOffsetX = (screenWidth - scaleFactor * DEFAULT_SCREEN_WIDTH) / (2 * scaleFactor);
+	scaleOffsetY = (screenHeight - scaleFactor * DEFAULT_SCREEN_HEIGHT) / (2 * scaleFactor);
 
 	rescaledWidth = screenWidth / scaleFactor;
 	rescaledHeight = screenHeight / scaleFactor;
@@ -1148,8 +1147,8 @@ void VL_CacheDesktopResolution(void)
 		}
 		else
 		{
-			desktopWidth = 1920;
-			desktopHeight = 1080;
+			desktopWidth = DEFAULT_SCREEN_WIDTH;
+			desktopHeight = DEFAULT_SCREEN_HEIGHT;
 		}
 	}
 }

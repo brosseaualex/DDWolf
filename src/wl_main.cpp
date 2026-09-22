@@ -1306,7 +1306,7 @@ void DoJukebox(void)
 	SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
 	PrintY = 15;
 	WindowX = 0;
-	WindowY = ORIGINAL_SCREEN_WIDTH;
+	WindowY = DEFAULT_SCREEN_WIDTH;
 	US_CPrint("Robert's Jukebox");
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
@@ -1524,8 +1524,8 @@ void ShowViewSize(int width)
 	}
 	else
 	{
-		viewwidth = width * 16 * screenWidth / ORIGINAL_SCREEN_WIDTH;
-		viewheight = (int)(width * 16 * HEIGHTRATIO * screenHeight / ORIGINAL_SCREEN_HEIGHT);
+		viewwidth = width * 16 * screenWidth / DEFAULT_SCREEN_WIDTH;
+		viewheight = (int)(width * 16 * HEIGHTRATIO * screenHeight / DEFAULT_SCREEN_HEIGHT);
 		DrawPlayBorder();
 	}
 
@@ -1546,8 +1546,8 @@ void NewViewSize(int width)
 		SetViewSize(screenWidth, screenHeight - (scaleFactor * STATUSLINES));
 	else
 	{
-		int targetW = (width * 16 * screenWidth) / ORIGINAL_SCREEN_WIDTH;
-		int targetH = (int)(width * 16 * HEIGHTRATIO * screenHeight) / ORIGINAL_SCREEN_HEIGHT;
+		int targetW = (width * 16 * screenWidth) / DEFAULT_SCREEN_WIDTH;
+		int targetH = (int)(width * 16 * HEIGHTRATIO * screenHeight) / DEFAULT_SCREEN_HEIGHT;
 
 		if (targetW < 64) targetW = 64;
 		if (targetH < 40) targetH = 40;
@@ -1764,7 +1764,7 @@ static void DemoLoop()
 			if (playstate == ex_abort)
 				break;
 			VW_FadeOut();
-			if (screenHeight % ORIGINAL_SCREEN_HEIGHT != 0)
+			if (screenHeight % DEFAULT_SCREEN_HEIGHT != 0)
 				VL_ClearScreen(0);
 			StartCPMusic(INTROSONG);
 		}
