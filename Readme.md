@@ -10,7 +10,7 @@ Please look at the **bottom** of this page for **credits and special thanks!**
 
 <h2><em>Main features</em></h2>
 
-* HD resolution support & Display menu
+* HD resolution support
 	- Display resolution & options menu.
   - Supports any resolutions.
     - Resolution change keeps aspect ratio in every display mode.
@@ -77,6 +77,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 <h2><em>Operating system support</em></h2>
 
 ```
+- Windows 95*
 - Windows 98*
 - Windows ME*
 - Windows 2000*
@@ -87,7 +88,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 - Windows 11 (32 and 64 bits)
 - Linux - [Game runs 100%, been tested, but build system might be broken]
 
-* DDWolf-Legacy only (SDL1).
+* DDWolf Legacy only (SDL1).
 ** Compatible with both SDL1 and SDL2
 ```
 
@@ -114,7 +115,8 @@ DDWolf supports the following command line options
  --nowait                         Skips intro screens
  --res <width> <height>           Sets the screen resolution
  --forcewindowed                  Forces the game in windowed mode
- --nodblbuf                       Disable double buffering (Legacy only)
+ --novsync                        Disables VSync
+ --nodblbuf                       (Legacy only) Disables double buffering
  --bits <b>                       Sets the screen color depth
                                   (Use this when you have palette/fading
                                   problem or perhaps to optimize speed on
@@ -157,15 +159,14 @@ The current version of the source code is available on GitHub at: https://github
 **_Preferred methods for compiling the source code_**
 
 - Code::Blocks 20.03 - ***Supported***
-  - DDWolf_x86.cbp (Requires 32-bits compiler)
-  - DDWolf_x64.cbp (Requires 64-bits compiler)
+  - DDWolf_x86.cbp (Requires 32 bits compiler)
+  - DDWolf_x64.cbp (Requires 64 bits compiler)
     - README-codeblocks.txt
-- Visual Studio C++ (2019/2022) - ***Supported***
+- Visual Studio C++ (2019/2022/2026) - ***Supported***
+  - [VS 2026] - DDWolf.VC2026.sln
   - [VS 2022] - DDWolf.VC2022.sln
   - [VS 2019] - DDWolf.VC2019.sln
     - README-VC.txt
-- [CLion] CMakeList (Tested with MingW) - ***No support provided***
-- [Outdated] Makefile (for Linux, BSD variants and MinGW/MSYS) - ***No support provided***
 
 <h2><em>SDL Libraries</em></h2>
 
@@ -209,17 +210,25 @@ Those flags are explicitely tagged in version.h
 - Low frame rate
   - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
 
-<h2><em>DDWolf-Legacy</em></h2>
+<h2><em>DDWolf Legacy</em></h2>
 
-Do not forget to take care of version.h!
+**_Please note that DDWolf Legacy is provided 'as-is' and will not be supported except for bug fixes. The IDE projects and the builds provided on Github have been fully tested._**
 
-By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
+In order to ensure the longevity of the game, SDL1 has been re-implemented.
 
-**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time it is changed._**
+This brings back support for legacy operating systems such as Windows 95, 98, ME, NT, 2000.
 
-Those flags are explicitely tagged in version.h
+The SDL and SDL_Mixer versions required for DDWolf Legacy :
+- SDL2 1.2.15
+- SDL2_mixer 1.2.12
 
-**_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
+If you want to compile the source code, the following options are offered:
+```
+- DDWolf.VC2026-SDL1.sln (Visual Studio C++ 2026)
+- DDWolf_x86-SDL1.cbp (Code::Blocks 20.03)
+
+32 bits (x86) support only.
+```
 
 <h2><em>Wolf4SDL</em></h2>
 

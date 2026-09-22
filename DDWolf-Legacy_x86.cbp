@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="DDWolf" />
+		<Option title="DDWolf Legacy" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="default">
 				<Option output="obj/DDWolf" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../_workingdir/output" />
+				<Option working_dir="../_workingdir-sdl1/output" />
 				<Option object_output="obj" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -18,15 +18,15 @@
 				<Option projectResourceIncludeDirsRelation="1" />
 				<Option projectLibDirsRelation="1" />
 				<Compiler>
-					<Add directory="libraries/mingw/SDL2-2.30.7/i686-w64-mingw32/include/SDL2" />
-					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/i686-w64-mingw32/include/SDL2" />
+					<Add directory="libraries/mingw/SDL-1.2.15/include/SDL" />
+					<Add directory="libraries/mingw/SDL_mixer-1.2.12/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
-					<Add option="-lSDL2main -lSDL2 -lSDL2_Mixer" />
-					<Add directory="libraries/mingw/SDL2-2.30.7/i686-w64-mingw32/lib" />
-					<Add directory="libraries/mingw/SDL2_mixer-2.8.0/i686-w64-mingw32/lib" />
+					<Add option="-lSDLmain -lSDL -lSDL_Mixer" />
+					<Add directory="libraries/mingw/SDL-1.2.15/lib" />
+					<Add directory="libraries/mingw/SDL_mixer-1.2.12/lib" />
 				</Linker>
 			</Target>
 		</Build>

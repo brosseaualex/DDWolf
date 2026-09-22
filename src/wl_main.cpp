@@ -90,18 +90,16 @@ char configname[13] = "config.";
 //
 // Command line parameter variables
 //
-//TODO DemolitionDerby - REVERT BACK TO FALSE
-boolean param_debugmode = true;
+boolean param_debugmode = false;
 boolean param_nowait = false;
-int param_difficulty = 1; // default is "normal"
-int param_tedlevel = -1;  // default is not to start a level
+int param_difficulty = 1; // default is "normal" (1)
+int param_tedlevel = -1;  // default is not to start a level (-1)
 int param_joystickindex = 0;
-
 int param_joystickhat = -1;
 #if SDL_MAJOR_VERSION == 2
 int param_samplerate = 44100;
 int param_audiobuffer = 1024;
-#elif SDL_MAJOR_VERSION == 1
+#elif SDL_MAJOR_VERSION == 1 //Should be better for older hardware
 int param_samplerate = 22050;
 int param_audiobuffer = 2048;
 #endif
@@ -109,8 +107,8 @@ int param_audiobuffer = 2048;
 int param_mission = 0;
 boolean param_goodtimes = false;
 boolean param_ignorenumchunks = false;
-
 boolean param_forcewindowed = false;
+boolean param_novsync = false;
 unsigned param_resx = 0;
 unsigned param_resy = 0;
 
@@ -1848,7 +1846,10 @@ param_difficulty = 0;
 			}
 		else IFARG("--forcewindowed")
 			param_forcewindowed = true;
-#if SDL_MAJOR_VERSION == 1
+#if SDL_MAJOR_VERSION == 2
+		else IFARG("--novsync")
+			param_novsync = true;
+#elif SDL_MAJOR_VERSION == 1
 		else IFARG("--nodblbuf")
 			doubleBufferingEnabled = false;
 #endif
@@ -2011,11 +2012,13 @@ param_difficulty = 0;
 			" --normal               Sets the difficulty to normal for tedlevel\n"
 			" --hard                 Sets the difficulty to hard for tedlevel\n"
 			" --nowait               Skips intro screens\n"
-#if SDL_MAJOR_VERSION == 1
-			" --nodblbuf             Disable double buffering\n"
-#endif
 			" --res <width> <height> Sets the screen resolution\n"
 			" --forcewindowed        Forces the game in windowed mode\n"
+#if SDL_MAJOR_VERSION == 2
+			" --novsync				 Disables VSync\n"
+#elif SDL_MAJOR_VERSION == 1
+			" --nodblbuf             Disables double buffering\n"
+#endif
 #ifdef VIEASM
 			" --nosound				 Turns off sound\n"
 			" --8bitsound			 Sets the sound to 8 bits (default 16 bits)\n"

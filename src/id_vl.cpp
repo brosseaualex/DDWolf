@@ -31,7 +31,7 @@ SDL_Surface* lastGameSurface = NULL;
 
 #if SDL_MAJOR_VERSION == 2
 Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
-Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
+Uint32 rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 SDL_DisplayMode displayMode;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -135,6 +135,11 @@ void VL_SetVGAPlaneMode(void)
 	// are loaded before generating the window.
 	ReadDisplayConfig();
 
+#if SDL_MAJOR_VERSION == 2
+	if (param_novsync || !vsyncEnabled)
+		rendererFlags &= ~SDL_RENDERER_PRESENTVSYNC;
+#endif
+
 	if (param_forcewindowed)
 		fullScreen = false;
 
@@ -181,9 +186,6 @@ void VL_SetVGAPlaneMode(void)
 	}
 
 #if SDL_MAJOR_VERSION == 2
-	if (vsyncEnabled)
-		rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
-
 	renderer = SDL_CreateRenderer(window, -1, rendererFlags);
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -1188,8 +1190,7 @@ void VL_ApplyDisplaySettings(void)
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
 
-	//VSync
-	SDL_RenderSetVSync(renderer, vsyncEnabled ? 1 : 0);
+	SDL_RenderSetVSync(renderer, vsyncEnabled ? true : false);
 #elif SDL_MAJOR_VERSION == 1
 	//SDL1 way of forcing the window to center on the screen
 #if defined(_WIN32)

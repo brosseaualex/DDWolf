@@ -8,10 +8,6 @@
 #ifndef __ID_IN_H_
 #define __ID_IN_H_
 
-#ifdef __DEBUG__
-#define __DEBUG_InputMgr__
-#endif
-
 #define KEYCOUNT 129
 
 typedef int ScanCode;

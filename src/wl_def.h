@@ -1385,6 +1385,7 @@ extern int param_mission;
 extern boolean param_goodtimes;
 extern boolean param_ignorenumchunks;
 extern boolean param_forcewindowed;
+extern boolean param_novsync;
 extern unsigned param_resx;
 extern unsigned param_resy;
 

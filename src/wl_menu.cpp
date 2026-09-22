@@ -2700,6 +2700,9 @@ void DrawDisplayOptScreen(void)
 #if SDL_MAJOR_VERSION == 2
 	if (fullScreen)
 		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 1;
+
+	if (param_novsync)
+		vsyncEnabled = false;
 #endif
 
 	DrawMenu(&DisplayItems, DisplayMenu);

@@ -192,5 +192,5 @@ void Present(SDL_Surface* surface)
 	}
 
 	SDL_UpdateRect(screen, 0, 0, 0, 0);
-#endif	
+#endif
 }

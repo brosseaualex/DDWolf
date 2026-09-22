@@ -8,10 +8,6 @@
 #ifndef __ID_US_H_
 #define __ID_US_H_
 
-#ifdef __DEBUG__
-#define __DEBUG_UserMgr__
-#endif
-
 //#define	HELPTEXTLINKED
 
 #define MaxX 320

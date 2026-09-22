@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>DDWolf-SDL1</ProjectName>
+    <ProjectName>DDWolf Legacy</ProjectName>
     <ProjectGuid>{411B026A-F58B-4E25-840B-4FE67710F762}</ProjectGuid>
     <RootNamespace>Wolf4SDL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
