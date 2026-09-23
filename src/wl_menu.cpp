@@ -168,6 +168,43 @@ enum
 	CTL_SPACE_KB_MORE_ACTION,
 	CTL_BACK_ACTIONKEYS
 };
+//
+// GAME CONTROLLER
+//
+enum
+{
+	CTL_GC_MOVE_FWRD,
+	CTL_GC_MOVE_BWRD,
+	CTL_GC_MOVE_LEFT,
+	CTL_GC_MOVE_RIGHT,
+	CTL_GC_STRAFE_LEFT,
+	CTL_GC_STRAFE_RIGHT,
+	CTL_GC_MOVE_SPACE,
+	CTL_GC_ACTIONKEYS
+};
+enum
+{
+	CTL_GC_ACTION_RUN,
+	CTL_GC_ACTION_OPEN,
+	CTL_GC_ACTION_FIRE,
+	CTL_GC_ACTION_STRAFE,
+	CTL_GC_ACTION_SPACE,
+	CTL_GC_MOVEMENTKEYS
+};
+enum
+{
+	CTL_GC_MORE_ACTION_PREV_WEP,
+	CTL_GC_MORE_ACTION_NEXT_WEP,
+	CTL_GC_MORE_ACTION_WEP1,
+	CTL_GC_MORE_ACTION_WEP2,
+	CTL_GC_MORE_ACTION_WEP3,
+	CTL_GC_MORE_ACTION_WEP4,
+#ifdef OVERHEAD_MAP
+	CTL_GC_MORE_ACTION_AUTOMAP,
+#endif
+	CTL_GC_MORE_ACTION_SPACE,
+	CTL_GC_BACK_ACTIONKEYS
+};
 enum
 {
 	CTL_JOYSTICK_RUN,
@@ -234,8 +271,8 @@ CP_itemtype CtlMenu[] = {
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
-	{1, STR_OP_KEYBOARD, CP_KeyboardMoveCtl},
-	{1, STR_OP_JOYSTICK, CP_JoystickCtl},
+	{1, STR_OP_KEYBOARD, CP_KbMoveCtl},
+	{1, STR_OP_JOYSTICK, CP_GcMoveCtl},
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 	{1, STR_CUS_CONTROLS, CP_CustomCtl}
 #endif
@@ -313,6 +350,9 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_SENS, MouseSensitivity}
 };
 
+//
+// KEYBOARD
+//
 CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_FRWD, 0},
 	{1, STR_BKWD, 0},
@@ -321,7 +361,7 @@ CP_itemtype CtlKeyboardMoveMenu[] = {
 	{1, STR_STF_LEFT, 0},
 	{1, STR_STF_RIGHT, 0},
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+	{1, STR_ACTION_KEYS, CP_KbActionCtl}
 };
 
 CP_itemtype CtlKeyboardActionMenu[] = {
@@ -330,8 +370,8 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CFIRE, 0},
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
-	{1, "More Actions", CP_KeyboardMoreActionCtl},
-	{1, STR_MOVEMENT_KEYS, CP_KeyboardMoveCtl}
+	{1, "More Actions", CP_KbMoreActionCtl},
+	{1, STR_MOVEMENT_KEYS, CP_KbMoveCtl}
 };
 
 CP_itemtype CtlKeyboardMoreActionMenu[] = {
@@ -345,7 +385,45 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_AUTOMAP, 0},
 #endif
 	{0, "", 0},
-	{1, STR_ACTION_KEYS, CP_KeyboardActionCtl}
+	{1, STR_ACTION_KEYS, CP_KbActionCtl}
+};
+
+//
+// GAME CONTROLLER
+//
+CP_itemtype CtlGcMoveMenu[] = {
+	{1, STR_FRWD, 0},
+	{1, STR_BKWD, 0},
+	{1, STR_LEFT, 0},
+	{1, STR_RIGHT, 0},
+	{1, STR_STF_LEFT, 0},
+	{1, STR_STF_RIGHT, 0},
+	{0, "", 0},
+	{1, STR_ACTION_KEYS, CP_GcActionCtl}
+};
+
+CP_itemtype CtlGcActionMenu[] = {
+	{1, STR_CRUN, 0},
+	{1, STR_COPEN, 0},
+	{1, STR_CFIRE, 0},
+	{1, STR_CSTRAFE, 0},
+	{0, "", 0},
+	{1, "More Actions", CP_GcMoreActionCtl},
+	{1, STR_MOVEMENT_KEYS, CP_GcMoveCtl}
+};
+
+CP_itemtype CtlGcMoreActionsMenu[] = {
+	{1, STR_WPN_1, 0},
+	{1, STR_WPN_2, 0},
+	{1, STR_WPN_3, 0},
+	{1, STR_WPN_4, 0},
+	{1, STR_PREV_WPN, 0},
+	{1, STR_NEXT_WPN, 0},
+#ifdef OVERHEAD_MAP
+	{1, STR_AUTOMAP, 0},
+#endif
+	{0, "", 0},
+	{1, STR_ACTION_KEYS, CP_GcActionCtl}
 };
 
 CP_itemtype CtlJoystickMenu[] = {
@@ -425,6 +503,11 @@ CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
 CusKeyboardMoveItems = { OPT_KEYBOARD_MOVE_X, OPT_KEYBOARD_MOVE_Y + 4, lengthof(CtlKeyboardMoveMenu), 0, 32 },
 CusKeyboardActionItems = { OPT_KEYBOARD_ACTION_X, OPT_KEYBOARD_ACTION_Y, lengthof(CtlKeyboardActionMenu), 0, 32 },
 CusKeyboardMoreActionItems = { OPT_KEYBOARD_MORE_ACTION_X, OPT_KEYBOARD_MORE_ACTION_Y, lengthof(CtlKeyboardMoreActionMenu), 0, 32 },
+
+CusGcMoveItems = { OPT_KEYBOARD_MOVE_X, OPT_KEYBOARD_MOVE_Y + 4, lengthof(CtlGcMoveMenu), 0, 32 },
+CusGcActionItems = { OPT_KEYBOARD_ACTION_X, OPT_KEYBOARD_ACTION_Y, lengthof(CtlGcActionMenu), 0, 32 },
+CusGcMoreActionsItems = { OPT_KEYBOARD_MORE_ACTION_X, OPT_KEYBOARD_MORE_ACTION_Y, lengthof(CtlGcMoreActionsMenu), 0, 32 },
+
 CusJoystickItems = { OPT_JOYSTICK_X, OPT_JOYSTICK_Y, lengthof(CtlJoystickMenu), 0, 32 },
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 CusCtlItems = { CUS_CTL_TEXT_X, CUS_CTL_TEXT_Y, lengthof(CusCtlMenu), 0, 32 },
@@ -2565,7 +2648,7 @@ void DrawCtlScreen(void)
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 #if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (IN_ControllerPresent())
+	//if (IN_ControllerPresent()) // FIXME - uncomment
 		CtlMenu[CTL_JOYENABLE].active = 1;
 #else	
 	if (IN_JoyPresent())
@@ -3033,7 +3116,7 @@ void DefineJoyBtns(int value)
 
 	++value;
 
-	EnterCtrlData(value, &joyallowed, DrawCustJoy, PrintCustJoy, CONTROLLER);
+	EnterCtrlData(value, &joyallowed, DrawCustJoy, PrintCustJoy, GC_ACTIONS);
 }
 
 #else
@@ -3049,7 +3132,7 @@ void DefineJoyBtns(void)
 // DEFINE THE KEYBOARD BUTTONS
 //
 #ifdef USE_MODERN_CONTROLS
-void DefineKeyBtns(int value)
+void DefineKbActionBtns(int value)
 {
 	CustomCtrls keyallowed;
 	int i;
@@ -3069,7 +3152,7 @@ void DefineKeyBtns(int value)
 	}
 
 	++value;
-	EnterCtrlData(value, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+	EnterCtrlData(value, &keyallowed, DrawCustKeybd, PrintCustKeybd, KB_ACTIONS);
 }
 #else
 void DefineKeyBtns(void)
@@ -3085,7 +3168,7 @@ void DefineKeyBtns(void)
 //
 #ifdef USE_MODERN_CONTROLS
 
-void DefineKeyMove(int value)
+void DefineKbMoveBtns(int value)
 {
 	CustomCtrls keyallowed;
 	int i;
@@ -3105,7 +3188,7 @@ void DefineKeyMove(int value)
 	}
 
 	++value;
-	EnterCtrlData(value, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
+	EnterCtrlData(value, &keyallowed, DrawCustKeys, PrintCustKeys, KB_MOVE);
 }
 
 #else
@@ -3121,7 +3204,7 @@ void DefineKeyMove(void)
 // DEFINE THE KEYBOARD MORE ACTIONS BUTTONS
 //
 #ifdef USE_MODERN_CONTROLS
-void DefineKeyMoreActionsBtns(int value)
+void DefineKbMoreActionsBtns(int value)
 {
 	CustomCtrls keyallowed;
 	int i;
@@ -3141,9 +3224,83 @@ void DefineKeyMoreActionsBtns(int value)
 	}
 
 	++value;
-	EnterCtrlData(value, &keyallowed, DrawMoreActionsKeys, PrintMoreActionsKeys, KEYBOARDMOREACTIONS);
+	EnterCtrlData(value, &keyallowed, DrawMoreActionsKeys, PrintMoreActionsKeys, KB_MORE_ACTIONS);
 }
 #endif
+
+////////////////////////
+//
+// DEFINE THE GAME CONTROLLER BUTTONS
+//
+
+void DefineGcMoveBtns(int value)
+{
+	CustomCtrls keyallowed;
+	int i;
+
+	--value;
+
+	for (i = 0; i < 6; i++)
+	{
+		if (i == value)
+		{
+			keyallowed.allowed[i] = 1;
+		}
+		else
+		{
+			keyallowed.allowed[i] = 0;
+		}
+	}
+
+	++value;
+	EnterCtrlData(value, &keyallowed, DrawGcMoveBtns, PrintGcMoveBtns, GC_MOVE);
+}
+
+void DefineGcActionBtns(int value)
+{
+	CustomCtrls keyallowed;
+	int i;
+
+	--value;
+
+	for (i = 0; i < 6; i++)
+	{
+		if (i == value)
+		{
+			keyallowed.allowed[i] = 1;
+		}
+		else
+		{
+			keyallowed.allowed[i] = 0;
+		}
+	}
+
+	++value;
+	EnterCtrlData(value, &keyallowed, DrawGcActionsBtns, PrintGcActionsBtns, GC_ACTIONS);
+}
+
+void DefineGcMoreActionsBtns(int value)
+{
+	CustomCtrls keyallowed;
+	int i;
+
+	--value;
+
+	for (i = 0; i < 9; i++)
+	{
+		if (i == value)
+		{
+			keyallowed.allowed[i] = 1;
+		}
+		else
+		{
+			keyallowed.allowed[i] = 0;
+		}
+	}
+
+	++value;
+	EnterCtrlData(value, &keyallowed, DrawGcMoreActionsBtns, PrintGcMoreActionsBtns, GC_MORE_ACTIONS);
+}
 
 ////////////////////////
 //
@@ -3174,12 +3331,12 @@ int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD }; //Move order is not the same as 
 
 #ifdef USE_MODERN_CONTROLS
 
-int CP_KeyboardMoveCtl(int blank)
+int CP_KbMoveCtl(int blank)
 {
 	int which;
 	menuExit = 0;
 
-	DrawKeyboardMoveCtlScreen();
+	DrawKbMoveCtlScreen();
 	WaitKeyUp();
 
 	do
@@ -3189,27 +3346,27 @@ int CP_KeyboardMoveCtl(int blank)
 		switch (which)
 		{
 		case CTL_KB_MOVE_FWRD:
-			DefineKeyMove(1);
+			DefineKbMoveBtns(1);
 			DrawCustKeys(1);
 			break;
 		case CTL_KB_MOVE_BWRD:
-			DefineKeyMove(2);
+			DefineKbMoveBtns(2);
 			DrawCustKeys(2);
 			break;
 		case CTL_KB_MOVE_LEFT:
-			DefineKeyMove(3);
+			DefineKbMoveBtns(3);
 			DrawCustKeys(3);
 			break;
 		case CTL_KB_MOVE_RIGHT:
-			DefineKeyMove(4);
+			DefineKbMoveBtns(4);
 			DrawCustKeys(4);
 			break;
 		case CTL_KB_STRAFE_LEFT:
-			DefineKeyMove(5);
+			DefineKbMoveBtns(5);
 			DrawCustKeys(5);
 			break;
 		case CTL_KB_STRAFE_RIGHT:
-			DefineKeyMove(6);
+			DefineKbMoveBtns(6);
 			DrawCustKeys(6);
 			break;
 		default:
@@ -3219,7 +3376,7 @@ int CP_KeyboardMoveCtl(int blank)
 		}
 
 		if (which != -1)
-			DrawKeyboardMoveCtlScreen();
+			DrawKbMoveCtlScreen();
 
 	} while (which >= 0);
 
@@ -3228,11 +3385,11 @@ int CP_KeyboardMoveCtl(int blank)
 	return 0;
 }
 
-int CP_KeyboardActionCtl(int blank)
+int CP_KbActionCtl(int blank)
 {
 	int which;
 
-	DrawKeyboardActionCtlScreen();
+	DrawKbActionCtlScreen();
 	WaitKeyUp();
 
 	do
@@ -3242,19 +3399,19 @@ int CP_KeyboardActionCtl(int blank)
 		switch (which)
 		{
 		case CTL_KB_ACTION_RUN:
-			DefineKeyBtns(1);
+			DefineKbActionBtns(1);
 			DrawCustKeybd(1);
 			break;
 		case CTL_KB_ACTION_OPEN:
-			DefineKeyBtns(2);
+			DefineKbActionBtns(2);
 			DrawCustKeybd(2);
 			break;
 		case CTL_KB_ACTION_FIRE:
-			DefineKeyBtns(3);
+			DefineKbActionBtns(3);
 			DrawCustKeybd(3);
 			break;
 		case CTL_KB_ACTION_STRAFE:
-			DefineKeyBtns(4);
+			DefineKbActionBtns(4);
 			DrawCustKeybd(4);
 			break;
 		default:
@@ -3264,7 +3421,7 @@ int CP_KeyboardActionCtl(int blank)
 		}
 
 		if (which != -1)
-			DrawKeyboardActionCtlScreen();
+			DrawKbActionCtlScreen();
 
 	} while (which >= 0);
 
@@ -3295,11 +3452,11 @@ int actionorder[6] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP };
 int actionorder[7] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP, AUTOMAP };
 #endif
 
-int CP_KeyboardMoreActionCtl(int blank)
+int CP_KbMoreActionCtl(int blank)
 {
 	int which;
 
-	DrawKeyboardMoreActionCtlScreen();
+	DrawKbMoreActionCtlScreen();
 	WaitKeyUp();
 
 	do
@@ -3309,27 +3466,27 @@ int CP_KeyboardMoreActionCtl(int blank)
 		switch (which)
 		{
 		case CTL_KB_MORE_ACTION_WEP1:
-			DefineKeyMoreActionsBtns(1);
+			DefineKbMoreActionsBtns(1);
 			DrawMoreActionsKeys(1);
 			break;
 		case CTL_KB_MORE_ACTION_WEP2:
-			DefineKeyMoreActionsBtns(2);
+			DefineKbMoreActionsBtns(2);
 			DrawMoreActionsKeys(2);
 			break;
 		case CTL_KB_MORE_ACTION_WEP3:
-			DefineKeyMoreActionsBtns(3);
+			DefineKbMoreActionsBtns(3);
 			DrawMoreActionsKeys(3);
 			break;
 		case CTL_KB_MORE_ACTION_WEP4:
-			DefineKeyMoreActionsBtns(4);
+			DefineKbMoreActionsBtns(4);
 			DrawMoreActionsKeys(4);
 			break;
 		case CTL_KB_MORE_ACTION_PREV_WEP:
-			DefineKeyMoreActionsBtns(5);
+			DefineKbMoreActionsBtns(5);
 			DrawMoreActionsKeys(5);
 			break;
 		case CTL_KB_MORE_ACTION_NEXT_WEP:
-			DefineKeyMoreActionsBtns(6);
+			DefineKbMoreActionsBtns(6);
 			DrawMoreActionsKeys(6);
 			break;
 #ifdef OVERHEAD_MAP
@@ -3345,7 +3502,170 @@ int CP_KeyboardMoreActionCtl(int blank)
 		}
 
 		if (which != -1)
-			DrawKeyboardMoreActionCtlScreen();
+			DrawKbMoreActionCtlScreen();
+
+	} while (which >= 0);
+
+	ExitToControlScreen();
+
+	return 0;
+}
+
+
+//
+// GAME CONTROLLER
+//
+int CP_GcMoveCtl(int blank)
+{
+	int which;
+	menuExit = 0;
+
+	DrawGcMoveCtlScreen();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&CusGcMoveItems, &CtlGcMoveMenu[0], NULL);
+
+		switch (which)
+		{
+		case CTL_GC_MOVE_FWRD:
+			//DefineGCMoveBtns(1);
+			DrawGcMoveBtns(1);
+			break;
+		case CTL_GC_MOVE_BWRD:
+			//DefineGCMoveBtns(2);
+			DrawGcMoveBtns(2);
+			break;
+		case CTL_GC_MOVE_LEFT:
+			//DefineGCMoveBtns(3);
+			DrawGcMoveBtns(3);
+			break;
+		case CTL_GC_MOVE_RIGHT:
+			//DefineGCMoveBtns(4);
+			DrawGcMoveBtns(4);
+			break;
+		case CTL_GC_STRAFE_LEFT:
+			//DefineGCMoveBtns(5);
+			DrawGcMoveBtns(5);
+			break;
+		case CTL_GC_STRAFE_RIGHT:
+			//DefineKbMoveBtns(6);
+			DrawGcMoveBtns(6);
+			break;
+		default:
+			which = -1;
+			menuExit++;
+			break;
+		}
+
+		if (which != -1)
+			DrawGcMoveCtlScreen();
+
+	} while (which >= 0);
+
+	DrawCtlScreen();
+	MenuFadeIn();
+
+	return 0;
+}
+
+int CP_GcActionCtl(int blank)
+{
+	int which;
+
+	DrawGcActionCtlScreen();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&CusGcActionItems, &CtlGcActionMenu[0], NULL);
+
+		switch (which)
+		{
+		case CTL_GC_ACTION_RUN:
+			//DefineKbActionBtns(1);
+			//DrawCustKeybd(1);
+			break;
+		case CTL_GC_ACTION_OPEN:
+			//DefineKbActionBtns(2);
+			//DrawCustKeybd(2);
+			break;
+		case CTL_GC_ACTION_FIRE:
+			//DefineKbActionBtns(3);
+			//DrawCustKeybd(3);
+			break;
+		case CTL_GC_ACTION_STRAFE:
+			//DefineKbActionBtns(4);
+			//DrawCustKeybd(4);
+			break;
+		default:
+			which = -1;
+			menuExit++;
+			break;
+		}
+
+		if (which != -1)
+			DrawGcActionCtlScreen();
+
+	} while (which >= 0);
+
+	ExitToControlScreen();
+
+	return 0;
+}
+
+int CP_GcMoreActionCtl(int blank)
+{
+	int which;
+
+	DrawGcMoreActionCtlScreen();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu(&CusGcMoreActionsItems, &CtlGcMoreActionsMenu[0], NULL);
+
+		switch (which)
+		{
+		case CTL_GC_MORE_ACTION_PREV_WEP:
+			//DefineKbMoreActionsBtns(5);
+			//DrawMoreActionsKeys(5);
+			break;
+		case CTL_GC_MORE_ACTION_NEXT_WEP:
+			//DefineKbMoreActionsBtns(6);
+			//DrawMoreActionsKeys(6);
+			break;
+		case CTL_GC_MORE_ACTION_WEP1:
+			//DefineKbMoreActionsBtns(1);
+			//DrawMoreActionsKeys(1);
+			break;
+		case CTL_GC_MORE_ACTION_WEP2:
+			//DefineKbMoreActionsBtns(2);
+			//DrawMoreActionsKeys(2);
+			break;
+		case CTL_GC_MORE_ACTION_WEP3:
+			//DefineKbMoreActionsBtns(3);
+			//DrawMoreActionsKeys(3);
+			break;
+		case CTL_GC_MORE_ACTION_WEP4:
+			//DefineKbMoreActionsBtns(4);
+			//DrawMoreActionsKeys(4);
+			break;
+#ifdef OVERHEAD_MAP
+		case CTL_GC_MORE_ACTION_AUTOMAP:
+			DefineKeyMoreActionsBtns(7);
+			DrawMoreActionsKeys(7);
+			break;
+#endif
+		default:
+			which = -1;
+			menuExit++;
+			break;
+		}
+
+		if (which != -1)
+			DrawGcMoreActionCtlScreen();
 
 	} while (which >= 0);
 
@@ -3558,15 +3878,15 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		start = 0;
 		amount = 4;
 		break;
-	case CONTROLLER:
+	case GC_ACTIONS:
 		start = 0;
 		amount = 4;
 		break;
-	case KEYBOARDMOVE:
+	case KB_MOVE:
 		start = 0;
 		amount = 8;
 		break;
-	case KEYBOARDMOREACTIONS:
+	case KB_MORE_ACTIONS:
 		start = MORE_ACTIONS_ARRAY_START;
 		amount = MORE_ACTIONS_ARRAY_END;
 		break;
@@ -3607,12 +3927,12 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 			DrawWindow(5, PrintY - 1 - scaleOffsetY, 310, 13, BKGDCOLOR);
 #else
 			switch (type) {
-			case KEYBOARDMOVE:
+			case KB_MOVE:
 				x = CTL_MOUSE_X + 10;
 				y = OPT_KB_MOVE_KEYS_Y;
 				w = 80;
 				break;
-			case KEYBOARDMOREACTIONS:
+			case KB_MORE_ACTIONS:
 				x = OPT_KEYBOARD_MORE_ACTION_TEXT_X;
 				y = OPT_KEYBOARD_MORE_ACTION_TEXT_Y;
 				w = 75;
@@ -3652,7 +3972,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		SDL_Delay(5);
 		ReadAnyControl(&ci);
 
-		if (type == MOUSE || type == JOYSTICK || type == CONTROLLER)
+		if (type == MOUSE || type == JOYSTICK || type == GC_ACTIONS)
 			if (IN_KeyDown(sc_Enter) || IN_KeyDown(sc_Control) || IN_KeyDown(sc_Alt))
 			{
 				IN_ClearKeysDown();
@@ -3662,15 +3982,15 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		//
 		// CHANGE BUTTON VALUE?
 		//
-		if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE && type != CUSTOMCONTROLS && type != KEYBOARDMOREACTIONS) &&
+		if ((type != KB_ACTIONS && type != KB_MOVE && type != CUSTOMCONTROLS && type != KB_MORE_ACTIONS) &&
 			(ci.button0 | ci.button1 | ci.button2 | ci.button3) ||
-			((type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == CUSTOMCONTROLS || type == KEYBOARDMOREACTIONS) && LastScan == sc_Enter))
+			((type == KB_ACTIONS || type == KB_MOVE || type == CUSTOMCONTROLS || type == KB_MORE_ACTIONS) && LastScan == sc_Enter))
 		{
 			lastFlashTime = GetTimeCount();
 			tick = picked = 0;
 			SETFONTCOLOR(0, TEXTCOLOR);
 
-			if (type == KEYBOARDBTNS || type == KEYBOARDMOVE || type == CUSTOMCONTROLS || type == KEYBOARDMOREACTIONS)
+			if (type == KB_ACTIONS || type == KB_MOVE || type == CUSTOMCONTROLS || type == KB_MORE_ACTIONS)
 				IN_ClearKeysDown();
 
 			while (1)
@@ -3738,7 +4058,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					}
 					break;
 #ifdef USE_MODERN_CONTROLS
-				case CONTROLLER:
+				case GC_ACTIONS:
 					if (ci.button0)
 						result = 1;
 					else if (ci.button1)
@@ -3792,7 +4112,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					}
 					break;
 #endif
-				case KEYBOARDBTNS:
+				case KB_ACTIONS:
 					if (LastScan && LastScan != sc_Escape)
 					{
 #ifdef USE_MODERN_CONTROLS
@@ -3809,7 +4129,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					}
 					break;
 
-				case KEYBOARDMOVE:
+				case KB_MOVE:
 					if (LastScan && LastScan != sc_Escape)
 					{
 #ifdef USE_MODERN_CONTROLS
@@ -3827,7 +4147,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					break;
 
 #ifdef USE_MODERN_CONTROLS
-				case KEYBOARDMOREACTIONS:
+				case KB_MORE_ACTIONS:
 					if (LastScan && LastScan != sc_Escape)
 					{
 						CheckKeyConflict();
@@ -3863,7 +4183,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				//
 				// EXIT INPUT?
 				//
-				if (IN_KeyDown(sc_Escape) || type != JOYSTICK && ci.button1 || type != CONTROLLER && ci.button1)
+				if (IN_KeyDown(sc_Escape) || type != JOYSTICK && ci.button1 || type != GC_ACTIONS && ci.button1)
 				{
 					picked = 1;
 					SD_PlaySound(ESCPRESSEDSND);
@@ -4067,7 +4387,7 @@ void DrawMouseCtlScreen(void)
 //
 // DRAW KEYBOARD MOVE CONTROLS SCREEN
 //
-void DrawKeyboardMoveCtlScreen(void)
+void DrawKbMoveCtlScreen(void)
 {
 	int i;
 	int which = 0;
@@ -4122,7 +4442,7 @@ void DrawKeyboardMoveCtlScreen(void)
 //
 // DRAW KEYBOARD ACTION CONTROLS SCREEN
 //
-void DrawKeyboardActionCtlScreen(void)
+void DrawKbActionCtlScreen(void)
 {
 	int i;
 	int which = 0;
@@ -4177,7 +4497,7 @@ void DrawKeyboardActionCtlScreen(void)
 //
 // DRAW KEYBOARD ACTION CONTROLS SCREEN
 //
-void DrawKeyboardMoreActionCtlScreen(void)
+void DrawKbMoreActionCtlScreen(void)
 {
 	int i;
 	int which = 0;
@@ -4199,7 +4519,7 @@ void DrawKeyboardMoreActionCtlScreen(void)
 #ifdef SPEAR
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 	PrintY = OPT_MOUSE_Y;
-	US_CPrint("Action keyr 2/2");
+	US_CPrint("Action keys 2/2");
 #endif
 
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
@@ -4221,6 +4541,162 @@ void DrawKeyboardMoreActionCtlScreen(void)
 			if (CtlKeyboardMoreActionMenu[i].active)
 			{
 				CusKeyboardMoreActionItems.curpos = i;
+				break;
+			}
+
+	VW_UpdateScreen();
+	MenuFadeIn();
+}
+
+//
+// GAME CONTROLLER
+//
+void DrawGcMoveCtlScreen(void) 
+{
+	int i;
+	int which = 0;
+
+	ClearMScreen();
+	WindowX = 0;
+	WindowW = 320;
+	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
+	DrawStripes(10);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
+
+	//
+	// MOUSE
+	//
+	SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+	WindowX = scaleOffsetX;
+	WindowW = 320;
+
+#ifdef SPEAR
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+	PrintY = OPT_MOUSE_Y;
+	US_CPrint("Movement keys");
+#endif
+
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+	DrawWindow(OPT_KEYBOARD_MOVE_X - 8, OPT_KEYBOARD_MOVE_Y, OPT_KEYBOARD_MOVE_W, OPT_KEYBOARD_MOVE_H, BKGDCOLOR);
+	DrawMenuGun(&CusGcMoveItems);
+
+	DrawMenu(&CusGcMoveItems, CtlGcMoveMenu);
+	DrawGcMoveBtns(0);
+
+	WaitKeyUp();
+	US_Print("\n");
+
+	//
+	// PICK STARTING POINT IN MENU
+	//
+	if (CusGcMoveItems.curpos < 0)
+		for (i = 0; i < CusGcMoveItems.amount; i++)
+			if (CtlGcMoveMenu[i].active)
+			{
+				CusGcMoveItems.curpos = i;
+				break;
+			}
+
+	VW_UpdateScreen();
+	MenuFadeIn();
+}
+
+void DrawGcActionCtlScreen(void)
+{
+	int i;
+	int which = 0;
+
+	ClearMScreen();
+	WindowX = 0;
+	WindowW = 320;
+	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
+	DrawStripes(10);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
+
+	//
+	// MOUSE
+	//
+	SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+	WindowX = scaleOffsetX;
+	WindowW = 320;
+
+#ifdef SPEAR
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+	PrintY = OPT_MOUSE_Y;
+	US_CPrint("Action keys 1/2");
+#endif
+
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+	DrawWindow(OPT_KEYBOARD_ACTION_X - 8, OPT_KEYBOARD_ACTION_Y - 5, OPT_KEYBOARD_ACTION_W, OPT_KEYBOARD_ACTION_H, BKGDCOLOR);
+	DrawMenuGun(&CusGcActionItems);
+
+	DrawMenu(&CusGcActionItems, CtlGcActionMenu);
+	DrawGcActionsBtns(0);
+
+	WaitKeyUp();
+	US_Print("\n");
+
+	//
+	// PICK STARTING POINT IN MENU
+	//
+	if (CusGcActionItems.curpos < 0)
+		for (i = 0; i < CusGcActionItems.amount; i++)
+			if (CtlGcActionMenu[i].active)
+			{
+				CusGcActionItems.curpos = i;
+				break;
+			}
+
+	VW_UpdateScreen();
+	MenuFadeIn();
+}
+
+void DrawGcMoreActionCtlScreen(void) 
+{
+	int i;
+	int which = 0;
+
+	ClearMScreen();
+	WindowX = 0;
+	WindowW = 320;
+	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
+	DrawStripes(10);
+	VWB_DrawPic(80, -(int)scaleOffsetY, C_CUSTOMIZEPIC);
+
+	//
+	// MOUSE
+	//
+	SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+	WindowX = scaleOffsetX;
+	WindowW = 320;
+
+#ifdef SPEAR
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+	PrintY = OPT_MOUSE_Y;
+	US_CPrint("Action keys 2/2");
+#endif
+
+	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+
+	DrawWindow(OPT_KEYBOARD_MORE_ACTION_X - 8, OPT_KEYBOARD_MORE_ACTION_Y - 5, OPT_KEYBOARD_MORE_ACTION_W, OPT_KEYBOARD_MORE_ACTION_H, BKGDCOLOR);
+	DrawMenuGun(&CusGcMoreActionsItems);
+
+	DrawMenu(&CusGcMoreActionsItems, CtlGcMoreActionsMenu);
+	DrawGcMoreActionsBtns(0);
+
+	WaitKeyUp();
+	US_Print("\n");
+
+	//
+	// PICK STARTING POINT IN MENU
+	//
+	if (CusGcMoreActionsItems.curpos < 0)
+		for (i = 0; i < CusGcMoreActionsItems.amount; i++)
+			if (CtlGcMoreActionsMenu[i].active)
+			{
+				CusGcMoreActionsItems.curpos = i;
 				break;
 			}
 
@@ -4525,6 +5001,36 @@ void DrawCustMouse(int highlight)
 }
 
 #ifdef USE_MODERN_CONTROLS
+void PrintGcMoveBtns(int i)
+{
+
+}
+
+void DrawGcMoveBtns(int hilight)
+{
+
+}
+
+void PrintGcActionsBtns(int i)
+{
+
+}
+
+void DrawGcActionsBtns(int hilight)
+{
+
+}
+
+void PrintGcMoreActionsBtns(int i)
+{
+
+}
+
+void DrawGcMoreActionsBtns(int hilight)
+{
+
+}
+
 void PrintCustJoy(int i)
 {
 	int j;

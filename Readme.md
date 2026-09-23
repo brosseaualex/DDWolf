@@ -94,7 +94,7 @@ The following versions of Wolfenstein 3D data files are currently supported by t
 
 <h2><em>How to play</em></h2>
 
-To play Wolfenstein 3D with DDWolf, you just have to copy the original data files (e.g. *.WL6) into the same directory as the DDWolf executable.
+To play Wolfenstein 3D with DDWolf, you just have to copy the original data files (e.g. *.\*) into the same directory as the DDWolf executable.
 
 Please make sure, that you use the correct version of the executable with the according data files version as the differences are hardcoded into the binary!
 
@@ -197,16 +197,16 @@ Do not forget to take care of version.h!
 
 By default it compiles for "Wolfenstein 3D 1.4 full GT/ID/Activision"!
 
-**_Certain flags REQUIRE CONFIG.WL6 to be DELETED every time it is changed._**
+**_Certain flags REQUIRE CONFIG.\* to be DELETED every time it is changed._**
 
 Those flags are explicitely tagged in version.h
 
-**_The game will crash on start or there will be issues with controls if config.wl6 is not deleted._**
+**_The game will crash on start or there will be issues with controls if config.* is not deleted._**
 
 <h2><em>Troubleshooting</em></h2>
 
 - Crash on startup or issues with controls after flag change
-  - Delete CONFIG.WL6
+  - Delete CONFIG.\*
 - Low frame rate
   - Consider using the original screen resolution (320x200) or lowering the sound quality (--samplerate 22050)
 

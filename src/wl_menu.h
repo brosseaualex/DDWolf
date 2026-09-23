@@ -331,9 +331,13 @@ void DefineKeyBtns(void);
 void DefineJoyBtns(void);
 #else
 void DefineMouseBtns(int);
-void DefineKeyMove(int);
-void DefineKeyBtns(int);
+void DefineKbMoveBtns(int);
+void DefineKbActionBtns(int);
 void DefineJoyBtns(int);
+
+void DefineGcMoveBtns(int);
+void DefineGcActionBtns(int);
+void DefineGcMoreActionsBtns(int);
 #endif
 
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type);
@@ -349,11 +353,18 @@ void DrawCtlScreen(void);
 void DrawCustomScreen(void);
 void DrawMouseCtlScreen(void);
 void DrawResolutionMenu(void);
+void DrawOptScreen(void);
+void DrawDisplayOptScreen(void);
 #ifdef USE_MODERN_CONTROLS
-void DrawKeyboardMoveCtlScreen(void);
-void DrawKeyboardActionCtlScreen(void);
-void DrawKeyboardMoreActionCtlScreen(void);
 void CheckKeyConflict(void);
+
+void DrawKbMoveCtlScreen(void);
+void DrawKbActionCtlScreen(void);
+void DrawKbMoreActionCtlScreen(void);
+
+void DrawGcMoveCtlScreen(void);
+void DrawGcActionCtlScreen(void);
+void DrawGcMoreActionCtlScreen(void);
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 void DrawCustomCtlScreen(void);
 #endif
@@ -376,9 +387,12 @@ void PrintCustomCtlKeys(int i);
 void DrawCustKeys(int hilight);
 void PrintCustKeys(int i);
 
-void DrawOptScreen(void);
-
-void DrawDisplayOptScreen(void);
+void PrintGcMoveBtns(int);
+void DrawGcMoveBtns(int);
+void PrintGcActionsBtns(int);
+void DrawGcActionsBtns(int);
+void PrintGcMoreActionsBtns(int);
+void DrawGcMoreActionsBtns(int);
 
 #if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 void DrawAtmosOptScreen(void);
@@ -406,10 +420,13 @@ int CP_CheckQuick(ScanCode scancode);
 int MouseSensitivity(int);
 #ifdef USE_MODERN_CONTROLS
 int CP_MouseCtl(int);
-int CP_KeyboardMoveCtl(int);
-int CP_KeyboardActionCtl(int);
-int CP_KeyboardMoreActionCtl(int);
+int CP_KbMoveCtl(int);
+int CP_KbActionCtl(int);
+int CP_KbMoreActionCtl(int);
 int CP_JoystickCtl(int);
+int CP_GcMoveCtl(int);
+int CP_GcActionCtl(int);
+int CP_GcMoreActionCtl(int);
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 int CP_CustomCtl(int);
 #endif
@@ -440,10 +457,12 @@ enum
 {
 	MOUSE,
 	JOYSTICK,
-	CONTROLLER,
-	KEYBOARDBTNS,
-	KEYBOARDMOVE,
-	KEYBOARDMOREACTIONS,
+	KB_ACTIONS,
+	KB_MOVE,
+	KB_MORE_ACTIONS,
+	GC_MOVE,
+	GC_ACTIONS,
+	GC_MORE_ACTIONS,
 	CUSTOMCONTROLS
 }; // FOR INPUT TYPES
 

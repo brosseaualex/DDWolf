@@ -105,7 +105,7 @@ DDWolf v1.3.0 (Sep 13, 2026)
 		- '--disableratiofix'
 		- '--disablehdres'
 			- These settings can now be changed in the game menu and if
-				your settings ever break, delete config.wl6 and restart the game.
+				your settings ever break, delete config.* and restart the game.
 
 DDWolf v1.2.0 (Sep 7, 2024)
  [Fixed]
