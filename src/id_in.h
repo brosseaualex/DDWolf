@@ -124,6 +124,246 @@ typedef int ScanCode;
 #define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
 #endif
 
+#ifdef USE_MODERN_CONTROLS
+enum
+{
+	CTL_MOUSEENABLE,
+	CTL_JOYENABLE,
+	CTL_ALWAYSRUN,
+	CTL_OPTIONS_SPACE,
+	CTL_MOUSEOPTIONS,
+	CTL_KEYBOARDOPTIONS,
+	CTL_JOYSTICKOPTIONS
+};
+
+enum
+{
+	CTL_MOUSE_RUN,
+	CTL_MOUSE_OPEN,
+	CTL_MOUSE_FIRE,
+	CTL_MOUSE_STRAFE,
+	CTL_SPACE_MOUSE,
+	CTL_MOUSEMOVEMENT,
+	CTL_MOUSESENS
+};
+enum
+{
+	CTL_KB_MOVE_FWRD,
+	CTL_KB_MOVE_BWRD,
+	CTL_KB_MOVE_LEFT,
+	CTL_KB_MOVE_RIGHT,
+	CTL_KB_STRAFE_LEFT,
+	CTL_KB_STRAFE_RIGHT,
+	CTL_SPACE_KB_MOVE,
+	CTL_ACTIONKEYS
+};
+enum
+{
+	CTL_KB_ACTION_RUN,
+	CTL_KB_ACTION_OPEN,
+	CTL_KB_ACTION_FIRE,
+	CTL_KB_ACTION_STRAFE,
+	CTL_SPACE_KB_ACTION,
+	CTL_MOVEMENTKEYS
+};
+enum
+{
+	CTL_KB_MORE_ACTION_WEP1,
+	CTL_KB_MORE_ACTION_WEP2,
+	CTL_KB_MORE_ACTION_WEP3,
+	CTL_KB_MORE_ACTION_WEP4,
+	CTL_KB_MORE_ACTION_PREV_WEP,
+	CTL_KB_MORE_ACTION_NEXT_WEP,
+#ifdef OVERHEAD_MAP
+	CTL_KB_MORE_ACTION_AUTOMAP,
+#endif
+	CTL_SPACE_KB_MORE_ACTION,
+	CTL_BACK_ACTIONKEYS
+};
+
+#if SDL_MAJOR_VERSION == 2
+//
+// GAME CONTROLLER
+//
+enum
+{
+	CTL_GC_MOVE_FWRD,
+	CTL_GC_MOVE_BWRD,
+	CTL_GC_MOVE_LEFT,
+	CTL_GC_MOVE_RIGHT,
+	CTL_GC_STRAFE_LEFT,
+	CTL_GC_STRAFE_RIGHT,
+	CTL_GC_MOVE_SPACE,
+	CTL_GC_ACTIONKEYS
+};
+enum
+{
+	CTL_GC_ACTION_RUN,
+	CTL_GC_ACTION_OPEN,
+	CTL_GC_ACTION_FIRE,
+	CTL_GC_ACTION_STRAFE,
+	CTL_GC_ACTION_PREV_WEP,
+	CTL_GC_ACTION_NEXT_WEP,
+	CTL_GC_ACTION_SPACE,
+	CTL_GC_MOVEMENTKEYS
+};
+enum
+{
+	CTL_GC_MORE_ACTION_WEP1,
+	CTL_GC_MORE_ACTION_WEP2,
+	CTL_GC_MORE_ACTION_WEP3,
+	CTL_GC_MORE_ACTION_WEP4,
+#ifdef OVERHEAD_MAP
+	CTL_GC_MORE_ACTION_AUTOMAP,
+#endif
+	CTL_GC_MORE_ACTION_SPACE,
+	CTL_GC_BACK_ACTIONKEYS
+};
+#endif
+enum
+{
+	CTL_JOYSTICK_RUN,
+	CTL_JOYSTICK_OPEN,
+	CTL_JOYSTICK_FIRE,
+	CTL_JOYSTICK_STRAFE
+};
+#if defined(SHOW_CUSTOM_CONTROLS)
+enum
+{
+	CTL_ADV_1,
+	CTL_ADV_2,
+	CTL_ADV_3,
+	CTL_ADV_4,
+	CTL_ADV_5,
+	CTL_ADV_6,
+	CTL_ADV_7,
+	CTL_ADV_8,
+	CTL_ADV_9,
+	CTL_ADV_10
+};
+#endif
+#else
+enum
+{
+	CTL_MOUSEENABLE,
+	CTL_MOUSESENS,
+	CTL_JOYENABLE,
+	CTL_CUSTOMIZE
+};
+#endif
+
+#ifdef SHOW_ATMOS_OPTIONS
+enum
+{
+	ATMOS_USE_TEXTURED,
+	ATMOS_USE_SHADING,
+	ATMOS_USE_SKYBOX,
+	ATMOS_USE_PRECIPITATION
+};
+#endif
+
+//
+// GAME CONTROLLER
+//
+
+#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#define TRIGGER_THRESHOLD	16000		// Analog trigger press depth (~50% on a XBox One Controller)
+#define STICK_THRESHOLD		16000		// Stick deflection threshold for discrete action checks
+#define DPAD_MAX_DELTA		32767
+
+typedef enum ControllerType
+{
+	CT_XBOX,
+	CT_PLAYSTATION,
+	CT_NINTENDO,
+	CT_GENERIC
+} ControllerType;
+
+typedef enum
+{
+	gc_nobutton = -1,
+	gc_attack = 0,
+	gc_use,
+	gc_run,
+	gc_strafe,
+	gc_nextweapon,
+	gc_prevweapon,
+	gc_forward,
+	gc_backward,
+	gc_turnleft,
+	gc_turnright,
+	gc_straferight,
+	gc_strafeleft,
+	gc_weapon1,
+	gc_weapon2,
+	gc_weapon3,
+	gc_weapon4,
+	gc_automap,
+	gc_esc,
+	gc_pause,
+	gc_NUMBUTTONS
+}GameControllerAction;
+
+extern int gcBindings[gc_NUMBUTTONS];
+
+extern float gcTurnSensitivity;
+extern float gcMaxTurnSensitivity;
+
+extern float gcMoveSensitivity;
+extern float gcDpadTurnMultiplier;
+
+#if SDL_MAJOR_VERSION == 2 & defined(USE_MODERN_CONTROLS)
+#define sc_gc_NoButton				-1
+#define sc_gc_Btn_A					SDL_CONTROLLER_BUTTON_A					// PS = Cross
+#define sc_gc_Btn_B					SDL_CONTROLLER_BUTTON_B					// PS = Circle
+#define sc_gc_Btn_X					SDL_CONTROLLER_BUTTON_X					// PS = Square
+#define sc_gc_Btn_Y					SDL_CONTROLLER_BUTTON_Y					// PS = Triangle
+#define sc_gc_Btn_Back				SDL_CONTROLLER_BUTTON_BACK
+#define sc_gc_Btn_Guide				SDL_CONTROLLER_BUTTON_GUIDE
+#define sc_gc_Btn_Start				SDL_CONTROLLER_BUTTON_START
+#define sc_gc_Left_Stick			SDL_CONTROLLER_BUTTON_LEFTSTICK			// Stick Click
+#define sc_gc_Right_Stick			SDL_CONTROLLER_BUTTON_RIGHTSTICK		// Stick Click
+#define sc_gc_Left_Shoulder			SDL_CONTROLLER_BUTTON_LEFTSHOULDER
+#define sc_gc_Right_Shoulder		SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
+#define sc_gc_DPad_Up				SDL_CONTROLLER_BUTTON_DPAD_UP
+#define sc_gc_DPad_Down				SDL_CONTROLLER_BUTTON_DPAD_DOWN
+#define sc_gc_DPad_Left				SDL_CONTROLLER_BUTTON_DPAD_LEFT
+#define sc_gc_DPad_Right			SDL_CONTROLLER_BUTTON_DPAD_RIGHT
+#define sc_gc_Share_Micro			SDL_CONTROLLER_BUTTON_MISC1				// Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button
+#define sc_gc_Btn_Paddle_1			SDL_CONTROLLER_BUTTON_PADDLE1			// Xbox Elite paddle P1 (upper left, facing the back)
+#define sc_gc_Btn_Paddle_2			SDL_CONTROLLER_BUTTON_PADDLE2			// Xbox Elite paddle P3 (upper right, facing the back)
+#define sc_gc_Btn_Paddle_3			SDL_CONTROLLER_BUTTON_PADDLE3			// Xbox Elite paddle P2 (lower left, facing the back)
+#define sc_gc_Btn_Paddle_4			SDL_CONTROLLER_BUTTON_PADDLE4			// Xbox Elite paddle P4 (lower right, facing the back)
+#define sc_gc_Touchpad				SDL_CONTROLLER_BUTTON_TOUCHPAD			// PS4/PS5 touchpad button
+#define sc_gc_Axis_Left_Trigger		100										// SDL_CONTROLLER_AXIS_TRIGGERLEFT but value needs to be changed since it conflicts with buttons
+#define sc_gc_Axis_Right_Trigger	101										// SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+#endif
+
+#define sc_gc_NoButton		-1
+static const int gcDefaults[gc_NUMBUTTONS] = {
+	sc_gc_Axis_Right_Trigger,	// gc_attack
+	sc_gc_Btn_A,				// gc_use
+	sc_gc_Btn_X,				// gc_run
+	sc_gc_Btn_B,				// gc_strafe
+	sc_gc_Left_Shoulder,		// gc_prevweapon
+	sc_gc_Right_Shoulder,		// gc_nextweapon
+	sc_gc_DPad_Up,				// gc_forward
+	sc_gc_DPad_Down,			// gc_backward
+	sc_gc_DPad_Left,			// gc_turnleft
+	sc_gc_DPad_Right,			// gc_turnright
+	sc_gc_NoButton,				// gc_straferight
+	sc_gc_NoButton,				// gc_strafeleft
+	sc_gc_NoButton,				// gc_weapon1
+	sc_gc_NoButton,				// gc_weapon2
+	sc_gc_NoButton,				// gc_weapon3
+	sc_gc_NoButton,				// gc_weapon4
+	sc_gc_NoButton,				// gc_automap
+	sc_gc_Btn_Back,				// gc_esc
+	sc_gc_Btn_Start				// gc_pause
+};
+
+#endif
+
 #if SDL_MAJOR_VERSION == 2
 typedef SDL_Keymod ModState;
 #define KEY_SCROLLLOCK SDLK_SCROLLLOCK
@@ -195,13 +435,13 @@ typedef struct
 		joyMultXL, joyMultYL,
 		joyMultXH, joyMultYH;
 } JoystickDef;
+
 // Global variables
 extern volatile boolean KeyboardState[129];
 extern boolean MousePresent;
 extern volatile boolean Paused;
 extern volatile char LastASCII;
 extern volatile ScanCode LastScan;
-extern int GameControllerNumButtons;
 extern int JoyNumButtons;
 
 // Function prototypes
@@ -216,20 +456,15 @@ extern int JoyNumButtons;
 // DEBUG - put names in prototypes
 extern void IN_Startup(void), IN_Shutdown(void);
 extern void IN_ClearKeysDown(void);
-extern void IN_ReadControl(int, ControlInfo *);
-//extern void IN_GetJoyAbs(word joy, word *xp, word *yp);
-//extern void IN_SetupJoy(word joy, word minx, word maxx,	word miny, word maxy);
-extern void IN_Ack(void); //IN_StopDemo(void), IN_FreeDemoBuffer(void);
+extern void IN_ReadControl(int, ControlInfo*);
+extern void IN_Ack(void);
 extern boolean IN_UserInput(longword delay);
 extern char IN_WaitForASCII(void);
 extern ScanCode IN_WaitForKey(void);
-//extern word IN_GetJoyButtonsDB(word joy);
-extern const char *IN_GetScanName(ScanCode);
+extern const char* IN_GetScanName(ScanCode);
 
 boolean Keyboard(int key);
-
 void KeyboardSet(int key, boolean state);
-
 int KeyboardLookup(int key);
 
 void IN_WaitAndProcessEvents();
@@ -237,24 +472,35 @@ void IN_ProcessEvents();
 
 int IN_MouseButtons(void);
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-void IN_GetGameControllerDelta(int* analog0X, int* analog0Y, int* analog1X, int* analog1Y);
-//void IN_GetGameControllerHat(int* dpadUp, int* dpadDown, int* dpadLeft, int* dpadRight);
-int IN_GameControllerButtons(void);
-boolean IN_ControllerPresent();
-#else
+#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
+void IN_GetJoyDelta(int* dx, int* dy);
+void IN_GetJoyDelta(int* dx, int* dy, int* strafe);
 int IN_JoyButtons(void);
 boolean IN_JoyPresent();
+void PollJoystickMove(void);
+void IN_GetJoyFineDelta(int* dx, int* dy);
 #endif
-
-//void IN_SetJoyCurrent(int joyIndex);
-
-void IN_GetJoyDelta(int *dx, int *dy);
-void IN_GetJoyFineDelta(int *dx, int *dy);
 
 void IN_StartAck(void);
 boolean IN_CheckAck(void);
 bool IN_IsInputGrabbed();
 void IN_CenterMouse();
 void IN_MouseGrab(void);
+
+// Game controller
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+boolean IN_GcPresent();
+ControllerType IN_GcGetControllerType(void);
+void IN_InitGcBindings(void);
+int IN_GcButtons(void);
+const char* IN_GcGetScanName(ScanCode);
+int IN_GcRemapReadButton(void);
+void IN_GcCheckMenuInputs(void);
+void IN_GcPollActions(void);
+void IN_GcGetDelta(int* analog0X, int* analog0Y, int* analog1X, int* analog1Y);
+bool IN_GcIsActionPressed(GameControllerAction, bool allowHold = true);
+bool IN_GcGetButton(SDL_GameControllerButton);
+void IN_GcForceReleaseAll(void);
+bool IN_GcIsButtonBlocked(int);
+#endif
 #endif

@@ -41,8 +41,6 @@
 #define INTROSONG XTOWER2_MUS
 #endif
 
-#define CONTROLLER_DEAD_ZONE 8000
-
 #define SENSITIVE 60
 #define CENTERX ((int)screenWidth / 2)
 #define CENTERY ((int)screenHeight / 2)
@@ -108,61 +106,12 @@
 #define OPT_H 13 * 4 + 8
 #endif
 
-//#ifdef USE_MODERN_CONTROLS
-//#ifdef SHOW_ATMOS_OPTIONS
-//#define OPT_H 72
-//#else
-//#define OPT_H 60	
-//#endif
-//#else
-//#ifdef  SHOW_ATMOS_OPTIONS
-//#define OPT_H 48
-//#else
-//#define OPT_H 36
-//#endif
-//#endif
-
 #ifdef SHOW_ATMOS_OPTIONS
 #define ATMOS_X 46
 #define ATMOS_Y 84
 #define ATMOS_W 244
 #define ATMOS_H 13 * 4 + 8
 #endif
-
-#ifndef SAVE_GAME_SCREENSHOT
-#define LSM_X 85
-#else
-#define LSM_X 20
-#endif
-#define LSM_Y 55
-#ifndef SAVE_GAME_SCREENSHOT
-#define LSM_W 175
-#else
-#define LSM_W 165
-#endif
-#define LSM_H 10 * 13 + 10
-
-#ifdef SAVE_GAME_SCREENSHOT
-#define LSP_X   184
-#define LSP_Y   80
-#define LSP_W   128
-#define LSP_H   80
-#define BMP_SAVE_FILENAME "savegam?.bmp"
-#endif
-
-#define DISPLAY_CTL_X 34
-#define DISPLAY_CTL_Y 86
-#define DISPLAY_CTL_W 262
-#if SDL_MAJOR_VERSION == 2
-#define DISPLAY_CTL_H 13 * 6 + 8
-#elif SDL_MAJOR_VERSION == 1
-#define DISPLAY_CTL_H 13 * 5 + 8
-#endif
-
-#define RES_MENU_X 44
-#define RES_MENU_Y 55
-#define RES_MENU_W 250
-#define RES_MENU_H 13 * 10 + 8
 
 #define NM_X 50
 #define NM_Y 100
@@ -176,6 +125,44 @@
 
 #define CST_X 20
 #define CST_Y 48
+#define CST_SPC_Y 13
+
+#define OPT_JOYSTICK_X 41
+#define OPT_JOYSTICK_Y 72
+#define OPT_JOYSTICK_W 250
+#define OPT_JOYSTICK_H 63
+
+#define CTL_MOUSE_X 180
+
+// Resolution
+#define RES_MENU_X 44
+#define RES_MENU_Y 55
+#define RES_MENU_W 250
+#define RES_MENU_H 13 * 10 + 8
+
+#define DISPLAY_CTL_X 34
+#define DISPLAY_CTL_Y 86
+#define DISPLAY_CTL_W 262
+#if SDL_MAJOR_VERSION == 2
+#define DISPLAY_CTL_H 13 * 6 + 8
+#elif SDL_MAJOR_VERSION == 1
+#define DISPLAY_CTL_H 13 * 5 + 8
+#endif
+
+#define LSM_Y 55
+#define LSM_H 10 * 13 + 10
+#ifndef SAVE_GAME_SCREENSHOT
+#define LSM_X 85
+#define LSM_W 175
+#else
+#define LSM_X	10
+#define LSM_W	165
+#define LSP_X   184
+#define LSP_Y   80
+#define LSP_W   128
+#define LSP_H   80
+#define BMP_SAVE_FILENAME "savegam?.bmp"
+#endif
 
 #ifndef USE_MODERN_CONTROLS
 #define CST_START 60
@@ -183,42 +170,80 @@
 #else
 #define CST_START 72
 #define CST_SPC 95
-#endif
 
-#ifdef USE_MODERN_CONTROLS
+// Mouse
 #define OPT_MOUSE_X 26
 #define OPT_MOUSE_Y 72
 #define OPT_MOUSE_W 284
 #define OPT_MOUSE_H 13 * 7 + 8
 
+// Keyboard
 #define OPT_KB_MOVE_KEYS_X 190
 #define OPT_KB_MOVE_KEYS_Y 65
 
-#define OPT_KEYBOARD_MOVE_X 41
-#define OPT_KEYBOARD_MOVE_Y 61
-#define OPT_KEYBOARD_MOVE_W 250
-#define OPT_KEYBOARD_MOVE_H 13 * 8 + 8
+#define OPT_KB_MOVE_X 41
+#define OPT_KB_MOVE_Y 61
+#define OPT_KB_MOVE_W 250
+#define OPT_KB_MOVE_H 13 * 8 + 8
 
-#define OPT_KEYBOARD_ACTION_X 41
-#define OPT_KEYBOARD_ACTION_Y 72
-#define OPT_KEYBOARD_ACTION_W 250
-#define OPT_KEYBOARD_ACTION_H 13 * 7 + 8
+#define OPT_KB_ACTION_X 41
+#define OPT_KB_ACTION_Y 72
+#define OPT_KB_ACTION_W 250
+#define OPT_KB_ACTION_H 13 * 7 + 8
 
-#define OPT_KEYBOARD_MORE_ACTION_X 41
-#define OPT_KEYBOARD_MORE_ACTION_Y 60
-#define OPT_KEYBOARD_MORE_ACTION_W 250
+#define OPT_KB_MORE_ACTION_X 41
+#define OPT_KB_MORE_ACTION_Y 60
+#define OPT_KB_MORE_ACTION_W 250
+
 #ifndef OVERHEAD_MAP
-#define OPT_KEYBOARD_MORE_ACTION_H 13 * 8 + 8
+#define OPT_KB_MORE_ACTION_H 13 * 8 + 8
 #else
-#define OPT_KEYBOARD_MORE_ACTION_H 13 * 9 + 8
+#define OPT_KB_MORE_ACTION_H 13 * 9 + 8
 #endif
 
-#define OPT_KEYBOARD_MORE_ACTION_TEXT_X 200
-#define OPT_KEYBOARD_MORE_ACTION_TEXT_Y 60
+#define OPT_KB_MORE_ACTION_TEXT_X 200
+#define OPT_KB_MORE_ACTION_TEXT_Y 60
 
-#define OPT_KEYBOARD_MORE_ACTION_RIGHT_TEXT_X 200
+#define OPT_KB_MORE_ACTION_RIGHT_TEXT_X 200
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+// Game Controller
+#define OPT_GC_MOVE_X 41
+#define OPT_GC_MOVE_Y 72
+#define OPT_GC_MOVE_W 250
+#define OPT_GC_MOVE_H 13 * 9 + 8
+
+#define OPT_GC_MOVE_TEXT_X 170
+#define OPT_GC_MOVE_TEXT_Y 72
+
+#define OPT_GC_ACTION_X 41
+#define OPT_GC_ACTION_Y 72
+#define OPT_GC_ACTION_W 250
+#define OPT_GC_ACTION_H 13 * 9 + 8
+
+#define OPT_GC_ACTION_TEXT_X 170
+#define OPT_GC_ACTION_TEXT_Y 72
+
+#define OPT_GC_MORE_ACTION_X 41
+#define OPT_GC_MORE_ACTION_Y 72
+#define OPT_GC_MORE_ACTION_W 250
+
+#ifndef OVERHEAD_MAP
+#define OPT_GC_MORE_ACTION_H 13 * 6 + 8
+#else
+#define OPT_GC_MORE_ACTION_H 13 * 7 + 8
+#endif
+
+#define OPT_GC_MORE_ACTION_TEXT_X 170
+#define OPT_GC_MORE_ACTION_TEXT_Y 72
+
+const int MORE_ACTIONS_ARRAY_START = 5;
+#ifndef OVERHEAD_MAP
+const int MORE_ACTIONS_ARRAY_END = 11;
+#else
+const int MORE_ACTIONS_ARRAY_END = 12;
+#endif
+
+#if defined(SHOW_CUSTOM_CONTROLS)
 #define CUS_CTL_X 26
 #define CUS_CTL_Y 50
 #define CUS_CTL_W 280
@@ -228,29 +253,29 @@
 #define CUS_CTL_TEXT_Y 55
 
 #define CUS_CTL_RIGHT_TEXT_X 200
+
+const int MAX_CUSTOM_CONTROLS = 10;
+const int CUS_CTL_ARRAY_RANGE_START = 19;
+const int CUS_CTL_ARRAY_RANGE_END = 29;
 #endif
-
-#define OPT_JOYSTICK_X 41
-#define OPT_JOYSTICK_Y 72
-#define OPT_JOYSTICK_W 250
-#define OPT_JOYSTICK_H 63
-
-#define CST_SPC_Y 13
-#define CTL_MOUSE_X 180
 #endif
 
 // Resolution definitions
 #define MAX_RESOLUTIONS 64
 #define RES_LIST_MAX_VISIBLE 10
 
-const int MORE_ACTIONS_ARRAY_START = 5;
-const int MORE_ACTIONS_ARRAY_END = 12;
-
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
-#endif
+enum
+{
+	DISPLAY_RESOLUTION,
+	DISPLAY_FULLSCREEN_EXCLUSIVE,
+#if SDL_MAJOR_VERSION == 2
+	DISPLAY_FULLSCREEN_BORDERLESS,
+	DISPLAY_VSYNC,
+#elif SDL_MAJOR_VERSION == 1
+	DISPLAY_DOUBLE_BUFFERING,
+#endif	
+	DISPLAY_APPLY
+};
 
 //
 // TYPEDEFS
@@ -302,12 +327,7 @@ void SetupControlPanel(void);
 void SetupSaveGames();
 void CleanupControlPanel(void);
 
-void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items);
-int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w));
-int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w), int totalItems, int* selectedIdx, void (*buildItemsFunc)(void));
 void ClearMScreen(void);
-void DrawWindow(int x, int y, int w, int h, int wcolor);
-void DrawOutline(int x, int y, int w, int h, int color1, int color2);
 void WaitKeyUp(void);
 void ReadAnyControl(ControlInfo* ci);
 void TicDelay(int count);
@@ -318,92 +338,56 @@ void CheckPause(void);
 void ShootSnd(void);
 void CheckSecretMissions(void);
 void BossKey(void);
+void PrintLSEntry(int w, int color);
+void TrackWhichGame(int w);
+void DrawNewGameDiff(int w);
+void FixupCustom(int w);
+void CheckForEpisodes(void);
+void FreeMusic(void);
 
+void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items);
+void DrawWindow(int x, int y, int w, int h, int wcolor);
+void DrawOutline(int x, int y, int w, int h, int color1, int color2);
 void DrawGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int* y, int which, int basey, void (*routine)(int w));
 void DrawHalfStep(int x, int y);
-void EraseGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int y, int which);
 void DrawMenuGun(CP_iteminfo* iteminfo);
 void DrawStripes(int y);
-#ifndef USE_MODERN_CONTROLS
-void DefineMouseBtns(void);
-void DefineKeyMove(void);
-void DefineKeyBtns(void);
-void DefineJoyBtns(void);
-#else
-void DefineMouseBtns(int);
-void DefineKbMoveBtns(int);
-void DefineKbActionBtns(int);
-void DefineJoyBtns(int);
+void DrawSliderBox(int, int, int, int, int, int, byte);
+void EraseGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int y, int which);
 
-void DefineGcMoveBtns(int);
-void DefineGcActionBtns(int);
-void DefineGcMoreActionsBtns(int);
-#endif
+int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w));
+int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w), int totalItems, int* selectedIdx, void (*buildItemsFunc)(void));
 
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type);
-
 void DrawMainMenu(void);
 void DrawSoundMenu(void);
 void DrawLoadSaveScreen(int loadsave);
+
 void DrawNewEpisode(void);
 void DrawNewGame(void);
 void DrawChangeView(int view);
 void DrawMouseSens(void);
 void DrawCtlScreen(void);
-void DrawCustomScreen(void);
-void DrawMouseCtlScreen(void);
-void DrawResolutionMenu(void);
 void DrawOptScreen(void);
+void DrawResolutionMenu(void);
 void DrawDisplayOptScreen(void);
-#ifdef USE_MODERN_CONTROLS
-void CheckKeyConflict(void);
-
-void DrawKbMoveCtlScreen(void);
-void DrawKbActionCtlScreen(void);
-void DrawKbMoreActionCtlScreen(void);
-
-void DrawGcMoveCtlScreen(void);
-void DrawGcActionCtlScreen(void);
-void DrawGcMoreActionCtlScreen(void);
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-void DrawCustomCtlScreen(void);
-#endif
-#endif
-
+void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
-void DrawCustJoy(int hilight);
 void DrawCustKeybd(int hilight);
-void PrintCustMouse(int i);
-void PrintCustJoy(int i);
-void PrintCustKeybd(int i);
-
-void DrawMoreActionsKeys(int hilight);
-void PrintMoreActionsKeys(int i);
-
-void DrawCustomCtlKeys(int hilight);
-void PrintCustomCtlKeys(int i);
-
 void DrawCustKeys(int hilight);
+void PrintCustMouse(int i);
+void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
 
-void PrintGcMoveBtns(int);
-void DrawGcMoveBtns(int);
-void PrintGcActionsBtns(int);
-void DrawGcActionsBtns(int);
-void PrintGcMoreActionsBtns(int);
-void DrawGcMoreActionsBtns(int);
-
-#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
-void DrawAtmosOptScreen(void);
+#ifndef USE_MODERN_CONTROLS
+void DefineMouseBtns(void);
+void DefineKeyMove(void);
+void DefineKeyBtns(void);
+void DefineJoyBtns(void);
+void PrintCustJoy(int i);
+void DrawCustJoy(int hilight);
 #endif
-
-void DrawJoystickScreen(void);
-
-void PrintLSEntry(int w, int color);
-void TrackWhichGame(int w);
-void DrawNewGameDiff(int w);
-void FixupCustom(int w);
 
 int CP_NewGame(int);
 int CP_Sound(int);
@@ -411,6 +395,7 @@ int CP_LoadGame(int quick);
 int CP_SaveGame(int quick);
 int CP_Options(int);
 int CP_Control(int);
+
 int CP_Resolution(int);
 int CP_ChangeView(int);
 int CP_Quit(int);
@@ -418,39 +403,75 @@ int CP_ViewScores(int);
 int CP_EndGame(int);
 int CP_CheckQuick(ScanCode scancode);
 int MouseSensitivity(int);
-#ifdef USE_MODERN_CONTROLS
-int CP_MouseCtl(int);
-int CP_KbMoveCtl(int);
-int CP_KbActionCtl(int);
-int CP_KbMoreActionCtl(int);
-int CP_JoystickCtl(int);
-int CP_GcMoveCtl(int);
-int CP_GcActionCtl(int);
-int CP_GcMoreActionCtl(int);
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-int CP_CustomCtl(int);
-#endif
-#else
 int CustomControls(int);
-#endif
-
-void CheckForEpisodes(void);
-
-void FreeMusic(void);
 
 // Resolution helper functions
-void AddResIfMissing(int w, int h);
-void InitResList(int);
-void BuildResMenuItems(void);
-bool IsDisplayChanged(void);
-void RevertDisplay(void);
+void Res_AddIfMissing(int w, int h);
+void Res_Init(int);
+void Res_BuildMenuItems(void);
+bool Res_IsDisplayChanged(void);
+void Res_RevertDisplay(void);
 
 // Resolution screens
 int CP_Resolution(int);
 int CP_Display(int);
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
+void DrawAtmosOptScreen(void);
 int CP_Atmos(int);
+#endif
+
+#ifdef USE_MODERN_CONTROLS
+void DrawMouseCtlScreen(void);
+
+int CP_MouseCtl(int);
+int CP_KbMoveCtl(int);
+int CP_KbActionCtl(int);
+int CP_KbMoreActionCtl(int);
+
+void CheckKeyConflict(void);
+
+void DrawKbMoveCtlScreen(void);
+void DrawKbActionCtlScreen(void);
+void DrawKbMoreActionCtlScreen(void);
+void DrawKbMoreActionsKeys(int hilight);
+void PrintKbMoreActionsKeys(int i);
+
+void DefineMouseBtns(int);
+void DefineKbMoveBtns(int);
+void DefineKbActionBtns(int);
+void DefineJoyBtns(int);
+
+#if SDL_MAJOR_VERSION == 2
+int CP_GcMoveCtl(int);
+int CP_GcActionCtl(int);
+int CP_GcMoreActionCtl(int);
+int CP_GcTurnSens(int);
+
+void DrawGcMoveCtlScreen(void);
+void DrawGcActionCtlScreen(void);
+void DrawGcMoreActionCtlScreen(void);
+void DrawGcMoveBtns(int);
+void DrawGcActionsBtns(int);
+void DrawGcMoreActionsBtns(int);
+void DrawGcTurnSensScreen(void);
+#endif
+
+#ifdef SHOW_CUSTOM_CONTROLS
+void DrawCustomCtlScreen(void);
+void DrawCustomCtlKeys(int hilight);
+void PrintCustomCtlKeys(int i);
+int CP_CustomCtl(int);
+#endif
+
+#if SDL_MAJOR_VERSION == 1
+void DrawJoystickScreen(void);
+int CP_JoystickCtl(int);
+void PrintCustJoy(int);
+void DrawCustJoy(int);
+void DefineJoyBtns(int value);
+#endif
+
 #endif
 
 enum
@@ -460,10 +481,7 @@ enum
 	KB_ACTIONS,
 	KB_MOVE,
 	KB_MORE_ACTIONS,
-	GC_MOVE,
-	GC_ACTIONS,
-	GC_MORE_ACTIONS,
-	CUSTOMCONTROLS
+	KB_CUSTOM_CONTROLS
 }; // FOR INPUT TYPES
 
 enum menuitems

@@ -184,11 +184,19 @@ void ReadConfig(void)
 		read(file, &mouseenabled, sizeof(mouseenabled));
 		read(file, &mouseYAxis, sizeof(mouseYAxis));
 		read(file, &alwaysRun, sizeof(alwaysRun));
-		read(file, &joystickenabled, sizeof(joystickenabled));
-		read(file, &controllerEnabled, sizeof(controllerEnabled));
+		
 
+#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
+		read(file, &joystickenabled, sizeof(joystickenabled));
+#else
+#if SDL_MAJOR_VERSION == 2
+		read(file, &controllerEnabled, sizeof(controllerEnabled));
+		read(file, &gcBindings, sizeof(gcBindings));
+		read(file, &gcTurnSensitivity, sizeof(gcTurnSensitivity));
+#endif
 #if defined(SHOW_CUSTOM_CONTROLS)
 		read(file, customControls, sizeof(customControls));
+#endif
 #endif
 
 		boolean dummyJoypadEnabled;
@@ -201,7 +209,7 @@ void ReadConfig(void)
 		read(file, dirscan, sizeof(dirscan));
 		read(file, buttonscan, sizeof(buttonscan));
 		read(file, buttonmouse, sizeof(buttonmouse));
-		read(file, buttoncontroller, sizeof(buttoncontroller));
+		//read(file, buttoncontroller, sizeof(buttoncontroller));
 		read(file, buttonjoy, sizeof(buttonjoy));
 		read(file, &viewsize, sizeof(viewsize));
 		read(file, &mouseadjustment, sizeof(mouseadjustment));
@@ -244,18 +252,18 @@ void ReadConfig(void)
 		if (alwaysRun)
 			alwaysRun = true;
 
-		if (controllerEnabled)
-			controllerEnabled = true;
-
+#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
 		if (joystickenabled)
 			joystickenabled = true;
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-		if (!IN_ControllerPresent())
-			controllerEnabled = false;
-#else
 		if (!IN_JoyPresent())
 			joystickenabled = false;
+#else
+		if (controllerEnabled)
+			controllerEnabled = true;
+
+		if (!IN_GcPresent())
+			controllerEnabled = false;
 #endif
 
 		if (mouseadjustment < 0)
@@ -324,12 +332,12 @@ void ReadConfig(void)
 			mouseYAxis = false;
 		}
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-		if (IN_ControllerPresent())
-			controllerEnabled = true;
-#else
+#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
 		if (IN_JoyPresent())
 			joystickenabled = true;
+#else
+		if (IN_GcPresent())
+			controllerEnabled = true;
 #endif
 
 		viewsize = 19; // start with a good size
@@ -464,11 +472,18 @@ void WriteConfig(void)
 		write(file, &mouseenabled, sizeof(mouseenabled));
 		write(file, &mouseYAxis, sizeof(mouseYAxis));
 		write(file, &alwaysRun, sizeof(alwaysRun));
-		write(file, &joystickenabled, sizeof(joystickenabled));
-		write(file, &controllerEnabled, sizeof(controllerEnabled));
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
+		write(file, &joystickenabled, sizeof(joystickenabled));
+#else
+#if SDL_MAJOR_VERSION == 2
+		write(file, &controllerEnabled, sizeof(controllerEnabled));
+		write(file, &gcBindings, sizeof(gcBindings));
+		write(file, &gcTurnSensitivity, sizeof(gcTurnSensitivity));
+#endif
+#if defined(SHOW_CUSTOM_CONTROLS)
 		write(file, customControls, sizeof(customControls));
+#endif
 #endif
 
 		boolean dummyJoypadEnabled = false;
@@ -481,7 +496,7 @@ void WriteConfig(void)
 		write(file, dirscan, sizeof(dirscan));
 		write(file, buttonscan, sizeof(buttonscan));
 		write(file, buttonmouse, sizeof(buttonmouse));
-		write(file, buttoncontroller, sizeof(buttoncontroller));
+		//write(file, buttoncontroller, sizeof(buttoncontroller));
 		write(file, buttonjoy, sizeof(buttonjoy));
 		write(file, &viewsize, sizeof(viewsize));
 		write(file, &mouseadjustment, sizeof(mouseadjustment));
@@ -1354,7 +1369,11 @@ static void InitGame()
 #endif // !VIEASM
 
 	// initialize SDL
+#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
+#else
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
+#endif	
 	{
 		printf("Unable to init SDL: %s\n", SDL_GetError());
 		exit(1);

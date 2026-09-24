@@ -53,7 +53,11 @@ unsigned tics;
 //
 // control info
 //
-boolean mouseenabled, joystickenabled, controllerEnabled, mouseYAxis, alwaysRun;
+boolean mouseenabled, joystickenabled, mouseYAxis, alwaysRun;
+
+#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+boolean controllerEnabled;
+#endif
 
 #ifdef USE_MODERN_CONTROLS
 int dirscan[6] = { sc_W, sc_E, sc_S, sc_Q, sc_StrafeLeft, sc_StrafeRight };
@@ -68,15 +72,10 @@ int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc
 int dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 #endif
 int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
-int buttoncontroller[15] = {
-	bt_attack, bt_strafe, bt_use, bt_run, bt_esc, bt_nobutton, bt_pause, bt_nobutton, bt_nobutton, bt_prevweapon, bt_nextweapon, bt_nobutton, bt_nobutton,
-	bt_strafeleft, bt_straferight };
 int buttonjoy[32] = {
-	bt_attack, bt_strafe, bt_use, bt_run, bt_esc, bt_pause, bt_nobutton, bt_nobutton, bt_nobutton, bt_prevweapon, bt_nextweapon,
-	bt_nobutton, bt_nobutton, bt_strafeleft, bt_straferight,
-	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
-	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton };
-
+	bt_attack, bt_strafe, bt_use, bt_run, bt_prevweapon, bt_nextweapon, bt_esc, bt_pause, bt_nobutton, bt_nobutton, bt_nobutton,
+	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
+	bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton };
 int viewsize;
 
 boolean buttonheld[NUMBUTTONS];
@@ -303,22 +302,22 @@ void PollMouseButtons(void)
 }
 
 #if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-/*
-===================
-=
-= PollGameControllerButtons
-=
-===================
-*/
-
-void PollGameControllerButtons(void)
-{
-	int i, val, buttons = IN_GameControllerButtons();
-
-	for (i = 0, val = 1; i < 16; i++, val <<= 1)
-		if (buttons & val)
-			buttonstate[buttoncontroller[i]] = true;
-}
+///*
+//===================
+//=
+//= PollGameControllerButtons
+//=
+//===================
+//*/
+//
+//void PollGameControllerButtons(void)
+//{
+//	int i, val, buttons = IN_GameControllerButtons();
+//
+//	for (i = 0, val = 1; i < 16; i++, val <<= 1)
+//		if (buttons & val)
+//			buttonstate[buttoncontroller[i]] = true;
+//}
 #else
 /*
 ===================
@@ -330,13 +329,20 @@ void PollGameControllerButtons(void)
 
 void PollJoystickButtons(void)
 {
-	int i, val, buttons = IN_JoyButtons();
+	int i;
+	int buttons = IN_JoyButtons();
 
-	for (i = 0, val = 1; i < JoyNumButtons; i++, val <<= 1)
-	{
-		if (buttons & val)
-			buttonstate[buttonjoy[i]] = true;
-	}
+	int maxButtons = sizeof(buttonjoy) / sizeof(buttonjoy[0]);
+	if (JoyNumButtons < maxButtons)
+		maxButtons = JoyNumButtons;
+
+	for (i = 0; i < maxButtons; i++)
+		if (buttons & (1 << i))
+		{
+			int mappedBtn = buttonjoy[i];
+			if (mappedBtn != bt_nobutton && mappedBtn >= 0 && mappedBtn < NUMBUTTONS)
+				buttonstate[mappedBtn] = true;
+		}
 }
 #endif
 
@@ -482,68 +488,7 @@ void PollMouseMove(void)
 #endif
 }
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-/*
-===================
-=
-= PollGameControllerMove
-=
-===================
-*/
-void PollGameControllerMove(void)
-{
-	int analog0X, analog0Y, analog1X, analog1Y;
-
-	IN_GetGameControllerDelta(&analog0X, &analog0Y, &analog1X, &analog1Y);
-
-	int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-
-	//Left Analog Stick
-	if (analog0X > CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 0 (Left) - X Axis Right");
-		controlx += delta;
-	}
-	else if (analog0X < -CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 0 (Left) - X Axis Left");
-		controlx -= delta;
-	}
-	if (analog0Y > CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 0 (Left) - Y Axis Down");
-		controly += delta;
-	}
-	else if (analog0Y < -CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 0 (Left) - Y Axis Up");
-		controly -= delta;
-	}
-
-	//Right Analog Stick
-	if (analog1X > CONTROLLER_DEAD_ZONE) {
-		controlh += delta;
-		//printf("\nAnalog Stick 1 (Right) - X Axis Right");
-	}
-	else if (analog1X < -CONTROLLER_DEAD_ZONE) {
-		controlh -= delta;
-		//printf("\nAnalog Stick 1 (Right) - X Axis Left");
-	}
-	if (analog1Y > CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 1 (Right) - Y Axis Down");
-	}
-	else if (analog1Y < -CONTROLLER_DEAD_ZONE) {
-		//printf("\nAnalog Stick 1 (Right) - Y Axis Up");
-	}
-
-	if (buttonstate[bt_strafeleft]) {
-		//printf("\nLeft Strafe Pressed");
-	}
-
-	if (buttonstate[bt_straferight]) {
-
-		//printf("\nRight Strafe Pressed");
-	}
-
-
-}
-#else
+#if !defined(USE_MODERN_CONTROLS)
 /*
 ===================
 =
@@ -569,6 +514,57 @@ void PollJoystickMove(void)
 	else if (joyy < -64 || buttonstate[bt_moveforward])
 		controly -= delta;
 }
+#else
+#if (SDL_MAJOR_VERSION == 1) 
+/*
+===================
+=
+= PollJoystickMove
+=
+===================
+*/
+
+void PollJoystickMove(void)
+{
+	int joyx, joyy, joystrafe;
+
+	IN_GetJoyDelta(&joyx, &joyy, &joystrafe);
+
+	int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+	if (joystrafe > 64 || buttonstate[bt_straferight])
+		controlx += delta;
+	else if (joystrafe < -64 || buttonstate[bt_strafeleft])
+		controlx -= delta;
+
+	if (joyy > 64 || buttonstate[bt_movebackward])
+		controly += delta;
+	else if (joyy < -64 || buttonstate[bt_moveforward])
+		controly -= delta;
+
+	if (joyx != 0)
+	{
+		if (buttonstate[bt_strafe])
+			controlx += (joyx * delta) / 128;
+		else
+			anglefrac += (joyx * TURNMOVE * tics) / 256;
+	}
+	else if (buttonstate[bt_turnright])
+	{
+		if (buttonstate[bt_strafe])
+			controlx += delta;
+		else
+			anglefrac -= TURNMOVE * tics;
+	}
+	else if (buttonstate[bt_turnleft])
+	{
+		if (buttonstate[bt_strafe])
+			controlx -= delta;
+		else
+			anglefrac += TURNMOVE * tics;
+	}
+}
+#endif
 #endif
 
 /*
@@ -647,7 +643,6 @@ void PollControls(void)
 #ifdef USE_MODERN_CONTROLS
 		controlh *= (int)tics;
 #endif
-
 		return;
 	}
 
@@ -664,12 +659,28 @@ void PollControls(void)
 		PollMouseButtons();
 
 #if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (controllerEnabled)
-		PollGameControllerButtons();
+	if (IN_GcPresent() && controllerEnabled)
+	{
+		int gc0X = 0, gc0Y = 0, gc1X = 0, gc1Y = 0;
+
+		IN_GcPollActions();
+		IN_GcGetDelta(&gc0X, &gc0Y, &gc1X, &gc1Y);
+
+		int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+
+		controlx += (gc0X * delta) / DPAD_MAX_DELTA;
+		controly += (gc0Y * delta) / DPAD_MAX_DELTA;
+
+		anglefrac += (gc1X * tics * 16);
+	}
 #else
 	if (joystickenabled)
+	{
 		PollJoystickButtons();
-#endif 
+		PollJoystickMove();
+	}
+#endif
+
 	// !
 	//
 	// get movements
@@ -683,13 +694,6 @@ void PollControls(void)
 	if (mouseenabled && IN_IsInputGrabbed())
 		PollMouseMove();
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (controllerEnabled)
-		PollGameControllerMove();
-#else
-	if (joystickenabled)
-		PollJoystickMove();
-#endif
 	//
 	// bound movement to a maximum
 	//
@@ -774,12 +778,12 @@ void CenterWindow(word w, word h)
 //===========================================================================
 
 /*
-	=====================
-	=
-	= CheckKeys
-	=
-	=====================
-	*/
+=====================
+=
+= CheckKeys
+=
+=====================
+*/
 
 void CheckKeys(void)
 {
@@ -937,6 +941,7 @@ void CheckKeys(void)
 
 		SETFONTCOLOR(0, 15);
 		IN_ClearKeysDown();
+
 		VW_FadeOut();
 		if (viewsize != 21)
 			DrawPlayScreen();
@@ -972,7 +977,7 @@ void CheckKeys(void)
 #endif
 
 #ifdef OVERHEAD_MAP
-	if (buttonstate[bt_automap]) 
+	if (buttonstate[bt_automap])
 	{
 		ViewMap();
 

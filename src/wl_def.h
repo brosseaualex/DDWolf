@@ -1448,8 +1448,9 @@ void UpdateSoundLoc(void);
 =============================================================================
 */
 
-#define BASEMOVE 35
-#define RUNMOVE 70
+#define BASEMOVE	35
+#define RUNMOVE		70
+#define TURNMOVE    150
 
 #define JOYSCALE 2
 
@@ -1482,20 +1483,23 @@ extern int lastgamemusicoffset;
 //
 // control info
 //
-extern boolean mouseenabled, joystickenabled, controllerEnabled, mouseYAxis, alwaysRun;
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+extern boolean mouseenabled, joystickenabled, mouseYAxis, alwaysRun;
+
+#if defined(USE_MODERN_CONTROLS)
+extern int dirscan[6];
+#if (SDL_MAJOR_VERSION == 2)
+extern boolean controllerEnabled;
+#endif
+#if defined(SHOW_CUSTOM_CONTROLS)
 extern int customControls[10];
 #endif
-
-#ifdef USE_MODERN_CONTROLS
-extern int dirscan[6];
 #else
 extern int dirscan[4];
 #endif
+
 extern int buttonscan[NUMBUTTONS];
 extern int buttonmouse[4];
 
-extern int buttoncontroller[15];
 extern int buttonjoy[32];
 
 extern boolean buttonheld[NUMBUTTONS];

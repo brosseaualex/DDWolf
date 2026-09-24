@@ -125,12 +125,14 @@
 #define STR_OP_MOUSE "Mouse"
 #define STR_OP_KEYBOARD "Keyboard"
 #define STR_OP_JOYSTICK "Controller"
+#define STR_OP_GC_TURN_SENS "Turn Sensitivity"
 
 #define STR_ALWAYS_RUN "Always Run"
 
 #define STR_MOUSEMOVEMENT "Mouse Y Axis Enabled"
 
 #define STR_ACTION_KEYS "Action Keys"
+#define STR_MORE_ACTION_KEYS "More Actions"
 #define STR_MOVEMENT_KEYS "Movement Keys"
 
 #define STR_STF_LEFT "Strafe L"
