@@ -650,7 +650,6 @@ void PollControls(void)
 	// get button states
 	//
 	PollKeyboardButtons();
-
 #if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
 	PollCustomControls();
 #endif
@@ -658,38 +657,43 @@ void PollControls(void)
 	if (mouseenabled && IN_IsInputGrabbed())
 		PollMouseButtons();
 
+	// Fix for input deltas stacking when using the keyboard and the controller at the same time.
+	// Controller takes priority over keyboard.
+	bool gcActiveMove = false;
+
 #if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (IN_GcPresent() && controllerEnabled)
+	if (GC_IsPresent() && controllerEnabled)
 	{
-		int gc0X = 0, gc0Y = 0, gc1X = 0, gc1Y = 0;
+		int preX = controlx, preY = controly;
+		int preAngle = anglefrac;
 
-		IN_GcPollActions();
-		IN_GcGetDelta(&gc0X, &gc0Y, &gc1X, &gc1Y);
+		GC_PollMove();
+		GC_PollActions();
 
-		int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-
-		controlx += (gc0X * delta) / DPAD_MAX_DELTA;
-		controly += (gc0Y * delta) / DPAD_MAX_DELTA;
-
-		anglefrac += (gc1X * tics * 16);
+		if (controlx != preX || controly != preY || anglefrac != preAngle)
+			gcActiveMove = true;
 	}
 #else
 	if (joystickenabled)
 	{
+		int preX = controlx, preY = controly;
+		int preAngle = anglefrac;
+
 		PollJoystickButtons();
 		PollJoystickMove();
+
+		if (controlx != preX || controly != preY || anglefrac != preAngle)
+			gcActiveMove = true;
 	}
 #endif
-
-	// !
-	//
-	// get movements
-	//
+	if (!gcActiveMove)
+	{
 #ifdef USE_MODERN_CONTROLS
-	PollCustomKeyboardMove();
+		PollCustomKeyboardMove();
 #else
-	PollKeyboardMove();
+		PollKeyboardMove();
 #endif
+	}
 
 	if (mouseenabled && IN_IsInputGrabbed())
 		PollMouseMove();
@@ -701,7 +705,6 @@ void PollControls(void)
 	min = -max;
 	rmax = max << 4;
 	rmin = -rmax;
-
 #ifdef USE_MODERN_CONTROLS
 	if (controlh > rmax)
 		controlh = rmax;

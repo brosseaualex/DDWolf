@@ -180,11 +180,15 @@ enum
 	CTL_SPACE_KB_MORE_ACTION,
 	CTL_BACK_ACTIONKEYS
 };
-
+enum
+{
+	CTL_JOYSTICK_RUN,
+	CTL_JOYSTICK_OPEN,
+	CTL_JOYSTICK_FIRE,
+	CTL_JOYSTICK_STRAFE
+};
+// Game controller controls
 #if SDL_MAJOR_VERSION == 2
-//
-// GAME CONTROLLER
-//
 enum
 {
 	CTL_GC_MOVE_FWRD,
@@ -220,13 +224,6 @@ enum
 	CTL_GC_BACK_ACTIONKEYS
 };
 #endif
-enum
-{
-	CTL_JOYSTICK_RUN,
-	CTL_JOYSTICK_OPEN,
-	CTL_JOYSTICK_FIRE,
-	CTL_JOYSTICK_STRAFE
-};
 #if defined(SHOW_CUSTOM_CONTROLS)
 enum
 {
@@ -260,108 +257,6 @@ enum
 	ATMOS_USE_SKYBOX,
 	ATMOS_USE_PRECIPITATION
 };
-#endif
-
-//
-// GAME CONTROLLER
-//
-
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-#define TRIGGER_THRESHOLD	16000		// Analog trigger press depth (~50% on a XBox One Controller)
-#define STICK_THRESHOLD		16000		// Stick deflection threshold for discrete action checks
-#define DPAD_MAX_DELTA		32767
-
-typedef enum ControllerType
-{
-	CT_XBOX,
-	CT_PLAYSTATION,
-	CT_NINTENDO,
-	CT_GENERIC
-} ControllerType;
-
-typedef enum
-{
-	gc_nobutton = -1,
-	gc_attack = 0,
-	gc_use,
-	gc_run,
-	gc_strafe,
-	gc_nextweapon,
-	gc_prevweapon,
-	gc_forward,
-	gc_backward,
-	gc_turnleft,
-	gc_turnright,
-	gc_straferight,
-	gc_strafeleft,
-	gc_weapon1,
-	gc_weapon2,
-	gc_weapon3,
-	gc_weapon4,
-	gc_automap,
-	gc_esc,
-	gc_pause,
-	gc_NUMBUTTONS
-}GameControllerAction;
-
-extern int gcBindings[gc_NUMBUTTONS];
-
-extern float gcTurnSensitivity;
-extern float gcMaxTurnSensitivity;
-
-extern float gcMoveSensitivity;
-extern float gcDpadTurnMultiplier;
-
-#if SDL_MAJOR_VERSION == 2 & defined(USE_MODERN_CONTROLS)
-#define sc_gc_NoButton				-1
-#define sc_gc_Btn_A					SDL_CONTROLLER_BUTTON_A					// PS = Cross
-#define sc_gc_Btn_B					SDL_CONTROLLER_BUTTON_B					// PS = Circle
-#define sc_gc_Btn_X					SDL_CONTROLLER_BUTTON_X					// PS = Square
-#define sc_gc_Btn_Y					SDL_CONTROLLER_BUTTON_Y					// PS = Triangle
-#define sc_gc_Btn_Back				SDL_CONTROLLER_BUTTON_BACK
-#define sc_gc_Btn_Guide				SDL_CONTROLLER_BUTTON_GUIDE
-#define sc_gc_Btn_Start				SDL_CONTROLLER_BUTTON_START
-#define sc_gc_Left_Stick			SDL_CONTROLLER_BUTTON_LEFTSTICK			// Stick Click
-#define sc_gc_Right_Stick			SDL_CONTROLLER_BUTTON_RIGHTSTICK		// Stick Click
-#define sc_gc_Left_Shoulder			SDL_CONTROLLER_BUTTON_LEFTSHOULDER
-#define sc_gc_Right_Shoulder		SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
-#define sc_gc_DPad_Up				SDL_CONTROLLER_BUTTON_DPAD_UP
-#define sc_gc_DPad_Down				SDL_CONTROLLER_BUTTON_DPAD_DOWN
-#define sc_gc_DPad_Left				SDL_CONTROLLER_BUTTON_DPAD_LEFT
-#define sc_gc_DPad_Right			SDL_CONTROLLER_BUTTON_DPAD_RIGHT
-#define sc_gc_Share_Micro			SDL_CONTROLLER_BUTTON_MISC1				// Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button
-#define sc_gc_Btn_Paddle_1			SDL_CONTROLLER_BUTTON_PADDLE1			// Xbox Elite paddle P1 (upper left, facing the back)
-#define sc_gc_Btn_Paddle_2			SDL_CONTROLLER_BUTTON_PADDLE2			// Xbox Elite paddle P3 (upper right, facing the back)
-#define sc_gc_Btn_Paddle_3			SDL_CONTROLLER_BUTTON_PADDLE3			// Xbox Elite paddle P2 (lower left, facing the back)
-#define sc_gc_Btn_Paddle_4			SDL_CONTROLLER_BUTTON_PADDLE4			// Xbox Elite paddle P4 (lower right, facing the back)
-#define sc_gc_Touchpad				SDL_CONTROLLER_BUTTON_TOUCHPAD			// PS4/PS5 touchpad button
-#define sc_gc_Axis_Left_Trigger		100										// SDL_CONTROLLER_AXIS_TRIGGERLEFT but value needs to be changed since it conflicts with buttons
-#define sc_gc_Axis_Right_Trigger	101										// SDL_CONTROLLER_AXIS_TRIGGERRIGHT
-#endif
-
-#define sc_gc_NoButton		-1
-static const int gcDefaults[gc_NUMBUTTONS] = {
-	sc_gc_Axis_Right_Trigger,	// gc_attack
-	sc_gc_Btn_A,				// gc_use
-	sc_gc_Btn_X,				// gc_run
-	sc_gc_Btn_B,				// gc_strafe
-	sc_gc_Left_Shoulder,		// gc_prevweapon
-	sc_gc_Right_Shoulder,		// gc_nextweapon
-	sc_gc_DPad_Up,				// gc_forward
-	sc_gc_DPad_Down,			// gc_backward
-	sc_gc_DPad_Left,			// gc_turnleft
-	sc_gc_DPad_Right,			// gc_turnright
-	sc_gc_NoButton,				// gc_straferight
-	sc_gc_NoButton,				// gc_strafeleft
-	sc_gc_NoButton,				// gc_weapon1
-	sc_gc_NoButton,				// gc_weapon2
-	sc_gc_NoButton,				// gc_weapon3
-	sc_gc_NoButton,				// gc_weapon4
-	sc_gc_NoButton,				// gc_automap
-	sc_gc_Btn_Back,				// gc_esc
-	sc_gc_Btn_Start				// gc_pause
-};
-
 #endif
 
 #if SDL_MAJOR_VERSION == 2
@@ -486,21 +381,4 @@ boolean IN_CheckAck(void);
 bool IN_IsInputGrabbed();
 void IN_CenterMouse();
 void IN_MouseGrab(void);
-
-// Game controller
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-boolean IN_GcPresent();
-ControllerType IN_GcGetControllerType(void);
-void IN_InitGcBindings(void);
-int IN_GcButtons(void);
-const char* IN_GcGetScanName(ScanCode);
-int IN_GcRemapReadButton(void);
-void IN_GcCheckMenuInputs(void);
-void IN_GcPollActions(void);
-void IN_GcGetDelta(int* analog0X, int* analog0Y, int* analog1X, int* analog1Y);
-bool IN_GcIsActionPressed(GameControllerAction, bool allowHold = true);
-bool IN_GcGetButton(SDL_GameControllerButton);
-void IN_GcForceReleaseAll(void);
-bool IN_GcIsButtonBlocked(int);
-#endif
 #endif

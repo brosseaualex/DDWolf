@@ -193,6 +193,16 @@
     <ClInclude Include="src\gfxv_sod.h" />
     <ClInclude Include="src\gfxv_wl6.h" />
     <ClInclude Include="src\id_ca.h" />
+    <ClInclude Include="src\id_gc.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="src\id_in.h" />
     <ClInclude Include="src\id_pm.h" />
     <ClInclude Include="src\id_sd.h" />
@@ -218,6 +228,16 @@
     <ClCompile Include="src\asmcomp.cpp" />
     <ClCompile Include="src\dosbox\dbopl.cpp" />
     <ClCompile Include="src\id_ca.cpp" />
+    <ClCompile Include="src\id_gc.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\id_in.cpp" />
     <ClCompile Include="src\id_pm.cpp" />
     <ClCompile Include="src\id_sd.cpp" />

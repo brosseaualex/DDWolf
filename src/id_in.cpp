@@ -54,30 +54,6 @@ static KeyboardDef KbdDefs = {
 	sc_PgDn        // downright
 };
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-static SDL_GameController* GameController;
-int GameControllerNumButtons = 16;
-int gcBindings[gc_NUMBUTTONS];
-static bool gcLastState[gc_NUMBUTTONS] = { false };
-static bool gcConsumedState[gc_NUMBUTTONS] = { false };
-
-// Any buttons in this list will be prevented to be mapped to an action
-static const int gcRemapForbiddenButtons[] = {
-	SDL_CONTROLLER_BUTTON_GUIDE,
-	SDL_CONTROLLER_BUTTON_START,
-	SDL_CONTROLLER_BUTTON_BACK,
-};
-static const int g_numBlockedGcButtons = sizeof(gcRemapForbiddenButtons) / sizeof(gcRemapForbiddenButtons[0]);
-
-// Sensitivity settings (10 = 100% normal speed, 5 = 50% speed, 20 = 200% speed)
-// Capped at 10 in the menu
-float gcTurnSensitivity = 5.0f;
-float gcMaxTurnSensitivity = 10.0f;
-
-float gcMoveSensitivity = 10.0f;
-float gcDpadTurnMultiplier = 3.0f;
-#endif
-
 #if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
 static SDL_Joystick* Joystick;
 int JoyNumButtons;
@@ -635,8 +611,8 @@ static void processEvent(SDL_Event* event)
 		// exit if the window is closed
 	case SDL_QUIT:
 		Quit(NULL);
-
 		// check for keypresses
+		break; // Ok but should there be a break here? -- check to see if it breaks anything
 	case SDL_KEYDOWN:
 	{
 		ModState mod = SDL_GetModState();
@@ -652,10 +628,8 @@ static void processEvent(SDL_Event* event)
 		LastScan = event->key.keysym.sym;
 
 		if (Keyboard(sc_Alt))
-		{
 			if (LastScan == SDLK_F4)
 				Quit(NULL);
-		}
 
 		if (LastScan == SDLK_KP_ENTER)
 			LastScan = SDLK_RETURN;
@@ -741,10 +715,30 @@ static void processEvent(SDL_Event* event)
 					break;
 				}
 			}
-			KeyboardSet(key, 0);
 		}
+		KeyboardSet(key, 0);
+		break;
+	}
+	// Game does not resume from pause when re-pressing the pause button, this fixes it
+#if !ENABLE_GAME_CONTROLLER
+	if (joystickenabled)
+	{
+	case SDL_JOYBUTTONDOWN:
+	{
+		if (event->jbutton.button == 7 || event->jbutton.button == 9)
+		{
+			LastScan = SDLK_PAUSE;
+			LastASCII = 0;
+			Paused = true;
+		}
+		break;
 	}
 	}
+#endif
+	}
+#if ENABLE_GAME_CONTROLLER
+		GC_ProcessEvents(event);
+#endif
 }
 
 void IN_WaitAndProcessEvents()
@@ -780,7 +774,10 @@ void IN_Startup(void)
 
 	IN_ClearKeysDown();
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
+	GC_InitGameController();
+	GC_InitDefaultBindings();
+#else
 	if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
 	{
 		Joystick = SDL_JoystickOpen(param_joystickindex);
@@ -794,31 +791,11 @@ void IN_Startup(void)
 				Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
 		}
 	}
-#else
-	// FIXME - implement param_joystickindex
-	//GameController = SDL_GameControllerOpen(param_joystickindex);
-	for (int i = 0; i < 2; ++i) {
-		if (SDL_IsGameController(i)) {
-			GameController = SDL_GameControllerOpen(i);
-			if (GameController) {
-				printf("Successfully opened controller: %s\n", SDL_GameControllerName(GameController));
-				break;
-			}
-			else {
-				printf("Could not open game controller %d! SDL_Error: %s\n", i, SDL_GetError());
-			}
-		}
-	}
 #endif
 
 	SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
 	IN_MouseGrab();
-
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-	// Initializes default controller bindings
-	IN_InitGcBindings();
-#endif
 
 	// I didn't find a way to ask libSDL whether a mouse is present, yet...
 	MousePresent = true;
@@ -1225,10 +1202,10 @@ void IN_StartAck(void)
 
 	int buttons = 0;
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	buttons = IN_GcButtons();
-#else
+#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
 	buttons = IN_JoyButtons();
+#else
+	buttons = GC_GetButtons();
 #endif
 
 	if (MousePresent)
@@ -1244,6 +1221,7 @@ boolean IN_CheckAck(void)
 	int i;
 
 	IN_ProcessEvents();
+
 	//
 	// see if something has been pressed
 	//
@@ -1252,9 +1230,9 @@ boolean IN_CheckAck(void)
 
 	int buttons = 0;
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (IN_GcPresent() && controllerEnabled)
-		buttons = IN_GcButtons() << 4;
+#if ENABLE_GAME_CONTROLLER
+	if (GC_IsPresent() && controllerEnabled)
+		buttons = GC_GetButtons() << 4;
 #else
 	if (IN_JoyPresent() && joystickenabled)
 		buttons = IN_JoyButtons() << 4;
@@ -1273,16 +1251,22 @@ boolean IN_CheckAck(void)
 				do
 				{
 					IN_WaitAndProcessEvents();
+
 					buttons = 0;
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-					if (IN_GcPresent() && controllerEnabled)
-						buttons = IN_GcButtons() << 4;
+#if ENABLE_GAME_CONTROLLER
+					if (gcHotplugDirty)
+					{
+						GC_CleanHotplugEvents(btnstate);
+						return false;
+					}
+
+					if (GC_IsPresent() && controllerEnabled)
+						buttons = GC_GetButtons() << 4;
 #else
 					if (IN_JoyPresent() && joystickenabled)
 						buttons = IN_JoyButtons() << 4;
 #endif
-
 					if (MousePresent)
 						buttons |= IN_MouseButtons();
 				} while (buttons & (1 << i));
@@ -1303,6 +1287,9 @@ void IN_Ack(void)
 
 	do
 	{
+#if ENABLE_GAME_CONTROLLER
+		GC_ProcessHotplugEvents();
+#endif
 		IN_WaitAndProcessEvents();
 	} while (!IN_CheckAck());
 }
@@ -1370,499 +1357,3 @@ void IN_MouseGrab(void)
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 #endif
 }
-
-//===========================================================================
-
-//
-// GAME CONTROLLER
-//
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-int IN_GcButtons()
-{
-	int i;
-	int res;
-
-	if (!GameController)
-		return 0;
-
-	SDL_GameControllerUpdate();
-	for (i = 0; i < GameControllerNumButtons && i < 16; i++)
-		res |= SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)i) << i;
-
-	return res;
-}
-
-void IN_InitGcBindings(void)
-{
-	for (int i = 0; i < gc_NUMBUTTONS; i++)
-		gcBindings[i] = gcDefaults[i];
-}
-
-void IN_GcForceReleaseAll(void)
-{
-	for (int i = 0; i < gc_NUMBUTTONS; i++)
-		gcConsumedState[i] = true;
-}
-
-bool IN_GcGetButton(SDL_GameControllerButton button)
-{
-	if (!GameController)
-		return false;
-	return SDL_GameControllerGetButton(GameController, button) != 0;
-}
-
-bool IN_IsButtonBoundToAnyAction(int targetButton)
-{
-	if (targetButton == sc_gc_NoButton || targetButton < 0)
-		return false;
-
-	for (int i = 0; i < gc_NUMBUTTONS; i++)
-		if (gcBindings[i] == targetButton)
-			return true;
-
-	return false;
-}
-
-bool IN_GcIsButtonBlocked(int button)
-{
-	if (button < 0)
-		return false;
-
-	for (int i = 0; i < g_numBlockedGcButtons; i++)
-	{
-		if (gcRemapForbiddenButtons[i] == button)
-			return true;
-	}
-	return false;
-}
-
-bool IN_GcIsActionPressed(GameControllerAction action, bool allowHold)
-{
-	if (!GameController || (unsigned)action >= gc_NUMBUTTONS)
-		return false;
-
-	bool currentState = false;
-	int btn = gcBindings[action];
-
-	if (btn >= 0 && btn < 100 && btn != sc_gc_NoButton)
-	{
-		if (SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)btn))
-			currentState = true;
-	}
-	else if (btn == sc_gc_Axis_Left_Trigger)
-	{
-		if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > TRIGGER_THRESHOLD)
-			currentState = true;
-	}
-	else if (btn == sc_gc_Axis_Right_Trigger)
-	{
-		if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > TRIGGER_THRESHOLD)
-			currentState = true;
-	}
-
-	if (!currentState && (btn == sc_gc_NoButton || btn < 0))
-	{
-		if (action == gc_attack)
-		{
-			if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > TRIGGER_THRESHOLD)
-				currentState = true;
-		}
-		else if (action == gc_run || action == gc_strafe)
-		{
-			if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > TRIGGER_THRESHOLD)
-				currentState = true;
-		}
-	}
-
-	if (!currentState)
-	{
-		switch (action)
-		{
-		case gc_forward:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTY) < -STICK_THRESHOLD;
-			break;
-		case gc_backward:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTY) > STICK_THRESHOLD;
-			break;
-		case gc_strafeleft:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTX) < -STICK_THRESHOLD;
-			break;
-		case gc_straferight:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTX) > STICK_THRESHOLD;
-			break;
-		case gc_turnleft:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTX) < -STICK_THRESHOLD;
-			break;
-		case gc_turnright:
-			currentState = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTX) > STICK_THRESHOLD;
-			break;
-		default:
-			break;
-		}
-	}
-
-	if (!currentState)
-		gcConsumedState[action] = false;
-
-	if (gcConsumedState[action])
-	{
-		gcLastState[action] = currentState;
-		return false;
-	}
-
-	bool result = false;
-	if (allowHold)
-		result = currentState;
-	else
-		result = currentState && !gcLastState[action];
-
-	gcLastState[action] = currentState;
-
-	return result;
-}
-
-void IN_GcPollActions(void)
-{
-	if (!GameController)
-		return;
-
-	if (IN_GcIsActionPressed(gc_attack))
-		buttonstate[bt_attack] = true;
-	if (IN_GcIsActionPressed(gc_use))
-		buttonstate[bt_use] = true;
-	if (IN_GcIsActionPressed(gc_run))
-		buttonstate[bt_run] = true;
-	if (IN_GcIsActionPressed(gc_strafe))
-		buttonstate[bt_strafe] = true;
-	if (IN_GcIsActionPressed(gc_prevweapon))
-		buttonstate[bt_prevweapon] = true;
-	if (IN_GcIsActionPressed(gc_nextweapon))
-		buttonstate[bt_nextweapon] = true;
-
-	if (IN_GcIsActionPressed(gc_weapon1))
-		gamestate.weapon = wp_knife;
-	else if (IN_GcIsActionPressed(gc_weapon2))
-		gamestate.weapon = wp_pistol;
-	else if (IN_GcIsActionPressed(gc_weapon3))
-		gamestate.weapon = wp_machinegun;
-	else if (IN_GcIsActionPressed(gc_weapon4))
-		gamestate.weapon = wp_chaingun;
-
-	if (IN_GcIsActionPressed(gc_pause, false))
-		buttonstate[bt_pause] = true;
-	if (IN_GcIsActionPressed(gc_esc, false))
-		buttonstate[bt_esc] = true;
-
-#ifdef OVERHEAD_MAP
-	//if (IN_IsGcActionPressed(gc_automap))
-//	ToggleAutoMap();
-#endif
-}
-
-void IN_GcGetDelta(int* analog0X, int* analog0Y, int* analog1X, int* analog1Y)
-{
-	if (!analog0X || !analog0Y || !analog1X || !analog1Y)
-		return;
-
-	if (!GameController)
-	{
-		*analog0X = 0;
-		*analog0Y = 0;
-		*analog1X = 0;
-		*analog1Y = 0;
-		return;
-	}
-
-	SDL_GameControllerUpdate();
-
-	int a0X = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTX);
-	int a0Y = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_LEFTY);
-	int a1X = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTX);
-	int a1Y = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTY);
-
-	if (abs(a0X) < TRIGGER_THRESHOLD)
-		a0X = 0;
-	if (abs(a0Y) < TRIGGER_THRESHOLD)
-		a0Y = 0;
-	if (abs(a1X) < TRIGGER_THRESHOLD)
-		a1X = 0;
-	if (abs(a1Y) < TRIGGER_THRESHOLD)
-		a1Y = 0;
-
-	a0X >>= 8;
-	a0Y >>= 8;
-	a1X >>= 8;
-	a1Y >>= 8;
-
-	a0X = (a0X * (int)gcMoveSensitivity) / 10;
-	a0Y = (a0Y * (int)gcMoveSensitivity) / 10;
-	a1X = (a1X * (int)gcTurnSensitivity) / 500;
-	a1Y = (a1Y * (int)gcTurnSensitivity) / 500;
-
-	int maxDelta = (DPAD_MAX_DELTA > 0) ? DPAD_MAX_DELTA : 128;
-
-	if (IN_GcIsActionPressed(gc_straferight))
-		a0X += maxDelta;
-	if (IN_GcIsActionPressed(gc_strafeleft))
-		a0X -= maxDelta;
-	if (IN_GcIsActionPressed(gc_backward))
-		a0Y += maxDelta;
-	if (IN_GcIsActionPressed(gc_forward))
-		a0Y -= maxDelta;
-
-	int buttonTurnDelta = maxDelta * (int)gcDpadTurnMultiplier;
-	if (IN_GcIsActionPressed(gc_turnright))
-		a1X -= buttonTurnDelta;
-	if (IN_GcIsActionPressed(gc_turnleft))
-		a1X += buttonTurnDelta;
-
-	int turnMax = maxDelta * (int)gcDpadTurnMultiplier;
-
-	if (a0X > maxDelta)
-		a0X = maxDelta;
-	else if (a0X < -maxDelta)
-		a0X = -maxDelta;
-
-	if (a0Y > maxDelta)
-		a0Y = maxDelta;
-	else if (a0Y < -maxDelta)
-		a0Y = -maxDelta;
-
-	if (a1X > turnMax)
-		a1X = turnMax;
-	else if (a1X < -turnMax)
-		a1X = -turnMax;
-
-	*analog0X = a0X;
-	*analog0Y = a0Y;
-	*analog1X = a1X;
-	*analog1Y = a1Y;
-}
-
-int IN_GcRemapReadButton(void)
-{
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
-		case SDL_CONTROLLERBUTTONDOWN:
-			return (int)event.cbutton.button;
-		case SDL_CONTROLLERAXISMOTION:
-			if (event.caxis.value > TRIGGER_THRESHOLD)
-			{
-				if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
-					return sc_gc_Axis_Left_Trigger;
-				if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
-					return sc_gc_Axis_Right_Trigger;
-			}
-			break;
-		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_BACKSPACE || event.key.keysym.sym == SDLK_DELETE)
-				return -3; // Clear
-			else if (event.key.keysym.sym == SDLK_ESCAPE)
-				return -2; // Cancel
-			break;
-		}
-	}
-
-	return -1;
-}
-
-boolean IN_GcPresent()
-{
-	return GameController != NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      IN_GcGetScanName() - Returns a string containing the name of the
-//              specified controller input/action
-//
-///////////////////////////////////////////////////////////////////////////
-const char* IN_GcGetScanName(int scan)
-{
-	if (scan == sc_gc_NoButton || scan < 0)
-		return "?";
-
-	ControllerType type = IN_GcGetControllerType();
-
-	switch (scan)
-	{
-	case SDL_CONTROLLER_BUTTON_A:
-		if (type == CT_PLAYSTATION)
-			return "Cross";
-		if (type == CT_NINTENDO)
-			return "B";
-		return "A";
-
-	case SDL_CONTROLLER_BUTTON_B:
-		if (type == CT_PLAYSTATION)
-			return "Circle";
-		if (type == CT_NINTENDO)
-			return "A";
-		return "B";
-
-	case SDL_CONTROLLER_BUTTON_X:
-		if (type == CT_PLAYSTATION)
-			return "Square";
-		if (type == CT_NINTENDO)
-			return "Y";
-		return "X";
-
-	case SDL_CONTROLLER_BUTTON_Y:
-		if (type == CT_PLAYSTATION)
-			return "Triangle";
-		if (type == CT_NINTENDO)
-			return "X";
-		return "Y";
-
-	case SDL_CONTROLLER_BUTTON_BACK:
-		if (type == CT_PLAYSTATION)
-			return "Share/Select";
-		if (type == CT_NINTENDO)
-			return "-";
-		return "Back";
-
-	case SDL_CONTROLLER_BUTTON_START:
-		if (type == CT_PLAYSTATION)
-			return "Options";
-		if (type == CT_NINTENDO)
-			return "+";
-		return "Start";
-
-	case SDL_CONTROLLER_BUTTON_GUIDE:
-		if (type == CT_PLAYSTATION)
-			return "PS";
-		if (type == CT_NINTENDO)
-			return "Home";
-		return "Guide";
-
-	case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-		if (type == CT_PLAYSTATION)
-			return "L1";
-		if (type == CT_NINTENDO)
-			return "L";
-		return "LB";
-
-	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-		if (type == CT_PLAYSTATION)
-			return "R1";
-		if (type == CT_NINTENDO)
-			return "R";
-		return "RB";
-
-	case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-		if (type == CT_PLAYSTATION)
-			return "L3";
-		return "L Stick Click";
-
-	case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-		if (type == CT_PLAYSTATION)
-			return "R3";
-		return "R Stick Click";
-
-	case SDL_CONTROLLER_BUTTON_DPAD_UP:
-		return "D-Pad Up";
-	case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-		return "D-Pad Down";
-	case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-		return "D-Pad L";
-	case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-		return "D-Pad R";
-
-		// Elite Controllers
-	case SDL_CONTROLLER_BUTTON_PADDLE1:
-		return "Paddle 1 (P1)";
-	case SDL_CONTROLLER_BUTTON_PADDLE2:
-		return "Paddle 2 (P2)";
-	case SDL_CONTROLLER_BUTTON_PADDLE3:
-		return "Paddle 3 (P3)";
-	case SDL_CONTROLLER_BUTTON_PADDLE4:
-		return "Paddle 4 (P4)";
-
-	case SDL_CONTROLLER_BUTTON_TOUCHPAD:
-		return "Touchpad Click";
-
-		// Other
-	case SDL_CONTROLLER_BUTTON_MISC1:
-		if (type == CT_PLAYSTATION)
-			return "Mute";
-		if (type == CT_NINTENDO)
-			return "Capture";
-		return "Share";
-
-		// Custom Trigger Bindings (IDs >= 100)
-	case sc_gc_Axis_Left_Trigger:
-		if (type == CT_PLAYSTATION)
-			return "L2";
-		if (type == CT_NINTENDO)
-			return "ZL";
-		return "LT";
-
-	case sc_gc_Axis_Right_Trigger:
-		if (type == CT_PLAYSTATION)
-			return "R2";
-		if (type == CT_NINTENDO)
-			return "ZR";
-		return "RT";
-
-	default:
-		return "?";
-	}
-}
-
-/*
-==========================
-=
-= IN_GcGetControllerType
-=
-==========================
-*/
-ControllerType IN_GcGetControllerType(void)
-{
-	if (!GameController)
-		return CT_GENERIC;
-
-#if SDL_VERSION_ATLEAST(2, 0, 12)
-	SDL_GameControllerType type = SDL_GameControllerGetType(GameController);
-
-	switch (type)
-	{
-	case SDL_CONTROLLER_TYPE_PS3:
-	case SDL_CONTROLLER_TYPE_PS4:
-	case SDL_CONTROLLER_TYPE_PS5:
-		return CT_PLAYSTATION;
-
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
-	case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
-		return CT_NINTENDO;
-
-	case SDL_CONTROLLER_TYPE_XBOX360:
-	case SDL_CONTROLLER_TYPE_XBOXONE:
-		return CT_XBOX;
-
-	default:
-		return CT_GENERIC;
-	}
-#else
-	const char* name = SDL_GameControllerName(GameController);
-	if (!name) return CT_GENERIC;
-
-	if (strstr(name, "PlayStation") || strstr(name, "DualShock") || strstr(name, "DualSense") || strstr(name, "PS4") || strstr(name, "PS5") || strstr(name, "PS3"))
-		return CT_PLAYSTATION;
-
-	if (strstr(name, "Nintendo") || strstr(name, "Switch") || strstr(name, "Pro Controller"))
-		return CT_NINTENDO;
-
-	if (strstr(name, "Xbox") || strstr(name, "X-Box") || strstr(name, "360"))
-		return CT_XBOX;
-
-	return CT_GENERIC;
-#endif
-}
-#endif
-

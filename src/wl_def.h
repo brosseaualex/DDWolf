@@ -96,12 +96,13 @@ void WriteConfig(void);
 #else
 #include "id_sd.h"
 #endif
+#include "id_gc.h"
+#include "id_sd.h"
 #include "id_in.h"
 #include "id_vl.h"
 #include "id_vh.h"
 #include "id_us.h"
 #include "id_ca.h"
-
 #include "wl_menu.h"
 #include "wl_utils.h"
 
@@ -1450,7 +1451,7 @@ void UpdateSoundLoc(void);
 
 #define BASEMOVE	35
 #define RUNMOVE		70
-#define TURNMOVE    150
+#define TURNMOVE    85
 
 #define JOYSCALE 2
 

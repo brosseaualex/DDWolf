@@ -120,7 +120,7 @@ CP_itemtype CtlMenu[] = {
 	{0, STR_JOYEN, 0},
 	{1, STR_CUSTOM, CustomControls}
 #else
-	{0, STR_JOYEN, 0},
+	{ 0, STR_JOYEN, 0 },
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
@@ -198,6 +198,18 @@ CP_itemtype CusMenu[] = {
 
 #ifdef USE_MODERN_CONTROLS
 //
+// MOUSE
+//
+CP_itemtype CtlMouseMenu[] = {
+	{1, STR_CRUN, 0},
+	{1, STR_COPEN, 0},
+	{1, STR_CFIRE, 0},
+	{1, STR_CSTRAFE, 0},
+	{0, "", 0},
+	{1, STR_MOUSEMOVEMENT, 0},
+	{1, STR_SENS, MouseSensitivity}
+};
+//
 // KEYBOARD
 //
 CP_itemtype CtlKeyboardMoveMenu[] = {
@@ -234,6 +246,23 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{0, "", 0},
 	{1, STR_ACTION_KEYS, CP_KbActionCtl}
 };
+
+//
+// EXTRA CONTROLS
+//
+#if defined(SHOW_CUSTOM_CONTROLS)
+CP_itemtype CusCtlMenu[] = {
+	{1, STR_CUS_CTL_1, 0},
+	{1, STR_CUS_CTL_2, 0},
+	{1, STR_CUS_CTL_3, 0},
+	{1, STR_CUS_CTL_4, 0},
+	{1, STR_CUS_CTL_5, 0},
+	{1, STR_CUS_CTL_6, 0},
+	{1, STR_CUS_CTL_7, 0},
+	{1, STR_CUS_CTL_8, 0},
+	{1, STR_CUS_CTL_9, 0},
+	{1, STR_CUS_CTL_10, 0} };
+#endif
 
 #if SDL_MAJOR_VERSION == 2
 //
@@ -274,24 +303,7 @@ CP_itemtype CtlGcMoreActionsMenu[] = {
 	{0, "", 0},
 	{1, STR_ACTION_KEYS, CP_GcActionCtl}
 };
-#endif
-
-#if defined(SHOW_CUSTOM_CONTROLS)
-CP_itemtype CusCtlMenu[] = {
-	{1, STR_CUS_CTL_1, 0},
-	{1, STR_CUS_CTL_2, 0},
-	{1, STR_CUS_CTL_3, 0},
-	{1, STR_CUS_CTL_4, 0},
-	{1, STR_CUS_CTL_5, 0},
-	{1, STR_CUS_CTL_6, 0},
-	{1, STR_CUS_CTL_7, 0},
-	{1, STR_CUS_CTL_8, 0},
-	{1, STR_CUS_CTL_9, 0},
-	{1, STR_CUS_CTL_10, 0} };
-#endif
-#endif
-
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
+#else
 CP_itemtype CtlJoystickMenu[] = {
 	{1, STR_CRUN, 0},
 	{1, STR_COPEN, 0},
@@ -299,17 +311,6 @@ CP_itemtype CtlJoystickMenu[] = {
 	{1, STR_CSTRAFE, 0}
 };
 #endif
-
-#if defined(USE_MODERN_CONTROLS)
-CP_itemtype CtlMouseMenu[] = {
-	{1, STR_CRUN, 0},
-	{1, STR_COPEN, 0},
-	{1, STR_CFIRE, 0},
-	{1, STR_CSTRAFE, 0},
-	{0, "", 0},
-	{1, STR_MOUSEMOVEMENT, 0},
-	{1, STR_SENS, MouseSensitivity}
-};
 #else
 CP_itemtype CtlMouseMenu[] = {
 	{1, STR_CRUN, 0},
@@ -318,6 +319,13 @@ CP_itemtype CtlMouseMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, STR_SENS, MouseSensitivity}
+};
+
+CP_itemtype CtlJoystickMenu[] = {
+	{1, STR_CRUN, 0},
+	{1, STR_COPEN, 0},
+	{1, STR_CFIRE, 0},
+	{1, STR_CSTRAFE, 0}
 };
 #endif
 
@@ -537,7 +545,7 @@ void US_ControlPanel(ScanCode scancode)
 #if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
 	// Game Controller hack - used to ensure actions cannot
 	// be spammed from in game to the menu or vice versa
-	IN_GcForceReleaseAll();
+	GC_ForceReleaseAllButtons();
 #endif
 
 	if (ingame)
@@ -684,7 +692,7 @@ void US_ControlPanel(ScanCode scancode)
 #if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
 	// Game Controller hack - used to ensure actions cannot
 	// be spammed from in game to the menu or vice versa
-	IN_GcForceReleaseAll();
+	GC_ForceReleaseAllButtons();
 #endif
 
 	//
@@ -2094,16 +2102,16 @@ int CP_Control(int blank)
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
 		case CTL_JOYENABLE:
-			controllerEnabled ^= 1;
+			joystickenabled ^= 1;
 			DrawCtlScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
 #else
 		case CTL_JOYENABLE:
-			joystickenabled ^= 1;
+			controllerEnabled ^= 1;
 			DrawCtlScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
@@ -2288,7 +2296,7 @@ void DrawCtlScreen(void)
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
 #if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (IN_GcPresent())
+	if (GC_IsPresent())
 		CtlMenu[CTL_JOYENABLE].active = 1;
 #else	
 	if (IN_JoyPresent())
@@ -4701,6 +4709,7 @@ void IntroScreen(void)
 
 #endif
 #define FILLCOLOR 14
+#define DARKGRAY 31
 
 	//      long memory;
 	//      long emshere,xmshere;
@@ -4740,12 +4749,19 @@ void IntroScreen(void)
 				VWB_Bar(129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
 	}
 #else
-	for (i = 0; i < 10; i++)
-		VWB_Bar(49 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, MAINCOLOR - i);
-	for (i = 0; i < 10; i++)
-		VWB_Bar(89 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, EMSCOLOR - i);
-	for (i = 0; i < 10; i++)
-		VWB_Bar(129 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, XMSCOLOR - i);
+#if ENABLE_GAME_CONTROLLER
+	if (!gcHotplugDirty)
+	{
+#endif
+		for (i = 0; i < 10; i++)
+			VWB_Bar(49 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, MAINCOLOR - i);
+		for (i = 0; i < 10; i++)
+			VWB_Bar(89 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, EMSCOLOR - i);
+		for (i = 0; i < 10; i++)
+			VWB_Bar(129 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, XMSCOLOR - i);
+#if ENABLE_GAME_CONTROLLER
+	}
+#endif	
 #endif
 
 	//
@@ -4754,12 +4770,14 @@ void IntroScreen(void)
 	if (MousePresent)
 		VWB_Bar(164 + scaleOffsetX, 82 + scaleOffsetY, 12, 2, FILLCOLOR);
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (IN_GcPresent())
+#if ENABLE_GAME_CONTROLLER
+	if (GC_IsPresent())
 #else
 	if (IN_JoyPresent())
 #endif
 		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, FILLCOLOR);
+	else
+		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, DARKGRAY);
 
 #ifndef VIEASM
 	if (AdLibPresent && !SoundBlasterPresent)
@@ -5580,48 +5598,9 @@ void ReadAnyControl(ControlInfo* ci)
 		}
 	}
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	if (controllerEnabled && !mouseactive)
-	{
-		int gcAnalog0X = 0, gcAnalog0Y = 0, gcAnalog1X = 0, gcAnalog1Y = 0;
-		IN_GcGetDelta(&gcAnalog0X, &gcAnalog0Y, &gcAnalog1X, &gcAnalog1Y);
-
-		controlx += gcAnalog0X;
-		controly += gcAnalog0Y;
-
-		anglefrac += (gcAnalog1X * 16);
-
-		if (gcAnalog0Y < -STICK_THRESHOLD)
-			ci->dir = dir_North;
-		else if (gcAnalog0Y > STICK_THRESHOLD)
-			ci->dir = dir_South;
-		if (gcAnalog0X < -STICK_THRESHOLD)
-			ci->dir = dir_West;
-		else if (gcAnalog0X > STICK_THRESHOLD)
-			ci->dir = dir_East;
-
-		// FIXME refactor this
-		// This is just to ensure that the button is released before
-		// being processed another time, this avoids lots of issues in the menu
-		static bool lastPressedA = false;
-		static bool lastPressedB = false;
-
-		bool pressedA = IN_GcGetButton(SDL_CONTROLLER_BUTTON_A) || IN_GcIsActionPressed(gc_use, false);
-		bool pressedB = IN_GcGetButton(SDL_CONTROLLER_BUTTON_B) || IN_GcIsActionPressed(gc_esc, false);
-
-		if (pressedA && !lastPressedA)
-			ci->button0 = true;
-		else
-			ci->button0 = false;
-
-		if (pressedB && !lastPressedB)
-			ci->button1 = true;
-		else
-			ci->button1 = false;
-
-		lastPressedA = pressedA;
-		lastPressedB = pressedB;
-	}
+		GC_PollMenuInputs((int*)&ci->dir, (bool*)&ci->button0, (bool*)&ci->button1, (bool*)&ci->button2, (bool*)&ci->button3);
 #else
 	if (joystickenabled && !mouseactive)
 	{
@@ -6422,7 +6401,7 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 
 	while (button == -1 && !cancelled)
 	{
-		button = IN_GcRemapReadButton();
+		button = GC_EnterCtrlData();
 
 		//
 		// FLASH CURSOR
@@ -6469,10 +6448,10 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 				break;
 			}
 
-			if (IN_GcIsButtonBlocked(button))
+			if (GC_IsButtonForbidden(button))
 			{
 #if _DEBUG
-				printf("Input %s (ID: %d) is blocked!\n", IN_GcGetScanName(button), button);
+				printf("Input %s (ID: %d) is blocked!\n", GC_GetScanName(button), button);
 #endif
 				SD_PlaySound(NOWAYSND);
 				button = -1;
@@ -6480,7 +6459,7 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 				continue;
 			}
 #if _DEBUG
-			printf("Input pressed: %s (ID: %d)\n", IN_GcGetScanName(button), button);
+			printf("Input pressed: %s (ID: %d)\n", GC_GetScanName(button), button);
 #endif
 		}
 		SDL_Delay(10);
@@ -6508,13 +6487,13 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 	if (gcBindings[action] == sc_gc_NoButton)
 		US_Print("?");
 	else
-		US_Print((const char*)IN_GcGetScanName(gcBindings[action]));
+		US_Print((const char*)GC_GetScanName(gcBindings[action]));
 
 	VW_UpdateScreen();
 
 	IN_ClearKeysDown();
 	LastScan = 0;
-	IN_GcForceReleaseAll();
+	GC_ForceReleaseAllButtons();
 	WaitKeyUp();
 }
 
@@ -6802,7 +6781,7 @@ void PrintGcMoveBtn(int i)
 	PrintX = OPT_GC_MOVE_TEXT_X + scaleOffsetX;
 	PrintY = OPT_GC_MOVE_TEXT_Y + scaleOffsetY + (CST_SPC_Y * i);
 
-	US_Print((const char*)IN_GcGetScanName((ScanCode)gcBindings[actionMap[i]]));
+	US_Print((const char*)GC_GetScanName((ScanCode)gcBindings[actionMap[i]]));
 }
 
 void DrawGcMoveBtns(int edit)
@@ -6840,7 +6819,7 @@ void PrintGcActionBtn(int i)
 	PrintX = OPT_GC_ACTION_TEXT_X + scaleOffsetX;
 	PrintY = OPT_GC_ACTION_TEXT_Y + scaleOffsetY + (CST_SPC_Y * i);
 
-	US_Print((const char*)IN_GcGetScanName((ScanCode)gcBindings[actionMap[i]]));
+	US_Print((const char*)GC_GetScanName((ScanCode)gcBindings[actionMap[i]]));
 }
 
 void DrawGcActionsBtns(int edit)
@@ -6880,7 +6859,7 @@ void PrintGcMoreActionBtn(int i)
 	PrintX = OPT_GC_MORE_ACTION_TEXT_X + scaleOffsetX;
 	PrintY = OPT_GC_MORE_ACTION_TEXT_Y + scaleOffsetY + (CST_SPC_Y * i);
 
-	US_Print((const char*)IN_GcGetScanName((ScanCode)gcBindings[actionMap[i]]));
+	US_Print((const char*)GC_GetScanName((ScanCode)gcBindings[actionMap[i]]));
 }
 
 void DrawGcMoreActionsBtns(int edit)

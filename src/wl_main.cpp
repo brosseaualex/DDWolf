@@ -184,7 +184,7 @@ void ReadConfig(void)
 		read(file, &mouseenabled, sizeof(mouseenabled));
 		read(file, &mouseYAxis, sizeof(mouseYAxis));
 		read(file, &alwaysRun, sizeof(alwaysRun));
-		
+
 
 #if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
 		read(file, &joystickenabled, sizeof(joystickenabled));
@@ -262,7 +262,7 @@ void ReadConfig(void)
 		if (controllerEnabled)
 			controllerEnabled = true;
 
-		if (!IN_GcPresent())
+		if (!GC_IsPresent())
 			controllerEnabled = false;
 #endif
 
@@ -336,7 +336,7 @@ void ReadConfig(void)
 		if (IN_JoyPresent())
 			joystickenabled = true;
 #else
-		if (IN_GcPresent())
+		if (GC_IsPresent())
 			controllerEnabled = true;
 #endif
 
@@ -1370,7 +1370,7 @@ static void InitGame()
 
 	// initialize SDL
 #if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0)
 #else
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
 #endif	
@@ -1435,7 +1435,6 @@ static void InitGame()
 	}
 	else
 #endif
-
 		//
 		// draw intro screen stuff
 		//

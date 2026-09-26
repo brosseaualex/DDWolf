@@ -442,7 +442,7 @@ void DefineKbMoveBtns(int);
 void DefineKbActionBtns(int);
 void DefineJoyBtns(int);
 
-#if SDL_MAJOR_VERSION == 2
+#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
 int CP_GcMoveCtl(int);
 int CP_GcActionCtl(int);
 int CP_GcMoreActionCtl(int);
@@ -455,13 +455,15 @@ void DrawGcMoveBtns(int);
 void DrawGcActionsBtns(int);
 void DrawGcMoreActionsBtns(int);
 void DrawGcTurnSensScreen(void);
-#endif
+
+//void GC_PollMenuInputs(ControlInfo* ci);
 
 #ifdef SHOW_CUSTOM_CONTROLS
 void DrawCustomCtlScreen(void);
 void DrawCustomCtlKeys(int hilight);
 void PrintCustomCtlKeys(int i);
 int CP_CustomCtl(int);
+#endif
 #endif
 
 #if SDL_MAJOR_VERSION == 1

@@ -206,10 +206,6 @@ void VL_SetVGAPlaneMode(void)
 #endif
 
 	VL_SetDisplayResolution(screenWidth, screenHeight);
-
-	NewViewSize(viewsize);
-
-	IN_MouseGrab();
 }
 
 /*
