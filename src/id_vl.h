@@ -21,14 +21,14 @@ extern SDL_Surface* screenBuffer;
 extern SDL_Surface* lastGameSurface;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 extern SDL_DisplayMode displayMode;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern SDL_Texture* texture;
 extern boolean borderlessFs;
 extern boolean vsyncEnabled;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 extern boolean doubleBufferingEnabled;
 #endif
 
@@ -104,7 +104,7 @@ void VL_UpdateUIScale(int newWidth, int newHeight);
 void VL_ApplyDisplaySettings(void);
 void VL_SetDisplayResolution(int newWidth, int newHeight);
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 float VL_GetTargetAspectRatio(int srcW, int srcH);
 #endif
 

@@ -130,7 +130,7 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
 		, frequency, channels, maxchan, buffersize, sndvolume, musvolume, (reverse) ? "true" : "false");
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (Mix_OpenAudioDevice(frequency, channels, 2, buffersize, NULL, NULL) == -1)
 	{
 #ifdef VERBOSE
@@ -138,7 +138,7 @@ bool ASM_Open(int frequency, bool use8Bit, int maxchan, int buffersize, Uint8 sn
 #endif
 		return false;
 	}
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (Mix_OpenAudio(frequency, channels, 2, buffersize) == -1)
 	{
 #ifdef VERBOSE

@@ -3,6 +3,7 @@
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
+#include "id_dd.h"
 
 #include <assert.h>
 #include <fcntl.h>
@@ -1237,7 +1238,7 @@ enum
 	bt_movebackward,
 	bt_turnleft,
 	bt_turnright,
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 	bt_cus_ctl_1,
 	bt_cus_ctl_2,
 	bt_cus_ctl_3,
@@ -1486,9 +1487,9 @@ extern int lastgamemusicoffset;
 //
 extern boolean mouseenabled, joystickenabled, mouseYAxis, alwaysRun;
 
-#if defined(USE_MODERN_CONTROLS)
+#if USE_MODERN_CONTROLS
 extern int dirscan[6];
-#if (SDL_MAJOR_VERSION == 2)
+#if ENABLE_GAME_CONTROLLER
 extern boolean controllerEnabled;
 #endif
 #if defined(SHOW_CUSTOM_CONTROLS)
@@ -1511,7 +1512,7 @@ extern int viewsize;
 // current user input
 //
 extern int controlx, controly; // range from -100 to 100
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 extern int controlh; // range from -100 to 100
 #endif
 extern boolean buttonstate[NUMBUTTONS];

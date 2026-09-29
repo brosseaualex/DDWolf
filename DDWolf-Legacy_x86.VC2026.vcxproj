@@ -193,6 +193,8 @@
     <ClInclude Include="src\gfxv_sod.h" />
     <ClInclude Include="src\gfxv_wl6.h" />
     <ClInclude Include="src\id_ca.h" />
+    <ClInclude Include="src\id_dd.h" />
+    <ClInclude Include="src\id_gc.h" />
     <ClInclude Include="src\id_in.h" />
     <ClInclude Include="src\id_pm.h" />
     <ClInclude Include="src\id_sd.h" />
@@ -218,6 +220,7 @@
     <ClCompile Include="src\asmcomp.cpp" />
     <ClCompile Include="src\dosbox\dbopl.cpp" />
     <ClCompile Include="src\id_ca.cpp" />
+    <ClCompile Include="src\id_gc.cpp" />
     <ClCompile Include="src\id_in.cpp" />
     <ClCompile Include="src\id_pm.cpp" />
     <ClCompile Include="src\id_sd.cpp" />

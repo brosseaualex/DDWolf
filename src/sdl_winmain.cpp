@@ -258,7 +258,7 @@ int console_main(int argc, char *argv[])
 	atexit(cleanup_output);
 	atexit(cleanup);
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 	/* Sam:
 	   We still need to pass in the application handle so that
 	   DirectInput will initialize properly when SDL_RegisterApp()

@@ -919,13 +919,13 @@ void SD_Startup(void)
 
     memset(SoundChunks, 0, sizeof(SoundChunks));
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
     if (Mix_OpenAudioDevice(param_samplerate, AUDIO_S16, 2, param_audiobuffer, NULL, NULL))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;
     }
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
     if (Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());

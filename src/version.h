@@ -29,15 +29,22 @@
 
 #endif
 
+/************************************/
+/*        BASE ENGINE VARIANT       */
+/*!! DELETE CONFIG.* AFTER CHANGE !!*/
+/*  DEFAULTS TO MODERN IF NONE SET  */
+/*  CANNOT BE ENABLED AT SAME TIME  */
+/************************************/
+
+#define MODERN									// WASD, full controller support.
+//#define VANILLA									// Original Wolf3D controls, limited controller support.
+
 /*############################*/
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_MODERN_CONTROLS						// Enables modern controls
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
-
 //#define VIEASM									// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
+/*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
 
 //#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
 //#define USE_FLOORCEILINGTEX						// Enables texture-mapped floors and ceilings (see wl_plane.c)
@@ -60,7 +67,7 @@
 /*###########################**/
 
 //#define OVERHEAD_MAP								// Enables the overhead map
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/
+/*!!!DELETE CONFIG.* AFTER CHANGING!!!*/
 
 //#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
 
@@ -87,12 +94,12 @@
 /*#########################*/
 
 //#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
+/*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
 													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
 
-#ifdef USE_MODERN_CONTROLS
+#ifdef MODERN
 //#define SHOW_CUSTOM_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
-/*!!!DELETE CONFIG.WL6 AFTER CHANGING!!!*/			// Custom actions needs to be implemented by modder.
+/*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Custom actions needs to be implemented by modder.
 #endif
 
 /*###################*/

@@ -289,7 +289,7 @@ boolean FizzleFade(SDL_Surface* source, int x1, int y1,
 					lastrndval = rndval;
 			}
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 			// If there is no double buffering, we always use the "first frame" case
 			if (doubleBufferingEnabled)
 				first = 0;

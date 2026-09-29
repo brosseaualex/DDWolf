@@ -193,6 +193,7 @@
     <ClInclude Include="src\gfxv_sod.h" />
     <ClInclude Include="src\gfxv_wl6.h" />
     <ClInclude Include="src\id_ca.h" />
+    <ClInclude Include="src\id_dd.h" />
     <ClInclude Include="src\id_gc.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>

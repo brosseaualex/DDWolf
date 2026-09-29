@@ -28,12 +28,12 @@ typedef int ScanCode;
 #define sc_DownArrow SDLK_DOWN
 #define sc_LeftArrow SDLK_LEFT
 #define sc_RightArrow SDLK_RIGHT
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 #define sc_StrafeLeft SDLK_a
 #define sc_StrafeRight SDLK_d
 #define sc_LeftBracket SDLK_LEFTBRACKET
 #define sc_RightBracket SDLK_RIGHTBRACKET
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 #define sc_CusCtl_1 SDLK_KP_0
 #define sc_CusCtl_2 SDLK_KP_1
 #define sc_CusCtl_3 SDLK_KP_2
@@ -108,7 +108,7 @@ typedef int ScanCode;
 
 #define key_None 0
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 #define SDLK_KP_0        SDLK_KP0
 #define SDLK_KP_1        SDLK_KP1
 #define SDLK_KP_2        SDLK_KP2
@@ -124,7 +124,7 @@ typedef int ScanCode;
 #define SDLK_NUMLOCKCLEAR SDLK_NUMLOCK
 #endif
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 enum
 {
 	CTL_MOUSEENABLE,
@@ -188,7 +188,7 @@ enum
 	CTL_JOYSTICK_STRAFE
 };
 // Game controller controls
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 enum
 {
 	CTL_GC_MOVE_FWRD,
@@ -259,11 +259,11 @@ enum
 };
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 typedef SDL_Keymod ModState;
 #define KEY_SCROLLLOCK SDLK_SCROLLLOCK
 #define SET_GRAB_INPUT(grab) SDL_SetRelativeMouseMode((grab) ? SDL_TRUE : SDL_FALSE)
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 typedef SDLMod ModState;
 #define KEY_SCROLLLOCK SDLK_SCROLLOCK
 #define SET_GRAB_INPUT(grab) SDL_WM_GrabInput((grab) ? SDL_GRAB_ON : SDL_GRAB_OFF)
@@ -367,8 +367,7 @@ void IN_ProcessEvents();
 
 int IN_MouseButtons(void);
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
-void IN_GetJoyDelta(int* dx, int* dy);
+#if !ENABLE_GAME_CONTROLLER
 void IN_GetJoyDelta(int* dx, int* dy, int* strafe);
 int IN_JoyButtons(void);
 boolean IN_JoyPresent();

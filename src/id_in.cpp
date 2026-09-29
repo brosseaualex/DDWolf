@@ -54,7 +54,7 @@ static KeyboardDef KbdDefs = {
 	sc_PgDn        // downright
 };
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
+#if !ENABLE_GAME_CONTROLLER
 static SDL_Joystick* Joystick;
 int JoyNumButtons;
 static int JoyNumHats;
@@ -416,7 +416,7 @@ static int INL_GetMouseButtons(void)
 	if (rightPressed)
 		buttons |= 1 << 1;
 
-	//#ifdef USE_MODERN_CONTROLS
+	//#if USE_MODERN_CONTROLS
 	//	if (rightPressed)
 	//		printf("\nMouse Right Pressed");
 	//
@@ -429,64 +429,17 @@ static int INL_GetMouseButtons(void)
 	//	if (mouse5Pressed)
 	//		printf("\nMouse 5 Pressed");
 	//#endif
+
 	return buttons;
 }
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
-void IN_GetJoyDelta(int* dx, int* dy)
-{
-	if (!Joystick)
-	{
-		if (dx) *dx = 0;
-		if (dy) *dy = 0;
-		return;
-	}
-
-	SDL_JoystickUpdate();
-
-	int numAxes = SDL_JoystickNumAxes(Joystick);
-
-	int lx = (numAxes > 0) ? (SDL_JoystickGetAxis(Joystick, 0) >> 8) : 0;
-	int ly = (numAxes > 1) ? (SDL_JoystickGetAxis(Joystick, 1) >> 8) : 0;
-
-	int hatIndex = (param_joystickhat >= 0) ? param_joystickhat : 0;
-	if (hatIndex < SDL_JoystickNumHats(Joystick))
-	{
-		uint8_t hatState = SDL_JoystickGetHat(Joystick, hatIndex);
-		if (hatState & SDL_HAT_RIGHT)      lx += 127;
-		if (hatState & SDL_HAT_LEFT)       lx -= 127;
-		if (hatState & SDL_HAT_DOWN)       ly += 127;
-		if (hatState & SDL_HAT_UP)         ly -= 127;
-	}
-
-	int numButtons = SDL_JoystickNumButtons(Joystick);
-	if (numButtons >= 15)
-	{
-		if (SDL_JoystickGetButton(Joystick, 11)) ly -= 127;
-		if (SDL_JoystickGetButton(Joystick, 12)) ly += 127;
-		if (SDL_JoystickGetButton(Joystick, 13)) lx -= 127;
-		if (SDL_JoystickGetButton(Joystick, 14)) lx += 127;
-	}
-
-	if (lx < -128) lx = -128; else if (lx > 127) lx = 127;
-	if (ly < -128) ly = -128; else if (ly > 127) ly = 127;
-
-	const int DEADZONE = 25;
-	if (abs(lx) < DEADZONE) lx = 0;
-	if (abs(ly) < DEADZONE) ly = 0;
-
-	if (dx) *dx = lx;
-	if (dy) *dy = ly;
-}
-
-///////////////////////////////////////////////////////////////////////////
-//
-//	IN_GetJoyDelta() - Returns the relative movement of the specified
-//		joystick (from +/-127)
-//
-///////////////////////////////////////////////////////////////////////////
+#if !ENABLE_GAME_CONTROLLER
 void IN_GetJoyDelta(int* dx, int* dy, int* strafe)
 {
+	int out_dx = 0;
+	int out_dy = 0;
+	int out_strafe = 0;
+
 	if (!Joystick)
 	{
 		if (dx) *dx = 0;
@@ -503,19 +456,28 @@ void IN_GetJoyDelta(int* dx, int* dy, int* strafe)
 	int ly = (numAxes > 1) ? (SDL_JoystickGetAxis(Joystick, 1) >> 8) : 0;
 
 	int rx = 0;
-	if (numAxes >= 5)
-		rx = SDL_JoystickGetAxis(Joystick, 4) >> 8;
-	else if (numAxes >= 4)
-		rx = SDL_JoystickGetAxis(Joystick, 3) >> 8;
-	else if (numAxes >= 3)
-		rx = SDL_JoystickGetAxis(Joystick, 2) >> 8;
+	if (strafe)
+	{
+		if (numAxes >= 5)
+			rx = SDL_JoystickGetAxis(Joystick, 4) >> 8;
+		else if (numAxes >= 4)
+			rx = SDL_JoystickGetAxis(Joystick, 3) >> 8;
+		else if (numAxes >= 3)
+			rx = SDL_JoystickGetAxis(Joystick, 2) >> 8;
+	}
 
 	int hatIndex = (param_joystickhat >= 0) ? param_joystickhat : 0;
 	if (hatIndex < SDL_JoystickNumHats(Joystick))
 	{
 		uint8_t hatState = SDL_JoystickGetHat(Joystick, hatIndex);
-		if (hatState & SDL_HAT_RIGHT)      rx += 127;
-		if (hatState & SDL_HAT_LEFT)       rx -= 127;
+		if (hatState & SDL_HAT_RIGHT)
+		{
+			if (strafe) rx += 127; else lx += 127;
+		}
+		if (hatState & SDL_HAT_LEFT)
+		{
+			if (strafe) rx -= 127; else lx -= 127;
+		}
 		if (hatState & SDL_HAT_DOWN)       ly += 127;
 		if (hatState & SDL_HAT_UP)         ly -= 127;
 	}
@@ -525,8 +487,14 @@ void IN_GetJoyDelta(int* dx, int* dy, int* strafe)
 	{
 		if (SDL_JoystickGetButton(Joystick, 11)) ly -= 127;
 		if (SDL_JoystickGetButton(Joystick, 12)) ly += 127;
-		if (SDL_JoystickGetButton(Joystick, 13)) rx -= 127;
-		if (SDL_JoystickGetButton(Joystick, 14)) rx += 127;
+		if (SDL_JoystickGetButton(Joystick, 13))
+		{
+			if (strafe) rx -= 127; else lx -= 127;
+		}
+		if (SDL_JoystickGetButton(Joystick, 14))
+		{
+			if (strafe) rx += 127; else lx += 127;
+		}
 	}
 
 	if (lx < -128) lx = -128; else if (lx > 127) lx = 127;
@@ -538,9 +506,21 @@ void IN_GetJoyDelta(int* dx, int* dy, int* strafe)
 	if (abs(ly) < DEADZONE) ly = 0;
 	if (abs(rx) < DEADZONE) rx = 0;
 
-	if (dx) *dx = rx;
-	if (dy) *dy = ly;
-	if (strafe) *strafe = lx;
+	if (strafe)
+	{
+		out_dx = rx;
+		out_dy = ly;
+		out_strafe = lx;
+	}
+	else
+	{
+		out_dx = lx;
+		out_dy = ly;
+	}
+
+	if (dx) *dx = out_dx;
+	if (dy) *dy = out_dy;
+	if (strafe) *strafe = out_strafe;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -719,25 +699,9 @@ static void processEvent(SDL_Event* event)
 		KeyboardSet(key, 0);
 		break;
 	}
-	// Game does not resume from pause when re-pressing the pause button, this fixes it
-#if !ENABLE_GAME_CONTROLLER
-	if (joystickenabled)
-	{
-	case SDL_JOYBUTTONDOWN:
-	{
-		if (event->jbutton.button == 7 || event->jbutton.button == 9)
-		{
-			LastScan = SDLK_PAUSE;
-			LastASCII = 0;
-			Paused = true;
-		}
-		break;
-	}
-	}
-#endif
 	}
 #if ENABLE_GAME_CONTROLLER
-		GC_ProcessEvents(event);
+	GC_ProcessEvents(event);
 #endif
 }
 
@@ -773,6 +737,9 @@ void IN_Startup(void)
 		return;
 
 	IN_ClearKeysDown();
+
+	// FIXME - implement param_joystickindex
+	//GameController = SDL_GameControllerOpen(param_joystickindex);
 
 #if ENABLE_GAME_CONTROLLER
 	GC_InitGameController();
@@ -813,7 +780,7 @@ void IN_Shutdown(void)
 	if (!IN_Started)
 		return;
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	if (GameController)
 		SDL_GameControllerClose(GameController);
 #else
@@ -1202,10 +1169,10 @@ void IN_StartAck(void)
 
 	int buttons = 0;
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
-	buttons = IN_JoyButtons();
-#else
+#if ENABLE_GAME_CONTROLLER
 	buttons = GC_GetButtons();
+#else
+	buttons = IN_JoyButtons();
 #endif
 
 	if (MousePresent)
@@ -1288,7 +1255,7 @@ void IN_Ack(void)
 	do
 	{
 #if ENABLE_GAME_CONTROLLER
-		GC_ProcessHotplugEvents();
+		GC_IntroHotplugEvents();
 #endif
 		IN_WaitAndProcessEvents();
 	} while (!IN_CheckAck());
@@ -1342,7 +1309,7 @@ bool IN_IsInputGrabbed()
 
 void IN_CenterMouse()
 {
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
 #endif
 }
@@ -1351,9 +1318,9 @@ void IN_MouseGrab(void)
 {
 	GrabInput = true;
 	SDL_ShowCursor(SDL_DISABLE);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 #endif
 }

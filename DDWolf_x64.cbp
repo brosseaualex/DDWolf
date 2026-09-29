@@ -46,6 +46,9 @@
 		<Unit filename="src/gfxv_wl6.h" />
 		<Unit filename="src/id_ca.cpp" />
 		<Unit filename="src/id_ca.h" />
+		<Unit filename="src/id_dd.h" />
+		<Unit filename="src/id_gc.cpp" />
+		<Unit filename="src/id_gc.h" />
 		<Unit filename="src/id_in.cpp" />
 		<Unit filename="src/id_in.h" />
 		<Unit filename="src/id_pm.cpp" />

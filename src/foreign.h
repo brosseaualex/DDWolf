@@ -22,7 +22,7 @@
 #define STR_LG "Load Game"
 #define STR_SG "Save Game"
 #define STR_OP "Options"
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 #define STR_CV "Change View"
 #else
 #define STR_CV "View Size"
@@ -119,7 +119,7 @@
 
 #define STR_SEEAGAIN "Let's see that again!"
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 #define STR_JOYEN "Controller Enabled"
 
 #define STR_OP_MOUSE "Mouse"
@@ -165,7 +165,7 @@
 #define STR_ATMOS_PRECIPITATION "Precipitation"
 #endif
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 #define STR_CUS_CONTROLS "Custom Controls"
 
 #define STR_CUS_CTL_1 "Cus Ctl 1"

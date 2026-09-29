@@ -111,6 +111,12 @@
     <ClInclude Include="src\vieasm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\id_gc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\id_dd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Changes.txt" />
@@ -213,6 +219,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vieasm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\id_gc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

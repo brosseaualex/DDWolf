@@ -40,10 +40,10 @@ static int selectedResIdx = 0;
 static int activeResIdx = 0;
 
 boolean orig_fullScreen;
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 boolean orig_borderlessFs;
 boolean orig_vsyncEnabled;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 boolean orig_doubleBuffEnabled;
 #endif
 
@@ -115,24 +115,21 @@ CP_itemtype SndMenu[] = {
 
 CP_itemtype CtlMenu[] = {
 	{0, STR_MOUSEEN, 0},
-#ifndef USE_MODERN_CONTROLS
+#if defined(VANILLA)
 	{0, STR_SENS, MouseSensitivity},
 	{0, STR_JOYEN, 0},
-	{1, STR_CUSTOM, CustomControls}
+	{1, STR_CUSTOM, CustomControls},
 #else
 	{ 0, STR_JOYEN, 0 },
 	{1, STR_ALWAYS_RUN, 0},
 	{0, "", 0},
 	{1, STR_OP_MOUSE, CP_MouseCtl},
 	{1, STR_OP_KEYBOARD, CP_KbMoveCtl},
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 	{1, STR_OP_JOYSTICK, CP_GcMoveCtl},
 #else
 	{1, STR_OP_JOYSTICK, CP_JoystickCtl},
-#endif
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-	{1, STR_CUS_CONTROLS, CP_CustomCtl}
-#endif
+#endif	
 #endif
 };
 
@@ -196,7 +193,7 @@ CP_itemtype CusMenu[] = {
 	{0, "", 0},
 	{1, "", 0} };
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 //
 // MOUSE
 //
@@ -230,7 +227,10 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{1, STR_CSTRAFE, 0},
 	{0, "", 0},
 	{1, STR_MORE_ACTION_KEYS, CP_KbMoreActionCtl},
-	{1, STR_MOVEMENT_KEYS, CP_KbMoveCtl}
+	{1, STR_MOVEMENT_KEYS, CP_KbMoveCtl},
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+	{1, STR_CUS_CONTROLS, CP_CustomCtl}
+#endif
 };
 
 CP_itemtype CtlKeyboardMoreActionMenu[] = {
@@ -264,7 +264,7 @@ CP_itemtype CusCtlMenu[] = {
 	{1, STR_CUS_CTL_10, 0} };
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 //
 // GAME CONTROLLER
 //
@@ -334,10 +334,10 @@ CP_itemtype ResMenu[MAX_RESOLUTIONS];
 CP_itemtype DisplayMenu[] = {
 	{1, STR_DISPLAY_RESOLUTION, CP_Resolution},
 	{1, STR_DISPLAY_FULLSCREEN_EXCLUSIVE, 0},
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	{ 1, STR_DISPLAY_FULLSCREEN_BORDERLESS, 0 },
 	{ 1, STR_DISPLAY_VSYNC, 0 },
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	{ 1, STR_DISPLAY_DOUBLE_BUFFERING, 0 },
 #endif
 	{0, "", 0},
@@ -373,13 +373,13 @@ ResItems = { RES_MENU_X, RES_MENU_Y, lengthof(ResMenu), 0, 32 },
 AtmosOptItems = { ATMOS_X, ATMOS_Y, lengthof(AtmosOptMenu), 0, 54 },
 #endif
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 CusMouseItems = { OPT_MOUSE_X, OPT_MOUSE_Y, lengthof(CtlMouseMenu), 0, 54 },
 CusKeyboardMoveItems = { OPT_KB_MOVE_X, OPT_KB_MOVE_Y + 4, lengthof(CtlKeyboardMoveMenu), 0, 32 },
 CusKeyboardActionItems = { OPT_KB_ACTION_X, OPT_KB_ACTION_Y, lengthof(CtlKeyboardActionMenu), 0, 32 },
 CusKeyboardMoreActionItems = { OPT_KB_MORE_ACTION_X, OPT_KB_MORE_ACTION_Y, lengthof(CtlKeyboardMoreActionMenu), 0, 32 },
 
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 CusGcMoveItems = { OPT_GC_MOVE_X, OPT_GC_MOVE_Y, lengthof(CtlGcMoveMenu), 0, 32 },
 CusGcActionItems = { OPT_GC_ACTION_X, OPT_GC_ACTION_Y, lengthof(CtlGcActionMenu), 0, 32 },
 CusGcMoreActionsItems = { OPT_GC_MORE_ACTION_X, OPT_GC_MORE_ACTION_Y, lengthof(CtlGcMoreActionsMenu), 0, 32 },
@@ -390,7 +390,7 @@ CusCtlItems = { CUS_CTL_TEXT_X, CUS_CTL_TEXT_Y, lengthof(CusCtlMenu), 0, 32 },
 #endif
 #endif
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 CusJoystickItems = { OPT_JOYSTICK_X, OPT_JOYSTICK_Y, lengthof(CtlJoystickMenu), 0, 32 },
 #endif
 
@@ -542,7 +542,7 @@ void US_ControlPanel(ScanCode scancode)
 {
 	int which;
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	// Game Controller hack - used to ensure actions cannot
 	// be spammed from in game to the menu or vice versa
 	GC_ForceReleaseAllButtons();
@@ -689,7 +689,7 @@ void US_ControlPanel(ScanCode scancode)
 	//
 	CleanupControlPanel();
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	// Game Controller hack - used to ensure actions cannot
 	// be spammed from in game to the menu or vice versa
 	GC_ForceReleaseAllButtons();
@@ -2102,23 +2102,23 @@ int CP_Control(int blank)
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
-		case CTL_JOYENABLE:
-			joystickenabled ^= 1;
-			DrawCtlScreen();
-			CusItems.curpos = -1;
-			ShootSnd();
-			break;
-#else
+#if ENABLE_GAME_CONTROLLER
 		case CTL_JOYENABLE:
 			controllerEnabled ^= 1;
 			DrawCtlScreen();
 			CusItems.curpos = -1;
 			ShootSnd();
 			break;
+#else
+		case CTL_JOYENABLE:
+			joystickenabled ^= 1;
+			DrawCtlScreen();
+			CusItems.curpos = -1;
+			ShootSnd();
+			break;
 #endif
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 		case CTL_ALWAYSRUN:
 			alwaysRun ^= 1;
 			DrawCtlScreen();
@@ -2295,28 +2295,28 @@ void DrawCtlScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	if (GC_IsPresent())
 		CtlMenu[CTL_JOYENABLE].active = 1;
-#else	
+#else
 	if (IN_JoyPresent())
 		CtlMenu[CTL_JOYENABLE].active = 1;
 #endif
 
 	if (MousePresent)
 	{
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 		CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEENABLE].active = 1;
 #else
 		CtlMenu[CTL_MOUSEENABLE].active = CtlMenu[CTL_MOUSEENABLE].active = 1;
 #endif
 	}
 
-#if defined(USE_MODERN_CONTROLS)
+#if USE_MODERN_CONTROLS
 	CtlMenu[CTL_MOUSEOPTIONS].active = mouseenabled;
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 	CtlMenu[CTL_JOYSTICKOPTIONS].active = controllerEnabled;
-#else	
+#else
 	CtlMenu[CTL_JOYSTICKOPTIONS].active = joystickenabled;
 #endif
 #else
@@ -2333,27 +2333,25 @@ void DrawCtlScreen(void)
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 	y = CTL_Y + 16;
 #else
 	y = CTL_Y + 29;
 #endif
 
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
-	if (joystickenabled)
-		VWB_DrawPic(x, y, C_SELECTEDPIC);
-	else
-		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#else
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 	if (controllerEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#endif
+#else
+	if (joystickenabled)
+		VWB_DrawPic(x, y, C_SELECTEDPIC);
+	else
+		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
 #endif
 
-#if defined(USE_MODERN_CONTROLS)
+#if USE_MODERN_CONTROLS
 	y = CTL_Y + 29;
 
 	if (alwaysRun)
@@ -2438,7 +2436,7 @@ void DrawDisplayOptScreen(void)
 	WindowW = 320;
 	SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (fullScreen)
 		DisplayMenu[DISPLAY_FULLSCREEN_BORDERLESS].active = 1;
 
@@ -2458,7 +2456,7 @@ void DrawDisplayOptScreen(void)
 
 	y = y + 13;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (borderlessFs)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
@@ -2470,7 +2468,7 @@ void DrawDisplayOptScreen(void)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
 		VWB_DrawPic(x, y, C_NOTSELECTEDPIC);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (doubleBufferingEnabled)
 		VWB_DrawPic(x, y, C_SELECTEDPIC);
 	else
@@ -2507,10 +2505,10 @@ int CP_Display(int blank)
 
 	orig_fullScreen = fullScreen;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	orig_borderlessFs = borderlessFs;
 	orig_vsyncEnabled = vsyncEnabled;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	orig_doubleBuffEnabled = doubleBufferingEnabled;
 #endif
 
@@ -2533,7 +2531,7 @@ int CP_Display(int blank)
 			fullScreen ^= 1;
 			DrawDisplayOptScreen();
 			break;
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		case DISPLAY_FULLSCREEN_BORDERLESS:
 			borderlessFs ^= 1;
 			DrawDisplayOptScreen();
@@ -2542,7 +2540,7 @@ int CP_Display(int blank)
 			vsyncEnabled ^= 1;
 			DrawDisplayOptScreen();
 			break;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 		case DISPLAY_DOUBLE_BUFFERING:
 			doubleBufferingEnabled ^= 1;
 			DrawDisplayOptScreen();
@@ -2709,7 +2707,7 @@ void DrawAtmosOptScreen(void)
 }
 #endif
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 ////////////////////////////////////////////////////////////////////
 //
 // CUSTOMIZE CONTROLS
@@ -2789,7 +2787,7 @@ enum
 	BKWD,
 	LEFT
 };
-int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD }; //Move order is not the same as everywhere else here, keep it as is	
+int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD }; //Move order is not the same as everywhere else here, keep it as is
 
 ////////////////////////
 //
@@ -3033,7 +3031,7 @@ void FixupCustom(int w)
 }
 #endif
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 /******************************
 /******************************
 /      MODERN CONTROLS        /
@@ -3894,7 +3892,7 @@ void DrawCustomCtlKeys(int hilight)
 }
 #endif
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY && defined(MODERN)
 ////////////////////////////////////////////////////////////////////
 //
 // CUSTOMIZE JOYSTICK CONTROLS
@@ -3957,7 +3955,7 @@ void PrintCustJoy(int i)
 	{
 		if (order[i] == buttonjoy[j])
 		{
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 			PrintX = CST_START + CST_SPC * i;
 			US_Print(mbarray[j]);
 #else
@@ -3978,15 +3976,6 @@ void DrawCustJoy(int hilight)
 		color = HIGHLIGHT;
 	SETFONTCOLOR(color, BKGDCOLOR);
 
-#if (SDL_MAJOR_VERSION == 2) && defined(USE_MODERN_CONTROLS)
-	if (!controllerEnabled)
-	{
-		SETFONTCOLOR(DEACTIVE, BKGDCOLOR);
-		CusMenu[3].active = 0;
-	}
-	else
-		CusMenu[3].active = 1;
-#else
 	if (!joystickenabled)
 	{
 		SETFONTCOLOR(DEACTIVE, BKGDCOLOR);
@@ -3994,9 +3983,8 @@ void DrawCustJoy(int hilight)
 	}
 	else
 		CusMenu[3].active = 1;
-#endif	
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	PrintY = CST_Y + 13 * 5 + scaleOffsetY;
 #else
 	PrintX = CTL_MOUSE_X + scaleOffsetX;
@@ -4092,7 +4080,7 @@ void DrawJoystickScreen(void)
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type)
 {
 	int j, z, exit, tick, redraw, which, x, picked, lastFlashTime;
-#ifdef USE_MODERN_CONTROLS //To avoid compiler warning
+#if USE_MODERN_CONTROLS //To avoid compiler warning
 	int y;
 #endif
 	ControlInfo ci;
@@ -4105,7 +4093,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 
 	ShootSnd();
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	amount = 4;
 	PrintY = CST_Y + scaleOffsetY + 13 * index;
 #else
@@ -4122,7 +4110,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		start = MORE_ACTIONS_ARRAY_START;
 		amount = MORE_ACTIONS_ARRAY_END;
 		break;
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 	case KB_CUSTOM_CONTROLS:
 		start = CUS_CTL_ARRAY_RANGE_START;
 		amount = CUS_CTL_ARRAY_RANGE_END;
@@ -4154,7 +4142,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 	{
 		if (redraw)
 		{
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 			x = CST_START + CST_SPC * which;
 			DrawWindow(5, PrintY - 1 - scaleOffsetY, 310, 13, BKGDCOLOR);
 #else
@@ -4169,7 +4157,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				y = OPT_KB_MORE_ACTION_TEXT_Y;
 				w = 75;
 				break;
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 			case KB_CUSTOM_CONTROLS:
 				x = CUS_CTL_RIGHT_TEXT_X;
 				y = CUS_CTL_TEXT_Y;
@@ -4185,7 +4173,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 #endif
 			DrawRtn(1);
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 			DrawWindow(x - 2, PrintY - scaleOffsetY, CST_SPC, 11, TEXTCOLOR);
 			DrawOutline(x - 2, PrintY - scaleOffsetY, CST_SPC, 11, 0, HIGHLIGHT);
 #else
@@ -4236,7 +4224,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					switch (tick)
 					{
 					case 0:
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 						w = CST_SPC;
 #endif
 						VWB_Bar(x + scaleOffsetX, PrintY + 1, w - 2, 10, TEXTCOLOR);
@@ -4288,7 +4276,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 						SD_PlaySound(SHOOTDOORSND);
 					}
 					break;
-#if SDL_MAJOR_VERSION == 1 || !defined(USE_MODERN_CONTROLS)
+#if !ENABLE_GAME_CONTROLLER
 				case JOYSTICK:
 					if (ci.button0)
 						result = 1;
@@ -4321,7 +4309,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				case KB_ACTIONS:
 					if (LastScan && LastScan != sc_Escape)
 					{
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 						CheckKeyConflict();
 #endif
 						buttonscan[order[which]] = LastScan;
@@ -4329,7 +4317,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 						picked = 1;
 						SD_PlaySound(SHOOTDOORSND);
 						IN_ClearKeysDown();
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 						exit = 1;
 #endif
 					}
@@ -4338,7 +4326,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				case KB_MOVE:
 					if (LastScan && LastScan != sc_Escape)
 					{
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 						CheckKeyConflict();
 #endif
 						dirscan[moveorder[which]] = LastScan;
@@ -4346,13 +4334,13 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 						picked = 1;
 						SD_PlaySound(SHOOTDOORSND);
 						IN_ClearKeysDown();
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 						exit = 1;
 #endif
 					}
 					break;
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 				case KB_MORE_ACTIONS:
 					if (LastScan && LastScan != sc_Escape)
 					{
@@ -4368,7 +4356,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					break;
 #endif
 
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
 				case KB_CUSTOM_CONTROLS:
 					if (LastScan && LastScan != sc_Escape)
 					{
@@ -4451,7 +4439,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 	SD_PlaySound(ESCPRESSEDSND);
 	WaitKeyUp();
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	DrawWindow(5, PrintY - 1 - scaleOffsetY, 310, 13, BKGDCOLOR);
 #endif
 }
@@ -4463,7 +4451,7 @@ void PrintCustMouse(int i)
 	for (j = 0; j < 4; j++)
 		if (order[i] == buttonmouse[j])
 		{
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 			PrintX = CST_START + scaleOffsetX + CST_SPC * i;
 #else
 			PrintX = CTL_MOUSE_X + scaleOffsetX;
@@ -4491,7 +4479,7 @@ void DrawCustMouse(int highlight)
 	else
 		CtlMouseMenu[0].active = 1;
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	PrintY = CST_Y + scaleOffsetY + 13 * 2;
 	PrintX = CST_START + scaleOffsetX;
 #else
@@ -4503,7 +4491,7 @@ void DrawCustMouse(int highlight)
 
 void PrintCustKeybd(int i)
 {
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	PrintX = CST_START + scaleOffsetX + CST_SPC * i;
 #else
 	PrintX = CTL_MOUSE_X + scaleOffsetX;
@@ -4520,7 +4508,7 @@ void DrawCustKeybd(int hilight)
 	if (hilight)
 		color = HIGHLIGHT;
 	SETFONTCOLOR(color, BKGDCOLOR);
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	PrintY = CST_Y + scaleOffsetY + 13 * 8;
 	PrintX = CST_START + scaleOffsetX;
 #else
@@ -4532,7 +4520,7 @@ void DrawCustKeybd(int hilight)
 
 void PrintCustKeys(int i)
 {
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 	PrintX = CST_START + scaleOffsetX + CST_SPC * i;
 #else
 	PrintX = OPT_KB_MOVE_KEYS_X + scaleOffsetX;
@@ -4552,7 +4540,7 @@ void DrawCustKeys(int hilight)
 
 	int amount = 4;
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 	PrintX = CTL_MOUSE_X + scaleOffsetX;
 	amount = 6;
 #else
@@ -4761,7 +4749,7 @@ void IntroScreen(void)
 			VWB_Bar(129 + scaleOffsetX, (163 - 8 * i) + scaleOffsetY, 6, 5, XMSCOLOR - i);
 #if ENABLE_GAME_CONTROLLER
 	}
-#endif	
+#endif
 #endif
 
 	//
@@ -4781,12 +4769,12 @@ void IntroScreen(void)
 
 #ifndef VIEASM
 	if (AdLibPresent && !SoundBlasterPresent)
-#endif	
+#endif
 		VWB_Bar(164 + scaleOffsetX, 128 + scaleOffsetY, 12, 2, FILLCOLOR);
 
 #ifndef VIEASM
 	if (SoundBlasterPresent)
-#endif	
+#endif
 		VWB_Bar(164 + scaleOffsetX, 151 + scaleOffsetY, 12, 2, FILLCOLOR);
 
 	//    if (SoundSourcePresent)
@@ -5157,10 +5145,10 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
 //
 // This function works with a dynamic "list" of menu items that can go beyond
 // the box displayed on the screen.
-// 
+//
 // Look at CP_Resolution(), DrawResolutionMenu() and BuildResolutionMenuItems()
 // to see how it is implemented.
-// 
+//
 ///////////////////////////////////////////////////////////////////////////////////////
 int HandleMenu(
 	CP_iteminfo* item_i,
@@ -5606,8 +5594,8 @@ void ReadAnyControl(ControlInfo* ci)
 	{
 		int jx = 0, jy = 0, jstrafe = 0, jb;
 
-#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
-		IN_GetJoyDelta(&jx, &jy);
+#if defined(DDWOLF_LEGACY) || defined(VANILLA)
+		IN_GetJoyDelta(&jx, &jy, NULL);
 #else
 		IN_GetJoyDelta(&jx, &jy, &jstrafe);
 
@@ -5616,7 +5604,6 @@ void ReadAnyControl(ControlInfo* ci)
 		else if (jstrafe > SENSITIVE || jx > SENSITIVE)
 			ci->dir = dir_East;
 #endif
-
 		if (jy < -SENSITIVE)
 			ci->dir = dir_North;
 		else if (jy > SENSITIVE)
@@ -5750,7 +5737,7 @@ int StartCPMusic(int song)
 
 #ifndef VIEASM
 	UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
-#endif	
+#endif
 
 	SD_StartMusic(STARTMUSIC + song);
 	return lastoffs;
@@ -5760,7 +5747,7 @@ void FreeMusic(void)
 {
 #ifndef VIEASM
 	UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
-#endif	
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -5989,7 +5976,7 @@ int Res_FetchDisplayModes(int displayIndex, ModeDimensions* outModes, int maxMod
 {
 	int count = 0;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	int totalModes = SDL_GetNumDisplayModes(displayIndex);
 	for (int i = 0; i < totalModes && count < maxModes; ++i)
 	{
@@ -6001,7 +5988,7 @@ int Res_FetchDisplayModes(int displayIndex, ModeDimensions* outModes, int maxMod
 			count++;
 		}
 	}
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
 	if (modes != (SDL_Rect**)0 && modes != (SDL_Rect**)-1)
 	{
@@ -6020,9 +6007,9 @@ int Res_FetchDisplayModes(int displayIndex, ModeDimensions* outModes, int maxMod
 ////////////////////////////////////////////////////////////////////
 //
 // Used to get the aspect ratio, including a tolerance to
-// ensure that rounding errors cannot prevent the ratio from 
+// ensure that rounding errors cannot prevent the ratio from
 // being assigned
-// 
+//
 ////////////////////////////////////////////////////////////////////
 const char* Res_GetAspectRatioLabel(int w, int h)
 {
@@ -6143,10 +6130,10 @@ void Res_Init(int displayIndex)
 
 bool Res_IsDisplayChanged(void)
 {
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (orig_fullScreen == fullScreen && orig_borderlessFs == borderlessFs && orig_vsyncEnabled == vsyncEnabled)
 		return false;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (orig_fullScreen == fullScreen && orig_doubleBuffEnabled == doubleBufferingEnabled)
 		return false;
 #endif
@@ -6155,11 +6142,11 @@ bool Res_IsDisplayChanged(void)
 
 void Res_RevertDisplay(void)
 {
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	fullScreen = orig_fullScreen;
 	borderlessFs = orig_borderlessFs;
 	vsyncEnabled = orig_vsyncEnabled;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	fullScreen = orig_fullScreen;
 	doubleBufferingEnabled = orig_doubleBuffEnabled;
 #endif
@@ -6305,7 +6292,7 @@ int CP_Resolution(int blank)
 	return 0;
 }
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 void CheckKeyConflict(void)
 {
 	int i = 0;
@@ -6344,12 +6331,11 @@ void CheckKeyConflict(void)
 }
 
 ///////////////////////////////////////////////////////////
-/// 
+///
 /// GAME CONTROLLER
-/// 
+///
 ///////////////////////////////////////////////////////////
-#if SDL_MAJOR_VERSION == 2
-
+#if ENABLE_GAME_CONTROLLER
 // Sensitivity slider helper functions
 static int SensToSlider(float sens, float maxSens, float minSens = 0.1f)
 {
@@ -6411,7 +6397,7 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 			switch (tick)
 			{
 			case 0:
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 				w = CST_SPC;
 #endif
 				VWB_Bar(printX, printY + 2, boxW - 2, 10, TEXTCOLOR);
@@ -6441,7 +6427,7 @@ void GcEnterCtrlData(int action, int startX, int startY, int index)
 			if (button == SDL_CONTROLLER_BUTTON_BACK)
 			{
 #if _DEBUG
-				printf("Rebinding cancelled via Back button.\n");
+				printf("Rebinding cancelled.\n");
 #endif
 				SD_PlaySound(ESCPRESSEDSND);
 				cancelled = true;

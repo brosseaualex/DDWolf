@@ -48,7 +48,7 @@
 #define MENU_X 76
 #define MENU_Y 55
 #define MENU_W 178
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 #ifdef USE_READTHIS
 #define MENU_H 13 * 8 + 6
 #else
@@ -83,13 +83,14 @@
 
 #define CTL_Y 72
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 #define CTL_X 38
-#if defined(USE_MODERN_CONTROLS) && defined(SHOW_CUSTOM_CONTROLS)
-#define CTL_H 13 * 8 + 8
-#else
 #define CTL_H 13 * 7 + 8
-#endif
+//#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+//#define CTL_H 13 * 8 + 8
+//#else
+//#define CTL_H 13 * 7 + 8
+//#endif
 #define CTL_W 250
 #else
 #define CTL_X 24
@@ -143,9 +144,9 @@
 #define DISPLAY_CTL_X 34
 #define DISPLAY_CTL_Y 86
 #define DISPLAY_CTL_W 262
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 #define DISPLAY_CTL_H 13 * 6 + 8
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 #define DISPLAY_CTL_H 13 * 5 + 8
 #endif
 
@@ -164,7 +165,7 @@
 #define BMP_SAVE_FILENAME "savegam?.bmp"
 #endif
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 #define CST_START 60
 #define CST_SPC 60
 #else
@@ -189,7 +190,12 @@
 #define OPT_KB_ACTION_X 41
 #define OPT_KB_ACTION_Y 72
 #define OPT_KB_ACTION_W 250
+
+#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#define OPT_KB_ACTION_H 13 * 8 + 8
+#else
 #define OPT_KB_ACTION_H 13 * 7 + 8
+#endif
 
 #define OPT_KB_MORE_ACTION_X 41
 #define OPT_KB_MORE_ACTION_Y 60
@@ -268,10 +274,10 @@ enum
 {
 	DISPLAY_RESOLUTION,
 	DISPLAY_FULLSCREEN_EXCLUSIVE,
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	DISPLAY_FULLSCREEN_BORDERLESS,
 	DISPLAY_VSYNC,
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	DISPLAY_DOUBLE_BUFFERING,
 #endif	
 	DISPLAY_APPLY
@@ -294,7 +300,7 @@ typedef struct
 
 typedef struct
 {
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 	short allowed[14];
 #else
 	short allowed[4];
@@ -380,7 +386,7 @@ void PrintCustMouse(int i);
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
 
-#ifndef USE_MODERN_CONTROLS
+#if !USE_MODERN_CONTROLS
 void DefineMouseBtns(void);
 void DefineKeyMove(void);
 void DefineKeyBtns(void);
@@ -421,7 +427,7 @@ void DrawAtmosOptScreen(void);
 int CP_Atmos(int);
 #endif
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 void DrawMouseCtlScreen(void);
 
 int CP_MouseCtl(int);
@@ -442,7 +448,15 @@ void DefineKbMoveBtns(int);
 void DefineKbActionBtns(int);
 void DefineJoyBtns(int);
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#ifdef SHOW_CUSTOM_CONTROLS
+void DrawCustomCtlScreen(void);
+void DrawCustomCtlKeys(int hilight);
+void PrintCustomCtlKeys(int i);
+int CP_CustomCtl(int);
+#endif
+#endif
+
+#if ENABLE_GAME_CONTROLLER
 int CP_GcMoveCtl(int);
 int CP_GcActionCtl(int);
 int CP_GcMoreActionCtl(int);
@@ -455,25 +469,14 @@ void DrawGcMoveBtns(int);
 void DrawGcActionsBtns(int);
 void DrawGcMoreActionsBtns(int);
 void DrawGcTurnSensScreen(void);
-
-//void GC_PollMenuInputs(ControlInfo* ci);
-
-#ifdef SHOW_CUSTOM_CONTROLS
-void DrawCustomCtlScreen(void);
-void DrawCustomCtlKeys(int hilight);
-void PrintCustomCtlKeys(int i);
-int CP_CustomCtl(int);
-#endif
 #endif
 
-#if SDL_MAJOR_VERSION == 1
+#if !DDWOLF && defined(MODERN)
 void DrawJoystickScreen(void);
 int CP_JoystickCtl(int);
 void PrintCustJoy(int);
 void DrawCustJoy(int);
 void DefineJoyBtns(int value);
-#endif
-
 #endif
 
 enum

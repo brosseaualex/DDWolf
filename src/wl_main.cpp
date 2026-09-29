@@ -96,10 +96,10 @@ int param_difficulty = 1; // default is "normal" (1)
 int param_tedlevel = -1;  // default is not to start a level (-1)
 int param_joystickindex = 0;
 int param_joystickhat = -1;
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 int param_samplerate = 44100;
 int param_audiobuffer = 1024;
-#elif SDL_MAJOR_VERSION == 1 //Should be better for older hardware
+#elif DDWOLF_LEGACY //Should be better for older hardware
 int param_samplerate = 22050;
 int param_audiobuffer = 2048;
 #endif
@@ -166,10 +166,10 @@ void ReadConfig(void)
 		read(file, &screenResH, sizeof(screenResH));
 
 		read(file, &fullScreen, sizeof(fullScreen));
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		read(file, &borderlessFs, sizeof(borderlessFs));
 		read(file, &vsyncEnabled, sizeof(vsyncEnabled));
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 		read(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
 #endif
 
@@ -185,18 +185,16 @@ void ReadConfig(void)
 		read(file, &mouseYAxis, sizeof(mouseYAxis));
 		read(file, &alwaysRun, sizeof(alwaysRun));
 
-
-#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
-		read(file, &joystickenabled, sizeof(joystickenabled));
-#else
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 		read(file, &controllerEnabled, sizeof(controllerEnabled));
 		read(file, &gcBindings, sizeof(gcBindings));
 		read(file, &gcTurnSensitivity, sizeof(gcTurnSensitivity));
+#else
+		read(file, &joystickenabled, sizeof(joystickenabled));
 #endif
-#if defined(SHOW_CUSTOM_CONTROLS)
+
+#ifdef SHOW_CUSTOM_CONTROLS
 		read(file, customControls, sizeof(customControls));
-#endif
 #endif
 
 		boolean dummyJoypadEnabled;
@@ -252,18 +250,18 @@ void ReadConfig(void)
 		if (alwaysRun)
 			alwaysRun = true;
 
-#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
-		if (joystickenabled)
-			joystickenabled = true;
-
-		if (!IN_JoyPresent())
-			joystickenabled = false;
-#else
+#if ENABLE_GAME_CONTROLLER
 		if (controllerEnabled)
 			controllerEnabled = true;
 
 		if (!GC_IsPresent())
 			controllerEnabled = false;
+#else
+		if (joystickenabled)
+			joystickenabled = true;
+
+		if (!IN_JoyPresent())
+			joystickenabled = false;
 #endif
 
 		if (mouseadjustment < 0)
@@ -279,13 +277,13 @@ void ReadConfig(void)
 		if (fullScreen)
 			fullScreen = true;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		if (borderlessFs)
 			borderlessFs = true;
 
 		if (vsyncEnabled)
 			vsyncEnabled = true;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 		if (doubleBufferingEnabled)
 			doubleBufferingEnabled = true;
 #endif
@@ -332,12 +330,12 @@ void ReadConfig(void)
 			mouseYAxis = false;
 		}
 
-#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
-		if (IN_JoyPresent())
-			joystickenabled = true;
-#else
+#if ENABLE_GAME_CONTROLLER
 		if (GC_IsPresent())
 			controllerEnabled = true;
+#else
+		if (IN_JoyPresent())
+			joystickenabled = true;
 #endif
 
 		viewsize = 19; // start with a good size
@@ -418,10 +416,10 @@ void ReadDisplayConfig(void)
 
 	read(file, &fullScreen, sizeof(fullScreen));
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	read(file, &borderlessFs, sizeof(borderlessFs));
 	read(file, &vsyncEnabled, sizeof(vsyncEnabled));
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	read(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
 #endif
 
@@ -455,10 +453,10 @@ void WriteConfig(void)
 		write(file, &screenResH, sizeof(screenResH));
 
 		write(file, &fullScreen, sizeof(fullScreen));
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		write(file, &borderlessFs, sizeof(borderlessFs));
 		write(file, &vsyncEnabled, sizeof(vsyncEnabled));
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 		write(file, &doubleBufferingEnabled, sizeof(doubleBufferingEnabled));
 #endif
 
@@ -473,17 +471,16 @@ void WriteConfig(void)
 		write(file, &mouseYAxis, sizeof(mouseYAxis));
 		write(file, &alwaysRun, sizeof(alwaysRun));
 
-#if (SDL_MAJOR_VERSION == 1) || !defined(USE_MODERN_CONTROLS)
-		write(file, &joystickenabled, sizeof(joystickenabled));
-#else
-#if SDL_MAJOR_VERSION == 2
+#if ENABLE_GAME_CONTROLLER
 		write(file, &controllerEnabled, sizeof(controllerEnabled));
 		write(file, &gcBindings, sizeof(gcBindings));
 		write(file, &gcTurnSensitivity, sizeof(gcTurnSensitivity));
+#else
+		write(file, &joystickenabled, sizeof(joystickenabled));
 #endif
-#if defined(SHOW_CUSTOM_CONTROLS)
+
+#ifdef SHOW_CUSTOM_CONTROLS
 		write(file, customControls, sizeof(customControls));
-#endif
 #endif
 
 		boolean dummyJoypadEnabled = false;
@@ -552,7 +549,7 @@ void DiskFlopAnim(int x, int y)
 	if (!x && !y)
 		return;
 	VWB_DrawPic(x, y, C_DISKLOADING1PIC + which);
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 	if (!doubleBufferingEnabled)
 #endif
 		VW_UpdateScreen(); // ADDEDFIX 4 - Chris
@@ -1369,7 +1366,7 @@ static void InitGame()
 #endif // !VIEASM
 
 	// initialize SDL
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0)
 #else
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
@@ -1864,10 +1861,10 @@ param_difficulty = 0;
 			}
 		else IFARG("--forcewindowed")
 			param_forcewindowed = true;
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		else IFARG("--novsync")
 			param_novsync = true;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 		else IFARG("--nodblbuf")
 			doubleBufferingEnabled = false;
 #endif
@@ -2014,9 +2011,9 @@ param_difficulty = 0;
 		if (hasError)
 			printf("\n");
 		printf(
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 			"DDWolf\n"
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 			"DDWolf Legacy\n"
 #endif
 			"Original Wolf4SDL by Chaos-Software, additions by the community\n"
@@ -2032,9 +2029,9 @@ param_difficulty = 0;
 			" --nowait               Skips intro screens\n"
 			" --res <width> <height> Sets the screen resolution\n"
 			" --forcewindowed        Forces the game in windowed mode\n"
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 			" --novsync				 Disables VSync\n"
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 			" --nodblbuf             Disables double buffering\n"
 #endif
 #ifdef VIEASM

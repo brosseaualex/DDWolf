@@ -1114,7 +1114,7 @@ void RecordDemo(void)
     SetupGameLevel();
     StartMusic();
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
     if (doubleBufferingEnabled)
         VW_UpdateScreen();
 #endif
@@ -1311,7 +1311,7 @@ void Died(void)
     //
     FinishPaletteShifts();
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
     if (doubleBufferingEnabled)
         VW_UpdateScreen();
 #endif

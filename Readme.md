@@ -20,18 +20,23 @@ Please look at the **bottom** of this page for **credits and special thanks!**
 * Modern control scheme
   - WASD controls.
   - Can disable mouse Y axis.
-  - #MODERN_CONTROL flag in version.h to enable or disable.
+  - #USE_MODERN_CONTROL flag in version.h to enable or disable.
     - Original control scheme available.
-* Better controller support
-  - Left analog stick : Move/Strafe
-  - Right analog stick : Rotate
-  - Left / Right shoulders : Previous and Next weapon
-  - Back/Start Button
-  - 4 Action Buttons (Can be remapped)
-    - A : Fire
-    - B : Strafe (mapped to key but not useful for now with controller)
-    - Y : Run
-    - X : Open door
+* Full controller support
+  - X-Box, PlayStation, Nintendo controllers are supported.
+    - Elite controllers / paddles are supported.
+  - Controller hot-plugging support.
+    - Game will now detect the controller connection and disconnection anytime.
+  - Every button can be remapped to an action.
+    - Start, Select, X-Box/PS buttons are reserved as system buttons and cannot be remapped.
+* Legacy OS support
+  - SDL1 has been re-implemented from the ground up.
+    - Reinstates support for Windows 95, 98, ME, NT, 2000.
+    - Everything should work almost the exact same as the SDL2 version, within SDL1's limitations.
+  - Unsupported on SDL1
+    - No borderless fullscreen in SDL1.
+    - No VSync in SDL1 for 2D surfaces.
+      - Replaced with "Double Buffering".
 * AlumiuN's Advanced Sound Manager
   - Some modifications by WSJ.
   - No sounds included.

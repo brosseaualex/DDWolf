@@ -29,7 +29,7 @@ SDL_Surface* screenBuffer = NULL;
 SDL_Surface* lastGameSurface = NULL;
 #endif
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE;
 Uint32 rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 SDL_DisplayMode displayMode;
@@ -38,7 +38,7 @@ SDL_Renderer* renderer = NULL;
 SDL_Texture* texture = NULL;
 boolean borderlessFs = true;
 boolean vsyncEnabled = true;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 Uint32 windowFlags = SDL_SWSURFACE | SDL_FULLSCREEN;
 int desktopWidth = 0;
 int desktopHeight = 0;
@@ -97,7 +97,7 @@ const char* title = "Wolfenstein 3D";
 
 void VL_Shutdown(void) {
 	SDL_FreeSurface(screenBuffer);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_DestroyTexture(texture);
@@ -124,9 +124,9 @@ void VL_Shutdown(void) {
 */
 void VL_SetVGAPlaneMode(void)
 {
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	uint32_t a, r, g, b;
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	SDL_WM_SetCaption(title, NULL);
 #endif
 
@@ -134,7 +134,7 @@ void VL_SetVGAPlaneMode(void)
 	// are loaded before generating the window.
 	ReadDisplayConfig();
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (param_novsync || !vsyncEnabled)
 		rendererFlags &= ~SDL_RENDERER_PRESENTVSYNC;
 #endif
@@ -157,7 +157,7 @@ void VL_SetVGAPlaneMode(void)
 	screenWidth = screenResW;
 	screenHeight = screenResH;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, windowFlags);
 	SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888, &screenBits, &r, &g, &b, &a);
 
@@ -168,7 +168,7 @@ void VL_SetVGAPlaneMode(void)
 	}
 
 	screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 8, 0, 0, 0, 0);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (screenBuffer)
 	{
 		SDL_FreeSurface(screenBuffer);
@@ -184,7 +184,7 @@ void VL_SetVGAPlaneMode(void)
 		exit(1);
 	}
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	renderer = SDL_CreateRenderer(window, -1, rendererFlags);
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -195,10 +195,10 @@ void VL_SetVGAPlaneMode(void)
 
 	memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	SDL_SetPaletteColors(screenBuffer->format->palette, gamepal, 0, 256);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (screenBuffer->format && screenBuffer->format->palette)
 		SDL_SetColors(screenBuffer, gamepal, 0, 256);
 
@@ -269,19 +269,19 @@ void VL_FillPalette(int red, int green, int blue) {
 void VL_SetColor(int color, int red, int green, int blue)
 {
 	SDL_Color col = { (Uint8)red, (Uint8)green, (Uint8)blue
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 		, 255
 #endif
 	};
 
 	curpal[color] = col;
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (screenBits == 8 && screen && screen->format && screen->format->palette)
 		SDL_SetPaletteColors(screen->format->palette, &col, color, 1);
 	else if (screenBuffer && screenBuffer->format && screenBuffer->format->palette)
 		SDL_SetPaletteColors(screenBuffer->format->palette, &col, color, 1);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (screenBuffer && screenBuffer->format && screenBuffer->format->palette)
 		SDL_SetColors(screenBuffer, &col, color, 1);
 
@@ -323,7 +323,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
 
 	memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (screenBits == 8)
 	{
 		if (screen && screen->format && screen->format->palette)
@@ -342,7 +342,7 @@ void VL_SetPalette(SDL_Color* palette, bool forceupdate)
 			Present(screenBuffer);
 		}
 	}
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (screenBuffer && screenBuffer->format && screenBuffer->format->palette)
 		SDL_SetColors(screenBuffer, palette, 0, 256);
 
@@ -416,9 +416,9 @@ void VL_FadeOut(int start, int end, int red, int green, int blue, int steps) {
 			newptr++;
 		}
 
-#if (SDL_MAJOR_VERSION == 2)
+#if DDWOLF
 		if (screenBits == 8)
-#elif (SDL_MAJOR_VERSION == 1)
+#elif DDWOLF_LEGACY
 		if (!doubleBufferingEnabled || screenBits == 8)
 #endif
 			VL_SetPalette(palette2, true);
@@ -464,9 +464,9 @@ void VL_FadeIn(int start, int end, SDL_Color* palette, int steps) {
 			palette2[j].b = palette1[j].b + delta * i / steps;
 		}
 
-#if (SDL_MAJOR_VERSION == 2)
+#if DDWOLF
 		if (screenBits == 8)
-#elif (SDL_MAJOR_VERSION == 1)
+#elif DDWOLF_LEGACY
 		if (!doubleBufferingEnabled || screenBits == 8)
 #endif		
 			VL_WaitVBL(1);
@@ -644,9 +644,9 @@ SDL_Surface* VL_ScaleSurface(SDL_Surface* surface, Uint16 width, Uint16 height) 
 
 	SDL_Surface* scaledSurface = SDL_CreateRGBSurface(surface->flags, width, height, 8, 0, 0, 0, 0);
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	SDL_SetPaletteColors(scaledSurface->format->palette, gamepal, 0, 256);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	SDL_SetPalette(scaledSurface, SDL_LOGPAL | SDL_PHYSPAL, gamepal, 0, 256);
 #endif
 
@@ -1110,7 +1110,7 @@ void VL_UpdateUIScale(int newWidth, int newHeight)
 		ylookup[i] = i * bufferPitch;
 }
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
 /*
 =================
 =
@@ -1159,7 +1159,7 @@ void VL_CacheDesktopResolution(void)
 */
 void VL_ApplyDisplaySettings(void)
 {
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (!window || !renderer)
 		return;
 
@@ -1186,7 +1186,7 @@ void VL_ApplyDisplaySettings(void)
 	}
 
 	SDL_RenderSetVSync(renderer, vsyncEnabled ? true : false);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	//SDL1 way of forcing the window to center on the screen
 #if defined(_WIN32)
 	putenv("SDL_VIDEO_WINDOW_POS=center");
@@ -1256,9 +1256,9 @@ void VL_SetDisplayResolution(int newWidth, int newHeight)
 		screenBuffer = NULL;
 	}
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	screenBuffer = SDL_CreateRGBSurface(0, screenWidth, screenHeight, 8, 0, 0, 0, 0);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth, screenHeight, 8, 0, 0, 0, 0);
 #endif
 
@@ -1268,7 +1268,7 @@ void VL_SetDisplayResolution(int newWidth, int newHeight)
 		exit(1);
 	}
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (screenBuffer->format && !screenBuffer->format->palette)
 	{
 		SDL_PixelFormat* fmt = screenBuffer->format;
@@ -1279,7 +1279,7 @@ void VL_SetDisplayResolution(int newWidth, int newHeight)
 		SDL_SetPaletteColors(screenBuffer->format->palette, tempPalette, 0, 256);
 
 	VL_CreateYlookup();
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	if (keepPalette && screenBuffer->format && screenBuffer->format->palette)
 		SDL_SetColors(screenBuffer, tempPalette, 0, 256);
 #endif
@@ -1288,7 +1288,7 @@ void VL_SetDisplayResolution(int newWidth, int newHeight)
 
 	VL_ApplyDisplaySettings();
 
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	if (texture)
 	{
 		SDL_DestroyTexture(texture);

@@ -8,7 +8,7 @@
 
 void Present(SDL_Surface* surface)
 {
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 	// This prevents the rendering loop to run when minimized
 	// Resolves recurring issue with the window keeping focus when trying to alt-tab out
 	Uint32 windowFlags = SDL_GetWindowFlags(window);
@@ -91,7 +91,7 @@ void Present(SDL_Surface* surface)
 
 	SDL_RenderCopy(renderer, texture, NULL, &renderDest);
 	SDL_RenderPresent(renderer);
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 	// This prevents the rendering loop to run when minimized
 	// Resolves recurring issue with the window keeping focus when trying to alt-tab out
 	if ((SDL_GetAppState() & SDL_APPACTIVE) == 0)

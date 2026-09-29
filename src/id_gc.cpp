@@ -1,13 +1,37 @@
-/*
-*	ID_GC.cpp - Game Controller Input Manager
-*	By Alexandre Brosseau (DemolitionDerby)
-*	v1.0 - September 2026
-*	Developed for DDWolf
-*/
+//
+//	ID Tech 0
+//	ID_GC.cpp - Game Controller Input Manager
+//	v1.0 - September 2026
+//	By Alexandre Brosseau (DemolitionDerby)
+//	Developed for DDWolf
+// 
+
+// 
+//	Feel free to use this, in part or in its entirety,
+//	however you want : )
+//
+//	The only thing that I ask is that you leave this
+//	header here or give proper credits if you only
+//	use parts of it.
+//
+//	This system should be fairly easy to implement in
+//	your own project, I tried to make it as easy
+//	to copy / paste as possible.
+// 
+//	It should also be generic enough to be easily
+//	ported to any ID Tech 0 variants.
+//
+//	Everything is contained mostly inside the
+//	ENABLE_GAME_CONTROLLER definition.
+//
+//	This manager is only compatible with SDL2.
+//	
+//	-- EOF o7
+//
 
 #include "id_gc.h"
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 
 SDL_GameController* GameController = NULL;
 SDL_JoystickID gcId = -1;
@@ -23,15 +47,42 @@ float gcMaxTurnSensitivity = 10.0f;
 
 bool gcHotplugDirty = false;
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_InitGameController() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_InitGameController(void)
 {
-	// FIXME - implement param_joystickindex
-	//GameController = SDL_GameControllerOpen(param_joystickindex);
-
 	SDL_GameControllerEventState(SDL_ENABLE);
 
-	for (int i = 0; i < SDL_NumJoysticks(); i++)
+	int numJoysticks = SDL_NumJoysticks();
+
+	// If an index has been specified
+	if (param_joystickindex >= 0 && param_joystickindex < numJoysticks)
 	{
+		if (SDL_IsGameController(param_joystickindex))
+		{
+			GameController = SDL_GameControllerOpen(param_joystickindex);
+			if (GameController)
+			{
+				SDL_Joystick* joy = SDL_GameControllerGetJoystick(GameController);
+				gcId = SDL_JoystickInstanceID(joy);
+				GC_ForceReleaseAllButtons();
+				printf("Successfully opened controller %d: %s\n", param_joystickindex, SDL_GameControllerName(GameController));
+				return;
+			}
+			else
+				printf("Could not open requested game controller %d! SDL_Error: %s\n", param_joystickindex, SDL_GetError());
+		}
+	}
+
+	// If no index are specified, get the first joystick available
+	for (int i = 0; i < numJoysticks; i++)
+	{
+		if (i == param_joystickindex)
+			continue;
+
 		if (SDL_IsGameController(i))
 		{
 			GameController = SDL_GameControllerOpen(i);
@@ -49,6 +100,12 @@ void GC_InitGameController(void)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_ProcessEvents() - Process background events such as handling of
+// Pause and connection/disconnection events.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_ProcessEvents(const SDL_Event* event)
 {
 	if (!event)
@@ -112,42 +169,34 @@ void GC_ProcessEvents(const SDL_Event* event)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_IsActionPressed() - Check if an 'action' button has been pressed.
+// Triggers are also interpreted as button inputs.
+//
+///////////////////////////////////////////////////////////////////////////
 bool GC_IsActionPressed(GameControllerAction action, bool allowHold = true)
 {
-	if (!GameController || !controllerEnabled || (unsigned)action >= gc_NUMBUTTONS)
+	if ((unsigned)action >= gc_NUMBUTTONS)
 		return false;
 
 	bool currentState = false;
-	int btn = gcBindings[action];
+	int binding = gcBindings[action];
 
-	if (btn >= 0 && btn < sc_gc_Axis_Left_Trigger && btn != sc_gc_NoButton)
+	if (binding >= 0 && binding < sc_gc_Axis_Left_Trigger && binding != sc_gc_NoButton)
 	{
-		if (SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)btn))
+		if (SDL_GameControllerGetButton(GameController, (SDL_GameControllerButton)binding))
 			currentState = true;
 	}
-	else if (btn == sc_gc_Axis_Left_Trigger)
+	else if (binding == sc_gc_Axis_Left_Trigger)
 	{
 		if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > TRIGGER_THRESHOLD)
 			currentState = true;
 	}
-	else if (btn == sc_gc_Axis_Right_Trigger)
+	else if (binding == sc_gc_Axis_Right_Trigger)
 	{
 		if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > TRIGGER_THRESHOLD)
 			currentState = true;
-	}
-
-	if (!currentState && (btn == sc_gc_NoButton || btn < 0))
-	{
-		if (action == gc_attack)
-		{
-			if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > TRIGGER_THRESHOLD)
-				currentState = true;
-		}
-		else if (action == gc_run || action == gc_strafe)
-		{
-			if (SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > TRIGGER_THRESHOLD)
-				currentState = true;
-		}
 	}
 
 	if (!currentState)
@@ -198,12 +247,14 @@ bool GC_IsActionPressed(GameControllerAction action, bool allowHold = true)
 	return true;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetDelta() - Gets and processes the input data for movement.
+//
+///////////////////////////////////////////////////////////////////////////
 ControllerDelta GC_GetDelta(void)
 {
 	ControllerDelta delta = { 0, 0, 0, 0 };
-
-	if (!GameController || !controllerEnabled)
-		return delta;
 
 	SDL_GameControllerUpdate();
 
@@ -273,11 +324,13 @@ ControllerDelta GC_GetDelta(void)
 	return delta;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_PollMove() - In-game function for movement.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_PollMove(void)
 {
-	if (!GameController || !controllerEnabled)
-		return;
-
 	ControllerDelta gc = GC_GetDelta();
 
 	int baseSpeed = (GC_IsActionPressed(gc_run) || buttonstate[bt_run]) ? (RUNMOVE * tics) : (BASEMOVE * tics);
@@ -294,11 +347,13 @@ void GC_PollMove(void)
 		anglefrac += (gc.a1X * turnSpeed) / 128;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_PollActions() - In-game function for button actions.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_PollActions(void)
 {
-	if (!GameController || !controllerEnabled)
-		return;
-
 	if (GC_IsActionPressed(gc_attack))
 		buttonstate[bt_attack] = true;
 	if (GC_IsActionPressed(gc_use))
@@ -332,12 +387,14 @@ void GC_PollActions(void)
 #endif
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetMenuState() - Wrapper for ControlInfo and menu navigation.
+//
+///////////////////////////////////////////////////////////////////////////
 GcMenuState GC_GetMenuState(void)
 {
 	GcMenuState menuState = { 0, 0, false, false, false, false };
-
-	if (!GameController || !controllerEnabled)
-		return menuState;
 
 	ControllerDelta gc = GC_GetDelta();
 
@@ -368,11 +425,13 @@ GcMenuState GC_GetMenuState(void)
 	return menuState;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_PollMenuInputs() - In-game function that handles menu inputs.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_PollMenuInputs(int* dir, bool* b0, bool* b1, bool* b2, bool* b3)
 {
-	if (!GameController || !controllerEnabled)
-		return;
-
 	GcMenuState gc = GC_GetMenuState();
 
 	if (dir)
@@ -393,6 +452,11 @@ void GC_PollMenuInputs(int* dir, bool* b0, bool* b1, bool* b2, bool* b3)
 	if (b3 && gc.buttonY) *b3 = true;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_EnterCtrlData() - Handles the inputs in the remapping menu.
+//
+///////////////////////////////////////////////////////////////////////////
 int GC_EnterCtrlData(void)
 {
 	SDL_Event event;
@@ -424,18 +488,13 @@ int GC_EnterCtrlData(void)
 	return -1;
 }
 
-/*
-==========================
-=
-= GC_GetControllerType
-=
-==========================
-*/
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetControllerType() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 ControllerType GC_GetControllerType(void)
 {
-	if (!GameController)
-		return CT_GENERIC;
-
 	SDL_GameControllerType type = SDL_GameControllerGetType(GameController);
 
 	switch (type)
@@ -460,13 +519,12 @@ ControllerType GC_GetControllerType(void)
 	}
 }
 
-/*
-==========================
-=
-= GC_GetScanName
-=
-==========================
-*/
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetScanName() - Returns the correct button name depending on the
+// controller type.
+//
+///////////////////////////////////////////////////////////////////////////
 const char* GC_GetScanName(int sc)
 {
 	if (sc == sc_gc_NoButton || sc < 0)
@@ -599,17 +657,32 @@ const char* GC_GetScanName(int sc)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_IsPresent() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 boolean GC_IsPresent()
 {
 	return GameController != NULL;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_InitDefaultBindings() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_InitDefaultBindings(void)
 {
 	for (int i = 0; i < gc_NUMBUTTONS; i++)
 		gcBindings[i] = gcDefaultBindings[i];
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetButtons() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 int GC_GetButtons()
 {
 	if (!GameController || !controllerEnabled)
@@ -626,23 +699,44 @@ int GC_GetButtons()
 	return res;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_GetButton() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 bool GC_GetButton(SDL_GameControllerButton button)
 {
 	return SDL_GameControllerGetButton(GameController, button) != 0;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_ForceReleaseButton() - Force release a button in the case where it
+// should not be held.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_ForceReleaseButton(GameControllerAction action)
 {
 	if ((unsigned)action < gc_NUMBUTTONS)
 		gcConsumedState[action] = true;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_ForceReleaseAllButtons() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_ForceReleaseAllButtons(void)
 {
 	for (int i = 0; i < gc_NUMBUTTONS; i++)
 		gcConsumedState[i] = true;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_IsButtonBound() - Checks if a button is already bound to an action.
+//
+///////////////////////////////////////////////////////////////////////////
 bool GC_IsButtonBound(int targetButton)
 {
 	if (targetButton == sc_gc_NoButton || targetButton < 0)
@@ -655,6 +749,15 @@ bool GC_IsButtonBound(int targetButton)
 	return false;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_IsButtonForbidden() - Checks if a button is blocked from being
+// remapped.
+// 
+// Ex: Pause, Back (Select) and the X-Box/PS buttons cannot be mapped
+// to an action.
+//
+///////////////////////////////////////////////////////////////////////////
 bool GC_IsButtonForbidden(int button)
 {
 	if (button < 0)
@@ -668,6 +771,11 @@ bool GC_IsButtonForbidden(int button)
 	return false;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_CheckEdge() - Checks button press on raw SDL_CONTROLLER_BUTTONS.
+//
+///////////////////////////////////////////////////////////////////////////
 bool GC_CheckEdge(bool isDown, bool* lastState)
 {
 	bool edge = isDown && !*lastState;
@@ -675,7 +783,13 @@ bool GC_CheckEdge(bool isDown, bool* lastState)
 	return edge;
 }
 
-void GC_ProcessHotplugEvents(void)
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_IntroHotplugEvents() - Used to ensure that the joystick/controller
+// button on the intro screen turns 'on/off' dynamically.
+//
+///////////////////////////////////////////////////////////////////////////
+void GC_IntroHotplugEvents(void)
 {
 	if (gcHotplugDirty)
 	{
@@ -688,6 +802,15 @@ void GC_ProcessHotplugEvents(void)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// GC_CleanHotplugEvents() - The game processes a controller connection
+// and disconnection as an actual event and will send a button press.
+// 
+// This function is used to clean the controller events before they are
+// processed.
+//
+///////////////////////////////////////////////////////////////////////////
 void GC_CleanHotplugEvents(boolean state[NUMBUTTONS])
 {
 	memset(state, 0, sizeof(state));
@@ -695,6 +818,11 @@ void GC_CleanHotplugEvents(boolean state[NUMBUTTONS])
 	LastASCII = 0;
 }
 
+///////////////////////////////////////////////////////////////////////////
+//
+// ClampInt() - Self-explanatory.
+//
+///////////////////////////////////////////////////////////////////////////
 int ClampInt(int val, int minVal, int maxVal)
 {
 	if (val < minVal) return minVal;

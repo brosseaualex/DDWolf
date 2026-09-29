@@ -105,7 +105,7 @@ void CheckWeaponChange(void)
 
 	if (buttonstate[bt_nextweapon] && !buttonheld[bt_nextweapon])
 	{
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 /*#ifdef _DEBUG
 		printf("\nNext Weapon Pressed");
 #endif*/
@@ -116,7 +116,7 @@ void CheckWeaponChange(void)
 	}
 	else if (buttonstate[bt_prevweapon] && !buttonheld[bt_prevweapon])
 	{
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 //#ifdef _DEBUG
 //		printf("\nPrevious Weapon Pressed");
 //#endif
@@ -158,7 +158,7 @@ void CheckWeaponChange(void)
 =
 =======================
 */
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 void ControlMovement(objtype *ob)
 {
 	int32_t oldx, oldy;
@@ -1187,7 +1187,7 @@ void Cmd_Fire(void)
 {
 	buttonheld[bt_attack] = true;
 
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 //#ifdef _DEBUG
 //	printf("\nAttack Button Pressed");
 //#endif
@@ -1288,7 +1288,7 @@ void Cmd_Use(void)
 	else
 		SD_PlaySound(DONOTHINGSND);
 #endif
-#ifdef USE_MODERN_CONTROLS
+#if USE_MODERN_CONTROLS
 //#ifdef _DEBUG
 //	printf("\nUse Pressed");
 //#endif

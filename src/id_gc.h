@@ -1,23 +1,72 @@
-/*
-*	ID_GC.cpp - Game Controller Input Manager
-*	By Alexandre Brosseau (DemolitionDerby)
-*	v1.0 - September 2026
-*	Developed for DDWolf
-*/
+//
+//	ID Tech 0
+//	ID_GC.h - Header file for Game Controller Input Manager
+//	v1.0 - September 2026
+//	By Alexandre Brosseau (DemolitionDerby)
+//	Developed for DDWolf
+// 
+
+// 
+//	Feel free to use this, in part or in its entirety,
+//	however you want : )
+//
+//	The only thing that I ask is that you leave this
+//	header here or give proper credits if you only
+//	use parts of it.
+//
+//	This system should be fairly easy to implement in
+//	your own project, I tried to make it as easy
+//	to copy / paste as possible.
+// 
+//	It should also be generic enough to be easily
+//	ported to any ID Tech 0 variants.
+//
+//	Everything is contained mostly inside the
+//	ENABLE_GAME_CONTROLLER definition.
+//
+//	This manager is only compatible with SDL2.
+//	
+//	-- EOF o7
+//
 
 #ifndef __ID_GC_H_
 #define __ID_GC_H_
 
 #include "wl_def.h"
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
-#ifndef ENABLE_GAME_CONTROLLER
-#define ENABLE_GAME_CONTROLLER 1
-#endif
+#if ENABLE_GAME_CONTROLLER
 
 #define TRIGGER_THRESHOLD	16000		// Analog trigger press depth (~50% on a XBox One Controller)
 #define STICK_THRESHOLD		16000		// Stick deflection threshold for discrete action checks
 #define DPAD_MAX_DELTA		32767
+
+//===========================================================================
+
+// Do not change anything here, in order to change the default mapping, edit gcDefaultBindings
+#define sc_gc_NoButton					-1
+#define sc_gc_Btn_A						SDL_CONTROLLER_BUTTON_A					// PS = Cross
+#define sc_gc_Btn_B						SDL_CONTROLLER_BUTTON_B					// PS = Circle
+#define sc_gc_Btn_X						SDL_CONTROLLER_BUTTON_X					// PS = Square
+#define sc_gc_Btn_Y						SDL_CONTROLLER_BUTTON_Y					// PS = Triangle
+#define sc_gc_Btn_Back					SDL_CONTROLLER_BUTTON_BACK
+#define sc_gc_Btn_Guide					SDL_CONTROLLER_BUTTON_GUIDE
+#define sc_gc_Btn_Start					SDL_CONTROLLER_BUTTON_START
+#define sc_gc_Left_Stick				SDL_CONTROLLER_BUTTON_LEFTSTICK			// Stick Click
+#define sc_gc_Right_Stick				SDL_CONTROLLER_BUTTON_RIGHTSTICK		// Stick Click
+#define sc_gc_Left_Shoulder				SDL_CONTROLLER_BUTTON_LEFTSHOULDER
+#define sc_gc_Right_Shoulder			SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
+#define sc_gc_DPad_Up					SDL_CONTROLLER_BUTTON_DPAD_UP
+#define sc_gc_DPad_Down					SDL_CONTROLLER_BUTTON_DPAD_DOWN
+#define sc_gc_DPad_Left					SDL_CONTROLLER_BUTTON_DPAD_LEFT
+#define sc_gc_DPad_Right				SDL_CONTROLLER_BUTTON_DPAD_RIGHT
+#define sc_gc_Share_Micro				SDL_CONTROLLER_BUTTON_MISC1				// Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button
+#define sc_gc_Btn_Paddle_1				SDL_CONTROLLER_BUTTON_PADDLE1			// Xbox Elite paddle P1 (upper left, facing the back)
+#define sc_gc_Btn_Paddle_2				SDL_CONTROLLER_BUTTON_PADDLE2			// Xbox Elite paddle P3 (upper right, facing the back)
+#define sc_gc_Btn_Paddle_3				SDL_CONTROLLER_BUTTON_PADDLE3			// Xbox Elite paddle P2 (lower left, facing the back)
+#define sc_gc_Btn_Paddle_4				SDL_CONTROLLER_BUTTON_PADDLE4			// Xbox Elite paddle P4 (lower right, facing the back)
+#define sc_gc_Touchpad					SDL_CONTROLLER_BUTTON_TOUCHPAD			// PS4/PS5 touchpad button
+#define sc_gc_Axis_Left_Trigger			100										// SDL_CONTROLLER_AXIS_TRIGGERLEFT but value needs to be changed since it conflicts with buttons
+#define sc_gc_Axis_Right_Trigger		101										// SDL_CONTROLLER_AXIS_TRIGGERRIGHT
 
 typedef enum
 {
@@ -72,36 +121,21 @@ typedef struct
 
 //===========================================================================
 
-// Do not change anything here, in order to change the default mapping, edit gcDefaultBindings
-#define sc_gc_NoButton					-1
-#define sc_gc_Btn_A						SDL_CONTROLLER_BUTTON_A					// PS = Cross
-#define sc_gc_Btn_B						SDL_CONTROLLER_BUTTON_B					// PS = Circle
-#define sc_gc_Btn_X						SDL_CONTROLLER_BUTTON_X					// PS = Square
-#define sc_gc_Btn_Y						SDL_CONTROLLER_BUTTON_Y					// PS = Triangle
-#define sc_gc_Btn_Back					SDL_CONTROLLER_BUTTON_BACK
-#define sc_gc_Btn_Guide					SDL_CONTROLLER_BUTTON_GUIDE
-#define sc_gc_Btn_Start					SDL_CONTROLLER_BUTTON_START
-#define sc_gc_Left_Stick				SDL_CONTROLLER_BUTTON_LEFTSTICK			// Stick Click
-#define sc_gc_Right_Stick				SDL_CONTROLLER_BUTTON_RIGHTSTICK		// Stick Click
-#define sc_gc_Left_Shoulder				SDL_CONTROLLER_BUTTON_LEFTSHOULDER
-#define sc_gc_Right_Shoulder			SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
-#define sc_gc_DPad_Up					SDL_CONTROLLER_BUTTON_DPAD_UP
-#define sc_gc_DPad_Down					SDL_CONTROLLER_BUTTON_DPAD_DOWN
-#define sc_gc_DPad_Left					SDL_CONTROLLER_BUTTON_DPAD_LEFT
-#define sc_gc_DPad_Right				SDL_CONTROLLER_BUTTON_DPAD_RIGHT
-#define sc_gc_Share_Micro				SDL_CONTROLLER_BUTTON_MISC1				// Xbox Series X share button, PS5 microphone button, Nintendo Switch Pro capture button, Amazon Luna microphone button
-#define sc_gc_Btn_Paddle_1				SDL_CONTROLLER_BUTTON_PADDLE1			// Xbox Elite paddle P1 (upper left, facing the back)
-#define sc_gc_Btn_Paddle_2				SDL_CONTROLLER_BUTTON_PADDLE2			// Xbox Elite paddle P3 (upper right, facing the back)
-#define sc_gc_Btn_Paddle_3				SDL_CONTROLLER_BUTTON_PADDLE3			// Xbox Elite paddle P2 (lower left, facing the back)
-#define sc_gc_Btn_Paddle_4				SDL_CONTROLLER_BUTTON_PADDLE4			// Xbox Elite paddle P4 (lower right, facing the back)
-#define sc_gc_Touchpad					SDL_CONTROLLER_BUTTON_TOUCHPAD			// PS4/PS5 touchpad button
-#define sc_gc_Axis_Left_Trigger			100										// SDL_CONTROLLER_AXIS_TRIGGERLEFT but value needs to be changed since it conflicts with buttons
-#define sc_gc_Axis_Right_Trigger		101										// SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+extern SDL_GameController* GameController;
+extern SDL_JoystickID gcId;
+extern float gcTurnSensitivity;
+extern float gcMaxTurnSensitivity;
+extern int gcBindings[gc_NUMBUTTONS];
+extern bool gcHotplugDirty;
 
 //===========================================================================
 
 //
 // Game controller default bindings
+// 
+// The game will set these binding if no config.* file exists.
+// Once the config.* file has been created, it uses what is saved
+// and this has no effect unless config.* is deleted and recreated.
 //
 static const int gcDefaultBindings[gc_NUMBUTTONS] = {
 		sc_gc_Axis_Right_Trigger,					// gc_attack
@@ -125,17 +159,10 @@ static const int gcDefaultBindings[gc_NUMBUTTONS] = {
 #endif	
 		sc_gc_Btn_Back,								// gc_esc
 		sc_gc_Btn_Start								// gc_pause
-#define sc_gc_NoButton						-1
+#define sc_gc_NoButton								-1
 };
 
 //===========================================================================
-
-extern SDL_GameController* GameController;
-extern SDL_JoystickID gcId;
-extern float gcTurnSensitivity;
-extern float gcMaxTurnSensitivity;
-extern int gcBindings[gc_NUMBUTTONS];
-extern bool gcHotplugDirty;
 
 //
 // Forbidden action buttons
@@ -167,11 +194,9 @@ bool GC_GetButton(SDL_GameControllerButton);
 void GC_ForceReleaseAllButtons(void);
 bool GC_IsButtonForbidden(int);
 void GC_ProcessEvents(const SDL_Event*);
-void GC_ProcessHotplugEvents(void);
+void GC_IntroHotplugEvents(void);
 void GC_CleanHotplugEvents(boolean[]);
 void GC_PollMenuInputs(int*, bool*, bool*, bool*, bool*);
 int ClampInt(int, int, int);
 #endif
-#else
-#define ENABLE_GAME_CONTROLLER 0
 #endif

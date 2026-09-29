@@ -3700,7 +3700,7 @@ void A_StartDeathCam(objtype *ob)
         return;
     }
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
     if (doubleBufferingEnabled)
         VW_UpdateScreen();
 #endif
@@ -3725,7 +3725,7 @@ void A_StartDeathCam(objtype *ob)
 
     VW_UpdateScreen();
 
-#if SDL_MAJOR_VERSION == 1
+#if DDWOLF_LEGACY
     if (doubleBufferingEnabled)
         VW_UpdateScreen();
 #endif

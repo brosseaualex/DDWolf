@@ -1192,7 +1192,7 @@ void ViewMap(void)
 	{
 		PollControls();
 
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 		PollGcMapControls(maporgx, maporgy);
 #endif
 
@@ -1206,7 +1206,7 @@ void ViewMap(void)
 			maporgy++;
 
 		OverheadRefresh();
-#if SDL_MAJOR_VERSION == 2 && defined(USE_MODERN_CONTROLS)
+#if ENABLE_GAME_CONTROLLER
 } while (!Keyboard(sc_Escape) && !(IN_GcPresent() && controllerEnabled &&
 	(IN_GcGetButton(SDL_CONTROLLER_BUTTON_BACK) || IN_GcGetButton(SDL_CONTROLLER_BUTTON_B))));
 #else

@@ -582,9 +582,9 @@ void LevelCompleted(void)
 				Write(x, 7, tempstr);
 				if (!(i % (PAR_AMOUNT / 10)))
 					SD_PlaySound(ENDBONUS1SND);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 				if (!(i % (PAR_AMOUNT / 50)))
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 				if (!doubleBufferingEnabled || !(i % (PAR_AMOUNT / 50)))
 #endif
 					VW_UpdateScreen();
@@ -615,9 +615,9 @@ void LevelCompleted(void)
 			Write(x, 14, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 			if (!(i & 1))
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 			if (!doubleBufferingEnabled || !(i & 1))
 #endif
 				VW_UpdateScreen();
@@ -662,9 +662,9 @@ void LevelCompleted(void)
 			Write(x, 16, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 			if (!(i & 1))
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 			if (!doubleBufferingEnabled || !(i & 1))
 #endif
 				VW_UpdateScreen();
@@ -708,9 +708,9 @@ void LevelCompleted(void)
 			Write(x, 18, tempstr);
 			if (!(i % 10))
 				SD_PlaySound(ENDBONUS1SND);
-#if SDL_MAJOR_VERSION == 2
+#if DDWOLF
 			if (!(i & 1))
-#elif SDL_MAJOR_VERSION == 1
+#elif DDWOLF_LEGACY
 			if (!doubleBufferingEnabled || !(i & 1))
 #endif
 				VW_UpdateScreen();
