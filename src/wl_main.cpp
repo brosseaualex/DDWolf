@@ -7,6 +7,7 @@
 #endif
 
 #include "wl_def.h"
+#include "..\win\resource.h"
 #pragma hdrstop
 #include "wl_atmos.h"
 #ifdef __linux__
@@ -1027,10 +1028,10 @@ void SignonScreen(void) // VGA version
 =
 ==========================
 */
-
 void FinishSignon(void)
 {
 #ifndef SPEAR
+	char versionString[32];
 
 	VW_Bar(scaleOffsetX, 189 + scaleOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
 	WindowX = scaleOffsetX;
@@ -1040,6 +1041,13 @@ void FinishSignon(void)
 	SETFONTCOLOR(14, 4);
 
 	US_CPrint("Press a key");
+
+	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
+
+	PrintX = scaleOffsetX + 2;
+	PrintY = 190 + scaleOffsetY;
+	SETFONTCOLOR(43, 4);
+	US_Print(versionString);
 
 	VW_UpdateScreen();
 
@@ -1055,12 +1063,12 @@ void FinishSignon(void)
 
 	VW_UpdateScreen();
 
-	SETFONTCOLOR(0, 15);
+	SETFONTCOLOR(0, 15); 
 #else
-	VW_UpdateScreen();
+		VW_UpdateScreen();
 
 	if (!param_nowait)
-		VW_WaitVBL(3 * 70);
+		VW_WaitVBL(3 * 70); 
 #endif
 }
 
@@ -1859,7 +1867,7 @@ param_difficulty = 0;
 				param_resy = atoi(argv[++i]);
 			}
 			}
-		else IFARG("--forcewindowed")
+		else IFARG("--windowed")
 			param_forcewindowed = true;
 #if DDWOLF
 		else IFARG("--novsync")
@@ -2028,7 +2036,7 @@ param_difficulty = 0;
 			" --hard                 Sets the difficulty to hard for tedlevel\n"
 			" --nowait               Skips intro screens\n"
 			" --res <width> <height> Sets the screen resolution\n"
-			" --forcewindowed        Forces the game in windowed mode\n"
+			" --windowed			 Sets the game in windowed mode\n"
 #if DDWOLF
 			" --novsync				 Disables VSync\n"
 #elif DDWOLF_LEGACY

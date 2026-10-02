@@ -28,7 +28,6 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - Controller hot-plugging support.
     - Game will now detect the controller connection and disconnection anytime.
   - Every button can be remapped to an action.
-    - Start, Select, X-Box/PS buttons are reserved as system buttons and cannot be remapped.
 * Legacy OS support
   - SDL1 has been re-implemented from the ground up.
     - Reinstates support for Windows 95, 98, ME, NT, 2000.
@@ -119,7 +118,7 @@ DDWolf supports the following command line options
  --hard                           Sets the difficulty to hard for tedlevel
  --nowait                         Skips intro screens
  --res <width> <height>           Sets the screen resolution
- --forcewindowed                  Forces the game in windowed mode
+ --windowed                       Sets the game in windowed mode
  --novsync                        Disables VSync
  --nodblbuf                       (Legacy only) Disables double buffering
  --bits <b>                       Sets the screen color depth

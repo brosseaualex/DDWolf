@@ -1,4 +1,4 @@
-DDWolf v1.4.0 (xxx XX, 2026)
+DDWolf v1.4.0 (Oct 2, 2026)
  [Added]
 	- [Full controller support]
 		- X-Box, PlayStation, Nintendo controllers are supported.
@@ -25,7 +25,7 @@ DDWolf v1.4.0 (xxx XX, 2026)
 		- DDWolf-Legacy_x86.cbp (CodeBlocks + MingW x86)
 	- [Added back some older command line args and some new ones]
 		- '--res <width> <height>'
-		- '--forcewindowed'
+		- '--windowed'
 		- '--novsync' - SDL2 only
 		- '--nodblbuf' - Legacy only (SDL1)
 		- '--extravbls <vbls>'
