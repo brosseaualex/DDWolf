@@ -1,13 +1,13 @@
 DDWolf v1.4.0 (Oct 2, 2026)
  [Added]
-	- [Full controller support]
+	- [Full controller support]*
 		- X-Box, PlayStation, Nintendo controllers are supported.
 			- Elite controllers / paddles are supported.
 		- Controller hot-plugging support
 			- Game will now detect the controller connection and disconnection anytime.
 		- Every button can be remapped to an action
 			- Start, Select, X-Box/PS buttons are reserved as system buttons and cannot be remapped.
-	- [New engine variant - DDWolf-Legacy]*
+	- [New engine variant - DDWolf-Legacy]**
 		- SDL1 has been re-implemented.
 			- Requires SDL-1.2.15 & SDL_mixer-1.2.12
 			- This reinstates support for Windows 95, 98, ME, NT, 2000.
@@ -38,7 +38,8 @@ DDWolf v1.4.0 (Oct 2, 2026)
 	- Fixed a crash when going on the ReadThis without an actual file.
 		- Now it just goes back to main menu.
 
-*DDWolf-Legacy is provided 'as-is' and no support will be provided other than bug fixes*
+* Full controller support is only available on the modern, non-legacy version.
+** DDWolf-Legacy is provided 'as-is' and no support will be provided other than bug fixes.
 
 DDWolf v1.3.1 (Sep 16, 2026)
  [Added]

@@ -22,7 +22,7 @@ Please look at the **bottom** of this page for **credits and special thanks!**
   - Can disable mouse Y axis.
   - #USE_MODERN_CONTROL flag in version.h to enable or disable.
     - Original control scheme available.
-* Full controller support
+* Full controller support (Modern, non-legacy version only)
   - X-Box, PlayStation, Nintendo controllers are supported.
     - Elite controllers / paddles are supported.
   - Controller hot-plugging support.
