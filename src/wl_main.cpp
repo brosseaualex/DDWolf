@@ -1030,9 +1030,8 @@ void SignonScreen(void) // VGA version
 */
 void FinishSignon(void)
 {
-#ifndef SPEAR
 	char versionString[32];
-
+#ifndef SPEAR
 	VW_Bar(scaleOffsetX, 189 + scaleOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
 	WindowX = scaleOffsetX;
 	WindowW = 320;
@@ -1040,13 +1039,12 @@ void FinishSignon(void)
 
 	SETFONTCOLOR(14, 4);
 
-	US_CPrint("Press a key");
-
-	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
+	US_CPrint("Press a key");	
 
 	PrintX = scaleOffsetX + 2;
 	PrintY = 190 + scaleOffsetY;
 	SETFONTCOLOR(43, 4);
+	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
 	US_Print(versionString);
 
 	VW_UpdateScreen();
@@ -1065,7 +1063,13 @@ void FinishSignon(void)
 
 	SETFONTCOLOR(0, 15); 
 #else
-		VW_UpdateScreen();
+	PrintX = scaleOffsetX + 4;
+	PrintY = 188 + scaleOffsetY;
+	SETFONTCOLOR(154, 154);
+	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
+	US_Print(versionString);
+
+	VW_UpdateScreen();
 
 	if (!param_nowait)
 		VW_WaitVBL(3 * 70); 
