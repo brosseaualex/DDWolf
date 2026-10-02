@@ -1,13 +1,13 @@
 DDWolf v1.4.0 (Oct 2, 2026)
  [Added]
-	- [Full controller support]*
+	- Full controller support*
 		- X-Box, PlayStation, Nintendo controllers are supported.
 			- Elite controllers / paddles are supported.
 		- Controller hot-plugging support
 			- Game will now detect the controller connection and disconnection anytime.
 		- Every button can be remapped to an action
 			- Start, Select, X-Box/PS buttons are reserved as system buttons and cannot be remapped.
-	- [New engine variant - DDWolf-Legacy]**
+	- New engine variant - DDWolf-Legacy**
 		- SDL1 has been re-implemented.
 			- Requires SDL-1.2.15 & SDL_mixer-1.2.12
 			- This reinstates support for Windows 95, 98, ME, NT, 2000.
@@ -23,13 +23,13 @@ DDWolf v1.4.0 (Oct 2, 2026)
 				- Replaced with "Double Buffering".
 		- DDWolf-Legacy_x86.VC2026.sln (Visual Studio 2026)
 		- DDWolf-Legacy_x86.cbp (CodeBlocks + MingW x86)
-	- [Added back some older command line args and some new ones]
+	- Added back some older command line args and some new ones
 		- '--res <width> <height>'
 		- '--windowed'
 		- '--novsync' - SDL2 only
 		- '--nodblbuf' - Legacy only (SDL1)
 		- '--extravbls <vbls>'
-	- [When Overhead map is enabled, you can now rebind the key]
+	- When Overhead map is enabled, you can now rebind the key
 
  [Fixed]
 	- Fixed rendering issue with rain/snow and textured ceiling.
