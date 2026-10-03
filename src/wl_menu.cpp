@@ -5798,11 +5798,11 @@ void DrawMenuGun(CP_iteminfo* iteminfo)
 void DrawStripes(int y)
 {
 #ifndef SPEAR
-	VWB_Bar(0, y, rescaledWidth, 24, 0);
-	VWB_Hlin(0, rescaledWidth - 1, y + 22, STRIPE);
+	VWB_Bar(0, y, screenWidth, 24, 0);
+	VWB_Hlin(0, screenWidth - 1, y + 22, STRIPE);
 #else
-	VWB_Bar(0, y, rescaledWidth, 22, 0);
-	VWB_Hlin(0, rescaledWidth - 1, y + 23, 0);
+	VWB_Bar(0, y, screenWidth, 22, 0);
+	VWB_Hlin(0, screenWidth - 1, y + 23, 0);
 #endif
 }
 
