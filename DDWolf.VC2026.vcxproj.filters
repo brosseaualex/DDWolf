@@ -117,6 +117,9 @@
     <ClInclude Include="src\id_dd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="win\ver_info.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Changes.txt" />

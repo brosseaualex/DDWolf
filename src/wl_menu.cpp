@@ -14,9 +14,8 @@
 #else
 #include <unistd.h>
 #endif
-
 #include "wl_def.h"
-
+#include "..\win\ver_info.h"
 #pragma hdrstop
 
 extern int lastgamemusicoffset;
@@ -2415,6 +2414,7 @@ void DrawOptScreen(void)
 	}
 
 	DrawMenuGun(&OptItems);
+	DrawDDWolfVersion();
 	VW_UpdateScreen();
 }
 
@@ -4800,7 +4800,7 @@ void ClearMScreen(void)
 	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
 #else
 	VWB_BarScaledCoord(0, 0, screenWidth, screenHeight, BORDCOLOR);
-	VWB_DrawPic(0, 0, C_BACKDROPPIC);
+	VWB_DrawPicScaled(0, 0, C_BACKDROPPIC);
 #endif
 }
 
@@ -5809,6 +5809,28 @@ void DrawStripes(int y)
 void ShootSnd(void)
 {
 	SD_PlaySound(SHOOTSND);
+}
+
+void DrawDDWolfVersion(void)
+{
+	int oldFntNb = fontnumber;
+
+	fontnumber = 0;
+	fontstruct* font = (fontstruct*)grsegs[STARTFONT + fontnumber];
+	int fontHeight = font->height;
+
+	int virtualHeight = screenHeight / scaleFactor;
+	int virtualWidth = screenWidth / scaleFactor;
+
+	px = 4;
+	py = virtualHeight - fontHeight - 2;
+#ifndef SPEAR
+	SETFONTCOLOR(43, 4);
+#else
+	SETFONTCOLOR(154, 154);
+#endif
+	VWB_DrawPropString(getVersion());
+	fontnumber = oldFntNb;
 }
 
 ///////////////////////////////////////////////////////////////////////////

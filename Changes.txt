@@ -1,3 +1,8 @@
+DDWolf v1.4.1 (Oct 3, 2026)
+ [Fixed]
+	- Fixed scaling of "pictures"
+		- Mostly title screen and SOD menu background.
+	
 DDWolf v1.4.0 (Oct 2, 2026)
  [Added]
 	- Full controller support*

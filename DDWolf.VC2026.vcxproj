@@ -221,6 +221,7 @@
     <ClInclude Include="src\wl_shade.h" />
     <ClInclude Include="src\wl_utils.h" />
     <ClInclude Include="win\resource.h" />
+    <ClInclude Include="win\ver_info.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Changes.txt" />

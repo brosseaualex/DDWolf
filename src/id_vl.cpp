@@ -872,6 +872,10 @@ void VL_DePlaneVGA(byte* source, int width, int height) {
 =================
 */
 
+void VL_MemToScreenPic(byte* source, int width, int height, int x, int y) {
+	VL_MemToScreenScaled2(source, width, height, scaleFactor * x, scaleFactor * y);
+}
+
 void VL_MemToScreen(byte* source, int width, int height, int x, int y) {
 	VL_MemToScreenScaledCoord(source, width, height, scaleFactor * x, scaleFactor * y);
 }
@@ -910,6 +914,66 @@ void VL_MemToScreenScaledCoord(byte* source, int width, int height, int destx, i
 			}
 		}
 	}
+	VL_UnlockSurface(screenBuffer);
+}
+
+/*
+=================
+=
+= VL_MemToScreenScaled2
+=
+= Used to scale images sur as Signon, Title etc.
+=
+=================
+*/
+
+void VL_MemToScreenScaled2(byte* source, int width, int height, int destx, int desty) {
+	byte* dest;
+	int x, y;
+
+	if (!screenBuffer || source == NULL)
+		return;
+
+	dest = VL_LockSurface(screenBuffer);
+	if (dest == NULL)
+		return;
+
+	int targetWidth = screenWidth;
+
+	int targetHeight;
+	if (height < 200)
+		targetHeight = (screenHeight * height) / 200;
+	else
+		targetHeight = screenHeight;
+
+	int scaledDestY = desty;
+	if (desty > 0)
+		scaledDestY = (screenHeight * desty) / 200;
+
+	for (y = 0; y < targetHeight; y++) {
+		int srcY = (y * height) / targetHeight;
+		if (srcY >= height) 
+			srcY = height - 1;
+
+		unsigned targetY = y + scaledDestY;
+		if (targetY >= screenHeight)
+			break;
+
+		for (x = 0; x < targetWidth; x++) {
+			int srcX = (x * width) / targetWidth;
+			if (srcX >= width) 
+				srcX = width - 1;
+
+			unsigned targetX = x + destx;
+			if (targetX >= screenWidth)
+				continue;
+
+			byte col = source[(srcY * width) + srcX];
+
+			dest[ylookup[targetY] + targetX] = col;
+		}
+	}
+
 	VL_UnlockSurface(screenBuffer);
 }
 

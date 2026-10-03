@@ -57,6 +57,7 @@ void VWB_DrawTile8M(int x, int y, int tile);
 void VWB_DrawTile16(int x, int y, int tile);
 void VWB_DrawTile16M(int x, int y, int tile);
 void VWB_DrawPic(int x, int y, int chunknum);
+void VWB_DrawPicScaled(int x, int y, int chunknum);
 void VWB_DrawPicScaledCoord(int x, int y, int chunknum);
 void VWB_DrawMPic(int x, int y, int chunknum);
 void VWB_Bar(int x, int y, int width, int height, int color);

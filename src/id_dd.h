@@ -14,7 +14,7 @@
 #ifndef __ID_DD_H_
 #define __ID_DD_H_
 
-#include <SDL.h>
+#include <SDL_version.h>
 
 // ----------------------------------------
 

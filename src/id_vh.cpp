@@ -95,6 +95,19 @@ void VWB_DrawPic(int x, int y, int chunknum)
 	VL_MemToScreen(grsegs[chunknum], width, height, x + scaleOffsetX, y + scaleOffsetY);
 }
 
+void VWB_DrawPicScaled(int x, int y, int chunknum)
+{
+	int picnum = chunknum - STARTPICS;
+	unsigned width, height;
+
+	x &= ~7;
+
+	width = pictable[picnum].width;
+	height = pictable[picnum].height;
+
+	VL_MemToScreenScaled2(grsegs[chunknum], width, height, x, y);
+}
+
 void VWB_DrawPicScaledCoord(int scx, int scy, int chunknum)
 {
 	int picnum = chunknum - STARTPICS;

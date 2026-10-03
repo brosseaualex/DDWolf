@@ -365,10 +365,10 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w));
 int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w), int totalItems, int* selectedIdx, void (*buildItemsFunc)(void));
 
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int), int type);
+void DrawDDWolfVersion(void);
 void DrawMainMenu(void);
 void DrawSoundMenu(void);
 void DrawLoadSaveScreen(int loadsave);
-
 void DrawNewEpisode(void);
 void DrawNewGame(void);
 void DrawChangeView(int view);

@@ -5,9 +5,7 @@
 #else
 #include <unistd.h>
 #endif
-
 #include "wl_def.h"
-#include "..\win\resource.h"
 #pragma hdrstop
 #include "wl_atmos.h"
 #ifdef __linux__
@@ -15,6 +13,8 @@
 #else
 #include <SDL_syswm.h>
 #endif
+#include "..\win\ver_info.h"
+#pragma hdrstop
 
 /*
 =============================================================================
@@ -1030,7 +1030,6 @@ void SignonScreen(void) // VGA version
 */
 void FinishSignon(void)
 {
-	char versionString[32];
 #ifndef SPEAR
 	VW_Bar(scaleOffsetX, 189 + scaleOffsetY, 300, 11, VL_GetFirstColoredPixel(screenBuffer));
 	WindowX = scaleOffsetX;
@@ -1039,13 +1038,7 @@ void FinishSignon(void)
 
 	SETFONTCOLOR(14, 4);
 
-	US_CPrint("Press a key");	
-
-	PrintX = scaleOffsetX + 2;
-	PrintY = 190 + scaleOffsetY;
-	SETFONTCOLOR(43, 4);
-	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
-	US_Print(versionString);
+	US_CPrint("Press a key");
 
 	VW_UpdateScreen();
 
@@ -1063,12 +1056,6 @@ void FinishSignon(void)
 
 	SETFONTCOLOR(0, 15); 
 #else
-	PrintX = scaleOffsetX + 4;
-	PrintY = 188 + scaleOffsetY;
-	SETFONTCOLOR(154, 154);
-	sprintf(versionString, "DDWolf v%s", VERSION_STRING);
-	US_Print(versionString);
-
 	VW_UpdateScreen();
 
 	if (!param_nowait)
@@ -1745,14 +1732,14 @@ static void DemoLoop()
 			SDL_Color pal[256];
 			VL_ConvertPalette(grsegs[TITLEPALETTE], pal, 256);
 
-			VWB_DrawPic(0, 0, TITLE1PIC);
-			VWB_DrawPic(0, 80, TITLE2PIC);
+			VWB_DrawPicScaled(0, 0, TITLE1PIC);
+			VWB_DrawPicScaled(0, 80, TITLE2PIC);
 
 			VW_UpdateScreen();
 			VL_FadeIn(0, 255, pal, 30);
 #else
 			VWB_Bar(0, 0, rescaledWidth, rescaledHeight, 0);
-			VWB_DrawPic(0, 0, TITLEPIC);
+			VWB_DrawPicScaled(0, 0, TITLEPIC);
 			VW_UpdateScreen();
 			VW_FadeIn();
 #endif
@@ -1762,7 +1749,7 @@ static void DemoLoop()
 			//
 			// credits page
 			//
-			VWB_DrawPic(0, 0, CREDITSPIC);
+			VWB_DrawPicScaled(0, 0, CREDITSPIC);
 			VW_UpdateScreen();
 			VW_FadeIn();
 			if (IN_UserInput(TickBase * 10))
