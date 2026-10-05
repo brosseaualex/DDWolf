@@ -85,7 +85,7 @@ CP_itemtype MainMenu[] = {
 };
 
 CP_itemtype SndMenu[] = {
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	{1, STR_NONE, 0},
 	{1, STR_PC, 0},
 	{1, STR_ALSB, 0},
@@ -227,7 +227,7 @@ CP_itemtype CtlKeyboardActionMenu[] = {
 	{0, "", 0},
 	{1, STR_MORE_ACTION_KEYS, CP_KbMoreActionCtl},
 	{1, STR_MOVEMENT_KEYS, CP_KbMoveCtl},
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 	{1, STR_CUS_CONTROLS, CP_CustomCtl}
 #endif
 };
@@ -239,7 +239,7 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 	{1, STR_WPN_4, 0},
 	{1, STR_PREV_WPN, 0},
 	{1, STR_NEXT_WPN, 0},
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 	{1, STR_AUTOMAP, 0},
 #endif
 	{0, "", 0},
@@ -249,7 +249,7 @@ CP_itemtype CtlKeyboardMoreActionMenu[] = {
 //
 // EXTRA CONTROLS
 //
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 CP_itemtype CusCtlMenu[] = {
 	{1, STR_CUS_CTL_1, 0},
 	{1, STR_CUS_CTL_2, 0},
@@ -296,7 +296,7 @@ CP_itemtype CtlGcMoreActionsMenu[] = {
 	{1, STR_WPN_2, 0},
 	{1, STR_WPN_3, 0},
 	{1, STR_WPN_4, 0},
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 	{1, STR_AUTOMAP, 0},
 #endif
 	{0, "", 0},
@@ -384,7 +384,7 @@ CusGcActionItems = { OPT_GC_ACTION_X, OPT_GC_ACTION_Y, lengthof(CtlGcActionMenu)
 CusGcMoreActionsItems = { OPT_GC_MORE_ACTION_X, OPT_GC_MORE_ACTION_Y, lengthof(CtlGcMoreActionsMenu), 0, 32 },
 #endif
 
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 CusCtlItems = { CUS_CTL_TEXT_X, CUS_CTL_TEXT_Y, lengthof(CusCtlMenu), 0, 32 },
 #endif
 #endif
@@ -847,7 +847,7 @@ int CP_CheckQuick(ScanCode scancode)
 		// QUICKSAVE
 		//
 	case sc_F8:
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 		VL_SetSaveGameSlot();
 #endif
 		if (SaveGamesAvail[LSItems.curpos] && pickquick)
@@ -1018,7 +1018,7 @@ int CP_NewGame(int blank)
 {
 	int which, episode;
 
-#if !defined(SPEAR) && !defined (SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined (USE_SEAMLESS_LEVELS)
 	firstpart :
 
 	DrawNewEpisode();
@@ -1089,7 +1089,7 @@ int CP_NewGame(int blank)
 	if (which < 0)
 	{
 		MenuFadeOut();
-#if !defined(SPEAR) && !defined (SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined (USE_SEAMLESS_LEVELS)
 		goto firstpart;
 #else
 		return 0;
@@ -1113,7 +1113,7 @@ int CP_NewGame(int blank)
 	return 0;
 }
 
-#if !defined(SPEAR) && !defined (SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined (USE_SEAMLESS_LEVELS)
 
 /////////////////////
 //
@@ -1187,7 +1187,7 @@ void DrawNewGameDiff(int w)
 // HANDLE SOUND MENU
 //
 ////////////////////////////////////////////////////////////////////
-#ifndef VIEASM
+#ifndef USE_VIEASM
 int CP_Sound(int blank)
 {
 	int which;
@@ -1297,7 +1297,7 @@ int CP_Sound(int blank)
 //
 // DRAW THE SOUND MENU
 //
-#ifndef VIEASM
+#ifndef USE_VIEASM
 void DrawSoundMenu(void)
 {
 	int i, on;
@@ -1828,7 +1828,7 @@ void TrackWhichGame(int w)
 	PrintLSEntry(lastgameon, TEXTCOLOR);
 	PrintLSEntry(w, HIGHLIGHT);
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 	char loadpath[300];
 	char bmpName[13] = BMP_SAVE_FILENAME;
 	bmpName[7] = w + '0';
@@ -1873,7 +1873,7 @@ void DrawLoadSaveScreen(int loadsave)
 	VWB_DrawPic(112, 184 + scaleOffsetY, C_MOUSELBACKPIC);
 	DrawWindow(LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, BKGDCOLOR);
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 	DrawWindow(LSP_X - 1, LSP_Y - 1, LSP_W + 1, LSP_H + 1, 0x00);
 #endif
 
@@ -1927,7 +1927,7 @@ int CP_SaveGame(int quick)
 	char savepath[300];
 	char input[32];
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 	char picpath[300];
 	char bmpName[13] = BMP_SAVE_FILENAME;
 #endif
@@ -1959,7 +1959,7 @@ int CP_SaveGame(int quick)
 			fseek(file, 32, SEEK_SET);
 			SaveTheGame(file, 0, 0);
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 			bmpName[7] = which + '0';
 			if (configdir[0]) {
 				snprintf(picpath, sizeof(picpath), "%s/%s", configdir, bmpName);
@@ -2033,7 +2033,7 @@ int CP_SaveGame(int quick)
 				DrawLSAction(1);
 				SaveTheGame(file, LSA_X + 8, LSA_Y + 5);
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 				bmpName[7] = which + '0';
 				if (configdir[0]) {
 					snprintf(picpath, sizeof(picpath), "%s/%s", configdir, bmpName);
@@ -3361,7 +3361,7 @@ enum
 	WEP3,
 	WEP4,
 	PREVWEP,
-#ifndef OVERHEAD_MAP
+#ifndef USE_OVERHEAD_MAP
 	NEXTWEP
 #else
 	NEXTWEP,
@@ -3369,7 +3369,7 @@ enum
 #endif
 };
 
-#ifndef OVERHEAD_MAP
+#ifndef USE_OVERHEAD_MAP
 int actionorder[6] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP };
 #else
 int actionorder[7] = { WEP1, WEP2, WEP3, WEP4, PREVWEP, NEXTWEP, AUTOMAP };
@@ -3412,7 +3412,7 @@ int CP_KbMoreActionCtl(int blank)
 			DefineKbMoreActionsBtns(6);
 			DrawKbMoreActionsKeys(6);
 			break;
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 		case CTL_KB_MORE_ACTION_AUTOMAP:
 			DefineKbMoreActionsBtns(7);
 			DrawKbMoreActionsKeys(7);
@@ -3686,7 +3686,7 @@ void DrawKbMoreActionsKeys(int hilight)
 	int i, color;
 	int nbActions = 6;
 
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 	nbActions = 7;
 #endif
 
@@ -3701,7 +3701,7 @@ void DrawKbMoreActionsKeys(int hilight)
 		PrintKbMoreActionsKeys(i);
 }
 
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 enum
 {
 	ADV_CTL_1,
@@ -4110,7 +4110,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 		start = MORE_ACTIONS_ARRAY_START;
 		amount = MORE_ACTIONS_ARRAY_END;
 		break;
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 	case KB_CUSTOM_CONTROLS:
 		start = CUS_CTL_ARRAY_RANGE_START;
 		amount = CUS_CTL_ARRAY_RANGE_END;
@@ -4157,7 +4157,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 				y = OPT_KB_MORE_ACTION_TEXT_Y;
 				w = 75;
 				break;
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 			case KB_CUSTOM_CONTROLS:
 				x = CUS_CTL_RIGHT_TEXT_X;
 				y = CUS_CTL_TEXT_Y;
@@ -4356,7 +4356,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 					break;
 #endif
 
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 				case KB_CUSTOM_CONTROLS:
 					if (LastScan && LastScan != sc_Escape)
 					{
@@ -4767,12 +4767,12 @@ void IntroScreen(void)
 	else
 		VWB_Bar(164 + scaleOffsetX, 105 + scaleOffsetY, 12, 2, DARKGRAY);
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	if (AdLibPresent && !SoundBlasterPresent)
 #endif
 		VWB_Bar(164 + scaleOffsetX, 128 + scaleOffsetY, 12, 2, FILLCOLOR);
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	if (SoundBlasterPresent)
 #endif
 		VWB_Bar(164 + scaleOffsetX, 151 + scaleOffsetY, 12, 2, FILLCOLOR);
@@ -5735,7 +5735,7 @@ int StartCPMusic(int song)
 	lastmusic = song;
 	lastoffs = SD_MusicOff();
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
 #endif
 
@@ -5745,7 +5745,7 @@ int StartCPMusic(int song)
 
 void FreeMusic(void)
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
 #endif
 }
@@ -5887,7 +5887,7 @@ void CheckForEpisodes(void)
 		Quit("NO WOLFENSTEIN 3-D DATA FILES to be found!");
 #else
 #ifndef SPEAR
-#ifndef SEAMLESSLEVELS
+#ifndef USE_SEAMLESS_LEVELS
 	if (!stat("vswap.wl6", &statbuf))
 	{
 		strcpy(extension, "wl6");
@@ -5961,7 +5961,9 @@ void CheckForEpisodes(void)
 	else
 		Quit("UNSUPPORTED MISSION!");
 	strcpy(graphext, "sod");
+#ifndef USE_VIEASM
 	strcpy(audioext, "sod");
+#endif	
 #else
 	if (!stat("vswap.sdm", &statbuf))
 	{
@@ -5974,7 +5976,7 @@ void CheckForEpisodes(void)
 #endif
 #else
 	strcpy(graphext, extension);
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	strcpy(audioext, extension);
 #endif
 #endif
@@ -6341,7 +6343,7 @@ void CheckKeyConflict(void)
 
 	arrayEnd = 0;
 
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 	arrayEnd = CUS_CTL_ARRAY_RANGE_END - CUS_CTL_ARRAY_RANGE_START;
 
 	for (i = 0; i < arrayEnd; i++)
@@ -6758,7 +6760,7 @@ int CP_GcMoreActionCtl(int blank)
 		case CTL_GC_MORE_ACTION_WEP4:
 			DrawGcMoreActionsBtns(4);
 			break;
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 		case CTL_GC_MORE_ACTION_AUTOMAP:
 			DrawGcMoreActionsBtns(5);
 			break;
@@ -6859,7 +6861,7 @@ void PrintGcMoreActionBtn(int i)
 {
 	int actionMap[] = {
 		gc_weapon1, gc_weapon2, gc_weapon3, gc_weapon4
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 		, gc_automap
 #endif
 	};
@@ -6874,7 +6876,7 @@ void DrawGcMoreActionsBtns(int edit)
 {
 	int actionMap[] = {
 		gc_weapon1, gc_weapon2, gc_weapon3, gc_weapon4
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 		, gc_automap
 #endif
 	};

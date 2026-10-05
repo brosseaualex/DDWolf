@@ -60,7 +60,7 @@ typedef struct
 
 word *mapsegs[MAPPLANES];
 maptype *mapheaderseg[NUMMAPS];
-#ifndef VIEASM
+#ifndef USE_VIEASM
 byte* audiosegs[NUMSNDCHUNKS];
 #endif
 byte *grsegs[NUMCHUNKS];
@@ -77,7 +77,7 @@ mapfiletype *tinf;
 
 char extension[5]; // Need a string, not constant to change cache files
 char graphext[5];
-#ifndef VIEASM
+#ifndef USE_VIEASM
 char audioext[5];
 #endif
 static const char gheadname[] = "vgahead.";
@@ -85,7 +85,7 @@ static const char gfilename[] = "vgagraph.";
 static const char gdictname[] = "vgadict.";
 static const char mheadname[] = "maphead.";
 static const char mfilename[] = "maptemp.";
-#ifndef VIEASM
+#ifndef USE_VIEASM
 static const char aheadname[] = "audiohed.";
 static const char afilename[] = "audiot.";
 #endif
@@ -93,7 +93,7 @@ static const char afilename[] = "audiot.";
 void CA_CannotOpen(const char *string);
 
 static int32_t grstarts[NUMCHUNKS + 1];
-#ifndef VIEASM
+#ifndef USE_VIEASM
 static int32_t* audiostarts; // array of offsets in audio / audiot
 #endif
 
@@ -105,13 +105,13 @@ huffnode grhuffman[255];
 
 int grhandle = -1;    // handle to EGAGRAPH
 int maphandle = -1;   // handle to MAPTEMP / GAMEMAPS
-#ifndef VIEASM
+#ifndef USE_VIEASM
 int audiohandle = -1; // handle to AUDIOT / AUDIO
 #endif
 
 int32_t chunkcomplen, chunkexplen;
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 SDMode oldsoundmode;
 #endif
 
@@ -599,7 +599,7 @@ void CAL_SetupMapFile(void)
 
 //==========================================================================
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 /*
 ======================
 =
@@ -655,7 +655,7 @@ void CA_Startup(void)
 
     CAL_SetupMapFile();
     CAL_SetupGrFile();
-#ifndef VIEASM
+#ifndef USE_VIEASM
     CAL_SetupAudioFile();
 #endif
 }
@@ -675,12 +675,12 @@ void CA_Startup(void)
 void CA_Shutdown(void)
 {
     int i;
-#ifndef VIEASM
+#ifndef USE_VIEASM
     int start = 0;
 #endif
     if (maphandle != -1)
         close(maphandle);
-#ifndef VIEASM
+#ifndef USE_VIEASM
     if (audiohandle != -1)
         close(audiohandle);
 #endif
@@ -709,7 +709,7 @@ void CA_Shutdown(void)
     free(tinf);
     tinf = NULL;
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
     switch (oldsoundmode)
     {
     case sdm_Off:
@@ -729,7 +729,7 @@ void CA_Shutdown(void)
 
 //===========================================================================
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 
 /*
 ======================

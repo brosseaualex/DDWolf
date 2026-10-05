@@ -165,7 +165,7 @@
 #define STR_ATMOS_PRECIPITATION "Precipitation"
 #endif
 
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 #define STR_CUS_CONTROLS "Custom Controls"
 
 #define STR_CUS_CTL_1 "Cus Ctl 1"

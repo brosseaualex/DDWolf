@@ -39,7 +39,7 @@
 #include "mame/fmopl.h"
 #endif
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #define ORIGSAMPLERATE 7042
 
 typedef struct

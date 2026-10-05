@@ -113,7 +113,7 @@ boolean param_novsync = false;
 unsigned param_resx = 0;
 unsigned param_resy = 0;
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 boolean param_8bitsound = false;
 bool noSound = false;
 #endif
@@ -138,7 +138,7 @@ void ReadConfig(void)
 {
 	SDMode sd;
 	SMMode sm;
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	SDSMode sds;
 #endif
 
@@ -178,7 +178,7 @@ void ReadConfig(void)
 
 		read(file, &sd, sizeof(sd));
 		read(file, &sm, sizeof(sm));
-#ifndef VIEASM
+#ifndef USE_VIEASM
 		read(file, &sds, sizeof(sds));
 #endif
 
@@ -194,7 +194,7 @@ void ReadConfig(void)
 		read(file, &joystickenabled, sizeof(joystickenabled));
 #endif
 
-#ifdef SHOW_CUSTOM_CONTROLS
+#ifdef USE_EXTRA_CONTROLS
 		read(file, customControls, sizeof(customControls));
 #endif
 
@@ -213,7 +213,7 @@ void ReadConfig(void)
 		read(file, &viewsize, sizeof(viewsize));
 		read(file, &mouseadjustment, sizeof(mouseadjustment));
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 		read(file, &soundvol, sizeof(soundvol));
 		read(file, &musicvol, sizeof(musicvol));
 		read(file, &reversestereo, sizeof(reversestereo));
@@ -226,7 +226,7 @@ void ReadConfig(void)
 #endif
 		close(file);
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 		if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent && !SoundBlasterPresent)
 		{
 			sd = sdm_PC;
@@ -290,7 +290,7 @@ void ReadConfig(void)
 #endif
 
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 		if (soundvol > 100) soundvol = 100;
 		if (musicvol > 100) musicvol = 100;
 #endif
@@ -304,7 +304,7 @@ void ReadConfig(void)
 		// no config file, so select by hardware
 		//
 	noconfig:
-#ifndef VIEASM
+#ifndef USE_VIEASM
 		if (SoundBlasterPresent || AdLibPresent)
 		{
 			sd = sdm_AdLib;
@@ -367,7 +367,7 @@ void ReadConfig(void)
 			atmosPrecipitationEnabled = true;
 #endif
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 		soundvol = 100;
 		musicvol = 100;
 		reversestereo = false;
@@ -376,7 +376,7 @@ void ReadConfig(void)
 
 	SD_SetMusicMode(sm);
 	SD_SetSoundMode(sd);
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	SD_SetDigiDevice(sds);
 #else
 	SD_ChangeVolume((byte)(soundvol * 1.28), (byte)(musicvol * 1.28));
@@ -465,7 +465,7 @@ void WriteConfig(void)
 
 		write(file, &SoundMode, sizeof(SoundMode));
 		write(file, &MusicMode, sizeof(MusicMode));
-#ifndef VIEASM
+#ifndef USE_VIEASM
 		write(file, &DigiMode, sizeof(DigiMode));
 #endif
 		write(file, &mouseenabled, sizeof(mouseenabled));
@@ -480,7 +480,7 @@ void WriteConfig(void)
 		write(file, &joystickenabled, sizeof(joystickenabled));
 #endif
 
-#ifdef SHOW_CUSTOM_CONTROLS
+#ifdef USE_EXTRA_CONTROLS
 		write(file, customControls, sizeof(customControls));
 #endif
 
@@ -499,7 +499,7 @@ void WriteConfig(void)
 		write(file, &viewsize, sizeof(viewsize));
 		write(file, &mouseadjustment, sizeof(mouseadjustment));
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 		write(file, &soundvol, sizeof(soundvol));
 		write(file, &musicvol, sizeof(musicvol));
 		write(file, &reversestereo, sizeof(reversestereo));
@@ -1065,7 +1065,7 @@ void FinishSignon(void)
 
 //===========================================================================
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 /*
 =====================
 =
@@ -1358,7 +1358,7 @@ void DoJukebox(void)
 
 static void InitGame()
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #ifndef SPEARDEMO
 	boolean didjukebox = false;
 #endif
@@ -1408,7 +1408,7 @@ static void InitGame()
 	//
 	// build some tables
 	//
-#ifndef VIEASM
+#ifndef USE_VIEASM
 	InitDigiMap();
 #endif // !VIEASM
 
@@ -1424,7 +1424,7 @@ static void InitGame()
 #ifndef SPEARDEMO
 	if (Keyboard(sc_M))
 	{
-#ifndef VIEASM
+#ifndef USE_VIEASM
 		DoJukebox();
 		didjukebox = true;
 #endif // !VIEASM
@@ -1448,7 +1448,7 @@ static void InitGame()
 	// initialize variables
 	//
 	InitRedShifts();
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #ifndef SPEARDEMO
 	if (!didjukebox)
 #endif
@@ -1646,7 +1646,7 @@ void Quit(const char* errorStr, ...)
 #endif
 	}
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 	allowwindow = false;
 #endif
 
@@ -1676,7 +1676,7 @@ static void DemoLoop()
 		EnableEndGameMenuItem();
 		NewGame(param_difficulty, 0);
 
-#if !defined(SPEAR) && !defined(SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined(USE_SEAMLESS_LEVELS)
 		gamestate.episode = param_tedlevel / 10;
 		gamestate.mapon = param_tedlevel % 10;
 #else
@@ -1694,7 +1694,10 @@ static void DemoLoop()
 #ifndef DEMOTEST
 
 #ifndef UPLOAD
-
+#ifdef USE_NON_SHAREWARE_NOTICE
+	if (!param_nowait)
+		NonShareware();
+#endif
 #ifndef GOODTIMES
 #ifndef SPEAR
 	if (!param_nowait)
@@ -1997,7 +2000,7 @@ param_difficulty = 0;
 			param_ignorenumchunks = true;
 		else IFARG("--help")
 			showHelp = true;
-#ifdef VIEASM
+#ifdef USE_VIEASM
 		else IFARG("--8bitsound")
 			param_8bitsound = true;
 		else IFARG("--nosound")
@@ -2033,7 +2036,7 @@ param_difficulty = 0;
 #elif DDWOLF_LEGACY
 			" --nodblbuf             Disables double buffering\n"
 #endif
-#ifdef VIEASM
+#ifdef USE_VIEASM
 			" --nosound				 Turns off sound\n"
 			" --8bitsound			 Sets the sound to 8 bits (default 16 bits)\n"
 #endif

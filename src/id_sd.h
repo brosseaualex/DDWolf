@@ -12,7 +12,7 @@
 
 #define TickBase 70 // 70Hz per tick - used as a base for timer 0
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 typedef enum
 {
     sdm_Off,

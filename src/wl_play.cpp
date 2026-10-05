@@ -61,7 +61,7 @@ boolean controllerEnabled;
 
 #if USE_MODERN_CONTROLS
 int dirscan[6] = { sc_W, sc_E, sc_S, sc_Q, sc_StrafeLeft, sc_StrafeRight };
-#ifndef SHOW_CUSTOM_CONTROLS
+#ifndef USE_EXTRA_CONTROLS
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4, sc_LeftBracket, sc_RightBracket, sc_O, sc_Escape, sc_None, sc_None, sc_None, sc_None, sc_None, sc_None };
 #else
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4, sc_LeftBracket, sc_RightBracket, sc_O, sc_Escape, sc_None, sc_None, sc_None, sc_None, sc_None, sc_None,  sc_None, sc_CusCtl_1, sc_CusCtl_2, sc_CusCtl_3, sc_CusCtl_4, sc_CusCtl_5, sc_CusCtl_6, sc_CusCtl_7, sc_CusCtl_8, sc_CusCtl_9, sc_CusCtl_10 };
@@ -470,7 +470,7 @@ void PollCustomKeyboardMove(void)
 		controlx = ((alwaysRun && buttonstate[bt_run]) || (!alwaysRun && !buttonstate[bt_run])) ? BASEMOVE * tics : RUNMOVE * tics;
 }
 
-#ifdef SHOW_CUSTOM_CONTROLS
+#ifdef USE_EXTRA_CONTROLS
 /*
 ===================
 =
@@ -481,7 +481,7 @@ void PollCustomKeyboardMove(void)
 void PollCustomControls(void)
 {
 	if (param_debugmode) {
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 		if (Keyboard(buttonscan[bt_cus_ctl_1]))
 			GetMessage("Adv Ctl 1", DEF_MSG_CLR);
 
@@ -600,7 +600,7 @@ void PollControls(void)
 	// get button states
 	//
 	PollKeyboardButtons();
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 	PollCustomControls();
 #endif
 
@@ -884,7 +884,7 @@ void CheckKeys(void)
 	if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
 	{
 		int lastoffs = StopMusic();
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 		VL_SetSaveGameSlot();
 #endif
 		ClearMemory();
@@ -929,7 +929,7 @@ void CheckKeys(void)
 	}
 #endif
 
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 	if (buttonstate[bt_automap])
 	{
 		ViewMap();

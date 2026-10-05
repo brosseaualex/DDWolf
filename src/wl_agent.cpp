@@ -732,7 +732,7 @@ void GiveKey(int key)
 {
 	gamestate.keys |= (1 << key);
 	DrawKeys();
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 	char pickupStr[48] = "";
 	sprintf(pickupStr, "Picked up %s ", keyname[key]);
 	GetMessage(pickupStr, DEF_MSG_CLR);
@@ -770,7 +770,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(HEALTH2SND);
 		HealSelf(25);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "First Aid Kit");
 #endif
 		break;
@@ -787,7 +787,7 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(BONUS1SND);
 		GivePoints(100);
 		gamestate.treasurecount++;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Cross (100 points)");
 #endif
 		break;
@@ -795,7 +795,7 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(BONUS2SND);
 		GivePoints(500);
 		gamestate.treasurecount++;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Chalice (500 points)");
 #endif
 		break;
@@ -803,7 +803,7 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(BONUS3SND);
 		GivePoints(1000);
 		gamestate.treasurecount++;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Bible (1000 points)");
 #endif
 		break;
@@ -811,7 +811,7 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(BONUS4SND);
 		GivePoints(5000);
 		gamestate.treasurecount++;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Crown (5000 points)");
 #endif
 		break;
@@ -822,7 +822,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(GETAMMOSND);
 		GiveAmmo(8);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 			//Its not a Clip, its a Mag. IYKYK
             strcat(pickupStr, "Magazine");
 #endif
@@ -833,7 +833,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(GETAMMOSND);
 		GiveAmmo(4);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 			//Its not a Clip, its a Mag.
             strcat(pickupStr, "Magazine");
 #endif
@@ -846,7 +846,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(GETAMMOBOXSND);
 		GiveAmmo(25);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
         strcat(pickupStr, "Ammo box");
 #endif
 		break;
@@ -855,7 +855,7 @@ void GetBonus(statobj_t *check)
 	case bo_machinegun:
 		SD_PlaySound(GETMACHINESND);
 		GiveWeapon(wp_machinegun);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Machine gun");
 #endif
 		break;
@@ -863,7 +863,7 @@ void GetBonus(statobj_t *check)
 		SD_PlaySound(GETGATLINGSND);
 		facetimes = 38;
 		GiveWeapon(wp_chaingun);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Gatling gun");
 #endif
 
@@ -878,7 +878,7 @@ void GetBonus(statobj_t *check)
 		GiveAmmo(25);
 		GiveExtraMan();
 		gamestate.treasurecount++;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "an extra life!");
 #endif
 		break;
@@ -889,7 +889,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(HEALTH1SND);
 		HealSelf(10);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Food");
 #endif
 		break;
@@ -900,7 +900,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(HEALTH1SND);
 		HealSelf(4);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Dog food");
 #endif
 		break;
@@ -911,7 +911,7 @@ void GetBonus(statobj_t *check)
 
 		SD_PlaySound(SLURPIESND);
 		HealSelf(1);
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
             strcat(pickupStr, "Yum yum");
 #endif
 		break;
@@ -929,7 +929,7 @@ void GetBonus(statobj_t *check)
 	StartBonusFlash();
 	check->shapenum = -1; // remove from list
 
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 	// This is basically just a hack to allow other functions within
 	// this function to use GetMessage without being overwritten by an empty GetMessage here.
 	// The GiveKey() function has its own GetMessage output.
@@ -1257,7 +1257,7 @@ void Cmd_Use(void)
 		//
 		// pushable wall
 		//
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 		strcat(str, "You found a secret!");
 		GetMessage(str, DEF_MSG_CLR);
 #endif

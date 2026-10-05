@@ -173,7 +173,7 @@ static void cleanup_output(void)
 			size_t readbytes = fread(buf, 1, 16383, file);
 			fclose(file);
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 			if (allowwindow)
 			{
 #endif
@@ -184,7 +184,7 @@ static void cleanup_output(void)
 				}
 				else
 					remove(stdoutPath); // remove empty file
-#ifdef VIEASM
+#ifdef USE_VIEASM
 			}
 #endif
 		}

@@ -65,7 +65,7 @@
 #define SM_X 48
 #define SM_W 250
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #define SM_Y1 20
 #define SM_H1 4 * 13 - 7
 #define SM_Y2 SM_Y1 + 5 * 13
@@ -86,11 +86,6 @@
 #if USE_MODERN_CONTROLS
 #define CTL_X 38
 #define CTL_H 13 * 7 + 8
-//#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
-//#define CTL_H 13 * 8 + 8
-//#else
-//#define CTL_H 13 * 7 + 8
-//#endif
 #define CTL_W 250
 #else
 #define CTL_X 24
@@ -152,7 +147,7 @@
 
 #define LSM_Y 55
 #define LSM_H 10 * 13 + 10
-#ifndef SAVE_GAME_SCREENSHOT
+#ifndef USE_SAVE_GAME_SCREENSHOT
 #define LSM_X 85
 #define LSM_W 175
 #else
@@ -191,7 +186,7 @@
 #define OPT_KB_ACTION_Y 72
 #define OPT_KB_ACTION_W 250
 
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 #define OPT_KB_ACTION_H 13 * 8 + 8
 #else
 #define OPT_KB_ACTION_H 13 * 7 + 8
@@ -201,7 +196,7 @@
 #define OPT_KB_MORE_ACTION_Y 60
 #define OPT_KB_MORE_ACTION_W 250
 
-#ifndef OVERHEAD_MAP
+#ifndef USE_OVERHEAD_MAP
 #define OPT_KB_MORE_ACTION_H 13 * 8 + 8
 #else
 #define OPT_KB_MORE_ACTION_H 13 * 9 + 8
@@ -233,7 +228,7 @@
 #define OPT_GC_MORE_ACTION_Y 72
 #define OPT_GC_MORE_ACTION_W 250
 
-#ifndef OVERHEAD_MAP
+#ifndef USE_OVERHEAD_MAP
 #define OPT_GC_MORE_ACTION_H 13 * 6 + 8
 #else
 #define OPT_GC_MORE_ACTION_H 13 * 7 + 8
@@ -243,13 +238,13 @@
 #define OPT_GC_MORE_ACTION_TEXT_Y 72
 
 const int MORE_ACTIONS_ARRAY_START = 5;
-#ifndef OVERHEAD_MAP
+#ifndef USE_OVERHEAD_MAP
 const int MORE_ACTIONS_ARRAY_END = 11;
 #else
 const int MORE_ACTIONS_ARRAY_END = 12;
 #endif
 
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 #define CUS_CTL_X 26
 #define CUS_CTL_Y 50
 #define CUS_CTL_W 280
@@ -448,7 +443,7 @@ void DefineKbMoveBtns(int);
 void DefineKbActionBtns(int);
 void DefineJoyBtns(int);
 
-#ifdef SHOW_CUSTOM_CONTROLS
+#ifdef USE_EXTRA_CONTROLS
 void DrawCustomCtlScreen(void);
 void DrawCustomCtlKeys(int hilight);
 void PrintCustomCtlKeys(int i);
@@ -519,7 +514,7 @@ void NonShareware(void);
 int GetYorN(int x, int y, int pic);
 #endif
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 void DrawSoundVols(bool);
 int AdjustVolume(int);
 #endif

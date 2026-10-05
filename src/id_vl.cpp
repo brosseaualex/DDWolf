@@ -25,7 +25,7 @@
 SDL_Surface* screen = NULL;
 SDL_Surface* screenBuffer = NULL;
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 SDL_Surface* lastGameSurface = NULL;
 #endif
 
@@ -548,7 +548,7 @@ byte VL_GetPixel(int x, int y)
 
 	return col;
 }
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 byte VL_GetPixel(SDL_Surface* surface, int x, int y) {
 	byte col;
 

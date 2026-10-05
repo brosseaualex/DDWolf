@@ -8,9 +8,6 @@
 #ifndef __AUDIOSOD_H_
 #define __AUDIOSOD_H_
 
-#define NUMSOUNDS 81
-#define NUMSNDCHUNKS 267
-
 //
 // Sound names & indexes
 //
@@ -104,9 +101,15 @@ typedef enum
 // Base offsets
 //
 #define STARTPCSOUNDS 0
-#define STARTADLIBSOUNDS 81
-#define STARTDIGISOUNDS 162
-#define STARTMUSIC 243
+#ifndef USE_VIEASM
+#define STARTADLIBSOUNDS LASTSOUND
+#define STARTDIGISOUNDS (2 * LASTSOUND)
+#define STARTMUSIC (3 * LASTSOUND)
+#else
+#define STARTADLIBSOUNDS 0
+#define STARTDIGISOUNDS 0
+#define STARTMUSIC 0
+#endif
 
 //
 // Music names & indexes
@@ -139,6 +142,13 @@ typedef enum
 	XTOWER2_MUS,  // 23
 	LASTMUSIC
 } musicnames;
+
+#define NUMSOUNDS LASTSOUND
+#define NUMSNDCHUNKS (STARTMUSIC + LASTMUSIC)
+
+#ifdef USE_VIEASM
+#define NUMMUSICS LASTMUSIC
+#endif
 
 /////////////////////////////////////////////////
 //

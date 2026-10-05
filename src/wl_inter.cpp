@@ -929,7 +929,7 @@ void DrawHighScores(void)
 #ifndef SPEAR
 	char* str;
 #ifndef UPLOAD
-#ifndef SEAMLESSLEVELS
+#ifndef USE_SEAMLESS_LEVELS
 	char buffer1[5];
 #endif
 #endif
@@ -996,7 +996,7 @@ void DrawHighScores(void)
 #endif
 
 #ifndef UPLOAD
-#if !defined(SPEAR) && !defined(SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined(USE_SEAMLESS_LEVELS)
 		PrintX -= 6;
 		itoa(s->episode + 1, buffer1, 10);
 		US_Print("E");
@@ -1132,8 +1132,7 @@ void CheckHighScore(int32_t score, word other)
 	}
 }
 
-#ifndef UPLOAD
-#ifndef SPEAR
+#ifdef USE_NON_SHAREWARE_NOTICE
 ////////////////////////////////////////////////////////
 //
 // NON-SHAREWARE NOTICE
@@ -1149,14 +1148,14 @@ void NonShareware(void)
 	fontnumber = 1;
 
 	SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
-	PrintX = 110;
+	PrintX = 110 + scaleOffsetX;
 	PrintY = 15;
 
 	US_Print("Attention");
 
 	SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR);
-	WindowX = PrintX = 40;
-	PrintY = 60;
+	WindowX = PrintX = 40 + scaleOffsetX;
+	PrintY = 60 + scaleOffsetY;
 
 	US_Print("This game is NOT shareware.\n");
 	US_Print("Please do not distribute it.\n");
@@ -1168,7 +1167,6 @@ void NonShareware(void)
 	VW_FadeIn();
 	IN_Ack();
 }
-#endif
 #endif
 
 #ifdef SPEAR

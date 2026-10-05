@@ -1228,10 +1228,10 @@ void SpawnTrans(int tilex, int tiley)
 {
     //        word *map;
     //        word tile;
-
+#ifndef USE_VIEASM
     if (SoundBlasterPresent && DigiMode != sds_Off)
         s_transdie01.tictime = 105;
-
+#endif
     SpawnNewObj(tilex, tiley, &s_transstand);
     newobj->obclass = transobj;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][en_trans];
@@ -1305,8 +1305,10 @@ statetype s_ubershoot7 = {false, SPR_UBER_SHOOT1, 12, NULL, NULL, &s_uberchase1}
 
 void SpawnUber(int tilex, int tiley)
 {
+#ifndef USE_VIEASM
     if (SoundBlasterPresent && DigiMode != sds_Off)
         s_uberdie01.tictime = 70;
+#endif
 
     SpawnNewObj(tilex, tiley, &s_uberstand);
     newobj->obclass = uberobj;
@@ -1398,8 +1400,10 @@ statetype s_willshoot6 = {false, SPR_WILL_SHOOT4, 10, NULL, (statefunc)T_Shoot, 
 
 void SpawnWill(int tilex, int tiley)
 {
+#ifndef USE_VIEASM
     if (SoundBlasterPresent && DigiMode != sds_Off)
         s_willdie2.tictime = 70;
+#endif
 
     SpawnNewObj(tilex, tiley, &s_willstand);
     newobj->obclass = willobj;
@@ -1570,8 +1574,10 @@ statetype s_deathshoot5 = {false, SPR_DEATH_SHOOT4, 10, NULL, (statefunc)T_Shoot
 
 void SpawnDeath(int tilex, int tiley)
 {
+#ifndef USE_VIEASM
     if (SoundBlasterPresent && DigiMode != sds_Off)
         s_deathdie2.tictime = 105;
+#endif
 
     SpawnNewObj(tilex, tiley, &s_deathstand);
     newobj->obclass = deathobj;
@@ -1755,8 +1761,10 @@ void A_Breathing(objtype *ob)
 
 void SpawnAngel(int tilex, int tiley)
 {
+#ifndef USE_VIEASM
     if (SoundBlasterPresent && DigiMode != sds_Off)
         s_angeldie11.tictime = 105;
+#endif
 
     SpawnNewObj(tilex, tiley, &s_angelstand);
     newobj->obclass = angelobj;
@@ -2153,7 +2161,7 @@ statetype s_fatshoot6 = {false, SPR_FAT_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s
 
 void SpawnSchabbs(int tilex, int tiley)
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
     if (DigiMode != sds_Off)
         s_schabbdie2.tictime = 140;
     else
@@ -2181,7 +2189,7 @@ void SpawnSchabbs(int tilex, int tiley)
 
 void SpawnGift(int tilex, int tiley)
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
     if (DigiMode != sds_Off)
         s_giftdie2.tictime = 140;
     else
@@ -2209,7 +2217,7 @@ void SpawnGift(int tilex, int tiley)
 
 void SpawnFat(int tilex, int tiley)
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
     if (DigiMode != sds_Off)
         s_fatdie2.tictime = 140;
     else
@@ -2778,7 +2786,7 @@ void SpawnFakeHitler(int tilex, int tiley)
 
 void SpawnHitler(int tilex, int tiley)
 {
-#ifndef VIEASM
+#ifndef USE_VIEASM
     if (DigiMode != sds_Off)
         s_hitlerdie2.tictime = 140;
     else

@@ -67,7 +67,7 @@ enum
 typedef int8_t bool;
 #endif
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 extern bool allowwindow;
 #endif
 
@@ -92,7 +92,7 @@ void ReadDisplayConfig(void);
 void WriteConfig(void);
 
 #include "id_pm.h"
-#ifdef VIEASM
+#ifdef USE_VIEASM
 #include "asmcomp.h"
 #else
 #include "id_sd.h"
@@ -1238,7 +1238,7 @@ enum
 	bt_movebackward,
 	bt_turnleft,
 	bt_turnright,
-#if USE_MODERN_CONTROLS && defined(SHOW_CUSTOM_CONTROLS)
+#if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
 	bt_cus_ctl_1,
 	bt_cus_ctl_2,
 	bt_cus_ctl_3,
@@ -1391,7 +1391,7 @@ extern boolean param_novsync;
 extern unsigned param_resx;
 extern unsigned param_resy;
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 extern boolean param_8bitsound;
 #endif
 
@@ -1492,7 +1492,7 @@ extern int dirscan[6];
 #if ENABLE_GAME_CONTROLLER
 extern boolean controllerEnabled;
 #endif
-#if defined(SHOW_CUSTOM_CONTROLS)
+#if defined(USE_EXTRA_CONTROLS)
 extern int customControls[10];
 #endif
 #else
@@ -1608,7 +1608,7 @@ extern short midangle;
 extern word horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 
 extern int messagetime;
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 void GetMessage(char* lastmessage, int color); // WSJ's message feature
 void DrawMessage(void);
 
@@ -1970,7 +1970,7 @@ void DrawParallax(void);
 
 #endif
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 extern byte soundvol, musicvol;
 extern bool reversestereo;
 #endif

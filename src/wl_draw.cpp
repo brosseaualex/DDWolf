@@ -65,7 +65,7 @@ void CalcTics(void);
 void ThreeDRefresh(void);
 
 // WSJ's message feature
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 void GetMessage(char* lastmessage, int color);
 void DrawMessage(void);
 void DrawRatios(void);
@@ -1672,7 +1672,7 @@ void ThreeDRefresh(void)
 
 	DrawPlayerWeapon(); // draw player's hands
 
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 	if (messagetime > 0) // WSJ's message feature
 		DrawMessage();
 #endif
@@ -1727,7 +1727,7 @@ void ThreeDRefresh(void)
 #endif
 }
 
-#ifdef WSJ_MESSAGE
+#ifdef USE_WSJ_MESSAGE
 //
 // In-game messages | WSJ's routine
 //

@@ -381,8 +381,8 @@ void GC_PollActions(void)
 	if (GC_IsActionPressed(gc_esc, false))
 		buttonstate[bt_esc] = true;
 
-#ifdef OVERHEAD_MAP
-	if (IN_GcIsActionPressed(gc_automap))
+#ifdef USE_OVERHEAD_MAP
+	if (GC_IsActionPressed(gc_automap))
 		buttonstate[bt_automap] = true;
 #endif
 }

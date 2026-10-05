@@ -109,7 +109,7 @@ typedef enum
 // Base offsets
 //
 #define STARTPCSOUNDS 0
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #define STARTADLIBSOUNDS LASTSOUND
 #define STARTDIGISOUNDS (2 * LASTSOUND)
 #define STARTMUSIC (3 * LASTSOUND)
@@ -156,7 +156,7 @@ typedef enum
 #define NUMSOUNDS LASTSOUND
 #define NUMSNDCHUNKS (STARTMUSIC + LASTMUSIC)
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 #define NUMMUSICS LASTMUSIC
 #endif
 

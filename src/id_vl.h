@@ -17,7 +17,7 @@ void Quit(const char *error, ...);
 extern SDL_Surface* screen;
 extern SDL_Surface* screenBuffer;
 
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 extern SDL_Surface* lastGameSurface;
 #endif
 
@@ -79,7 +79,7 @@ void VL_UnlockSurface(SDL_Surface *surface);
 byte VL_GetPixel(int x, int y);
 SDL_Surface* VL_DuplicateSurface(SDL_Surface* surf);
 byte VL_GetFirstColoredPixel(SDL_Surface* surface);
-#ifdef SAVE_GAME_SCREENSHOT
+#ifdef USE_SAVE_GAME_SCREENSHOT
 byte VL_GetPixel(SDL_Surface* surface, int x, int y);
 void VL_SetSaveGameSlot();
 #endif

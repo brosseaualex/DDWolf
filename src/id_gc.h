@@ -87,7 +87,7 @@ typedef enum
 	gc_weapon2,
 	gc_weapon3,
 	gc_weapon4,
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 	gc_automap,
 #endif
 	gc_esc,
@@ -154,7 +154,7 @@ static const int gcDefaultBindings[gc_NUMBUTTONS] = {
 		sc_gc_NoButton,								// gc_weapon2
 		sc_gc_NoButton,								// gc_weapon3
 		sc_gc_NoButton,								// gc_weapon4
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 		sc_gc_Axis_Left_Trigger,					// gc_automap
 #endif	
 		sc_gc_Btn_Back,								// gc_esc

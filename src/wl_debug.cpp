@@ -321,7 +321,7 @@ void ShapeTest(void)
 				//
 				US_Print("\n\n Number of sounds: ");
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 				US_PrintUnsigned(NumDigi);
 
 				for (l = j = 0; j < NumDigi; j++)
@@ -338,7 +338,7 @@ void ShapeTest(void)
 			}
 			else
 			{
-#ifndef VIEASM
+#ifndef USE_VIEASM
 				//
 				// display sounds
 				//
@@ -422,7 +422,7 @@ void ShapeTest(void)
 
 		case sc_P:
 			if (sound != -1)
-#ifndef VIEASM
+#ifndef USE_VIEASM
 				SD_PlayDigitized(sound, 8, 8);
 #else
 				SD_PlayDigitized(sound, 8, 8, false);
@@ -806,7 +806,7 @@ int DebugKeys(void)
 =============================================================================
 */
 
-#ifdef OVERHEAD_MAP
+#ifdef USE_OVERHEAD_MAP
 
 #define COL_FLOOR 0x19   // empty area color
 #define COL_SECRET WHITE // pushwall color
@@ -1121,29 +1121,31 @@ void SetupMapView(void)
 	if (maporgy > mapheight - viewtiley)
 		maporgy = mapheight - viewtiley;
 }
+
+#if ENABLE_GAME_CONTROLLER
 /*
 ===========================================================
 =
 = PollGcMapControls
-= 
+=
 = This function ensures that the game controller always
 = works to move around the map, regardless of the gc's
 = mapping.
-= 
+=
 = This resolves issues where D-Pad would be mapped to
 = 'Turn' so the input would not work in the map, while
 = actually turning the player around in-game while
 = the map was still open.
-= 
+=
 ===========================================================
 */
 
 void PollGcMapControls(int16_t maporgx, int16_t maporgy)
 {
-	if (!IN_GcPresent() || !controllerEnabled)
+	if (!GC_IsPresent() || !controllerEnabled)
 		return;
 
-	ControllerDelta gc = IN_GcGetDelta();
+	ControllerDelta gc = GC_GetDelta();
 
 	//Cancelling input from right stick, as it only works for moving left and right.
 	int rawRightStickX = SDL_GameControllerGetAxis(GameController, SDL_CONTROLLER_AXIS_RIGHTX);
@@ -1156,9 +1158,9 @@ void PollGcMapControls(int16_t maporgx, int16_t maporgy)
 	{
 		if (gc.a1X != 0)
 			mapPanX = gc.a1X;
-		else if (IN_GcGetButton(SDL_CONTROLLER_BUTTON_DPAD_LEFT))
+		else if (GC_GetButton(SDL_CONTROLLER_BUTTON_DPAD_LEFT))
 			mapPanX = -128;
-		else if (IN_GcGetButton(SDL_CONTROLLER_BUTTON_DPAD_RIGHT))
+		else if (GC_GetButton(SDL_CONTROLLER_BUTTON_DPAD_RIGHT))
 			mapPanX = 127;
 	}
 
@@ -1166,15 +1168,16 @@ void PollGcMapControls(int16_t maporgx, int16_t maporgy)
 
 	if (mapPanY == 0)
 	{
-		if (IN_GcGetButton(SDL_CONTROLLER_BUTTON_DPAD_UP))
+		if (GC_GetButton(SDL_CONTROLLER_BUTTON_DPAD_UP))
 			mapPanY = -128;
-		else if (IN_GcGetButton(SDL_CONTROLLER_BUTTON_DPAD_DOWN))
+		else if (GC_GetButton(SDL_CONTROLLER_BUTTON_DPAD_DOWN))
 			mapPanY = 127;
 	}
 
 	// Cancelling turning motion.
 	anglefrac = 0;
 }
+#endif
 
 /*
 ===================
@@ -1207,8 +1210,8 @@ void ViewMap(void)
 
 		OverheadRefresh();
 #if ENABLE_GAME_CONTROLLER
-} while (!Keyboard(sc_Escape) && !(IN_GcPresent() && controllerEnabled &&
-	(IN_GcGetButton(SDL_CONTROLLER_BUTTON_BACK) || IN_GcGetButton(SDL_CONTROLLER_BUTTON_B))));
+} while (!Keyboard(sc_Escape) && !(GC_IsPresent() && controllerEnabled &&
+	(GC_GetButton(SDL_CONTROLLER_BUTTON_BACK) || GC_GetButton(SDL_CONTROLLER_BUTTON_B))));
 #else
 } while (!Keyboard(sc_Escape));
 #endif

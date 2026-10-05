@@ -30,6 +30,8 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 #include <SDL.h>
 #endif
 
+#include "id_dd.h"
+
 const char* ASM_Verstring = "v0.9.1 Beta";  // Version string
 
 Uint8 sndvol, musvol;                       // Volumes for sound

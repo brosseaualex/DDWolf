@@ -15,7 +15,7 @@ IF YOU FIND ANY, PLEASE TELL ME SO I CAN FIX THEM!
 #include "wl_def.h"
 #include "asmcref.h"
 
-#ifdef VIEASM
+#ifdef USE_VIEASM
 SDMode          SoundMode;
 SMMode          MusicMode;
 

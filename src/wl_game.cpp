@@ -197,7 +197,7 @@ void UpdateSoundLoc(void)
         SD_SetPosition(leftchannel,rightchannel);
     }*/
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
     for (i = 0; i < MIX_CHANNELS; i++)
 #else
     for (i = 0; i < ASM_CurChannels(); i++)
@@ -1095,7 +1095,7 @@ void RecordDemo(void)
 
     VW_FadeOut();
 
-#if !defined(SPEAR) && !defined(SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined(USE_SEAMLESS_LEVELS)
     NewGame(gd_hard, level / 10);
     gamestate.mapon = level % 10;
 #else
@@ -1423,12 +1423,14 @@ restartgame:
         {
             SD_StopSound();
             SD_PlaySound(GETSPEARSND);
+#ifndef USE_VIEASM
             if (DigiMode != sds_Off)
             {
                 Delay(150);
             }
             else
                 SD_WaitSoundDone();
+#endif
 
             ClearMemory();
             gamestate.oldscore = gamestate.score;
@@ -1564,7 +1566,7 @@ restartgame:
         case ex_victorious:
             if (viewsize == 21)
                 DrawPlayScreen();
-#if !defined(SPEAR) && !defined(SEAMLESSLEVELS)
+#if !defined(SPEAR) && !defined(USE_SEAMLESS_LEVELS)
             VW_FadeOut();
 #else
             VL_FadeOut(0, 255, 0, 17, 17, 300);

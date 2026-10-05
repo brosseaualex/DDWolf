@@ -6,7 +6,7 @@
 #define NUMMAPS 60
 #define MAPPLANES 3
 
-#ifndef VIEASM
+#ifndef USE_VIEASM
 #define UNCACHEAUDIOCHUNK(chunk)     \
     {                                \
         if (audiosegs[chunk])        \
@@ -30,7 +30,7 @@ typedef struct
 
 extern word *mapsegs[MAPPLANES];
 extern maptype *mapheaderseg[NUMMAPS];
-#ifndef VIEASM
+#ifndef USE_VIEASM
 extern byte* audiosegs[NUMSNDCHUNKS];
 #endif
 
@@ -38,7 +38,7 @@ extern byte *grsegs[NUMCHUNKS];
 
 extern char extension[5];
 extern char graphext[5];
-#ifndef VIEASM
+#ifndef USE_VIEASM
 extern char audioext[5];
 #endif
 
