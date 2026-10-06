@@ -1,14 +1,15 @@
-DDWolf v1.4.2 (Xxx X, xxxx)
+DDWolf v1.4.2 (Oct 6, 2026)
  [Added]
+	- Added VIEASM support for Spear of Destiny.
 	- Added definition to enable Non-Shareware notice at the start of the game.
 		- version.h - #define NON_SHAREWARE_NOTICE.
-	- Added VIEASM support for Spear of Destiny.
  
  [Changed]
 	- Renamed SHOW_CUSTOM_CONTROLS to USE_EXTRA_CONTROLS.
 	
  [Fixed]
 	- Fixed error related to Overhead map and game controller.
+	- Fixed some inconsistencies in the menus.
 	
 DDWolf v1.4.1 (Oct 3, 2026)
  [Fixed]

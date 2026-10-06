@@ -43,7 +43,7 @@
 /*###### MAJOR FEATURES ######*/
 /*############################*/
 
-#define USE_VIEASM								// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
+//#define USE_VIEASM								// AlumiuN's Vodka-Induced Entertainment Advanced Sound Manager
 /*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Some modifications made by WSJ. Information in asmcref.h
 
 //#define USE_FEATUREFLAGS							// Enables the level feature flags (see bottom of wl_def.h)
@@ -66,24 +66,24 @@
 /*###### MINOR FEATURES ######*/
 /*###########################**/
 
-#define USE_OVERHEAD_MAP							// Enables the overhead map
+//#define USE_OVERHEAD_MAP							// Enables the overhead map
 /*!!!DELETE CONFIG.* AFTER CHANGING!!!*/
-#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
+//#define OVERHEAD_HIDE_UNSEEN						// Enables showing only the areas of the overhead map that have been seen
 
-#define USE_SEAMLESS_LEVELS						// Disables the Episode selection screen on Wolf3D
+//#define USE_SEAMLESS_LEVELS						// Disables the Episode selection screen on Wolf3D
 
-#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
+//#define USE_READTHIS								// Enables help text in the main menu, also works on SPEAR but there are no textures for the ReadThis frame. By MCS
 
-#define USE_RAND                                  // Enables the C++ random number generator (SRAND). By Matthew
+//#define USE_RAND                                  // Enables the C++ random number generator (SRAND). By Matthew
 
-#define USE_WSJ_MESSAGE							// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors. By WSJ
+//#define USE_WSJ_MESSAGE							// WSJ's message feature, shows on-screen messages for pickups, secrets and locked doors. By WSJ
 
-#define USE_SAVE_GAME_SCREENSHOT					// Shows a screenshot in the Save and Load screens. By insurrectionman
+//#define USE_SAVE_GAME_SCREENSHOT					// Shows a screenshot in the Save and Load screens. By insurrectionman
 
 //#define USE_NON_SHAREWARE_NOTICE					// Enables the "NonShareware()" message when starting the game.
 
 #ifdef MODERN
-#define USE_EXTRA_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
+//#define USE_EXTRA_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
 /*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Custom actions needs to be implemented by modder.
 #endif
 
@@ -99,7 +99,7 @@
 /*###### EXTRA MENUS ######*/
 /*#########################*/
 
-#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
+//#define SHOW_ATMOS_OPTIONS						// Menu to enable/disable atmosphere options at runtime
 /*!!!DELETE CONFIG.* AFTER CHANGING!!!*/			// Textured floor & ceiling, Shading, Skybox and Precipitation
 													// Requires at least ONE atmosphere flag to be enabled for the menu to appear
 
@@ -117,6 +117,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif
