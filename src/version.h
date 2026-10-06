@@ -5,7 +5,7 @@
 
 /* Defines used for different versions */
 
-#define SPEAR
+//#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
@@ -80,7 +80,7 @@
 
 #define USE_SAVE_GAME_SCREENSHOT					// Shows a screenshot in the Save and Load screens. By insurrectionman
 
-#define USE_NON_SHAREWARE_NOTICE					// Enables the "NonShareware()" message when starting the game.
+//#define USE_NON_SHAREWARE_NOTICE					// Enables the "NonShareware()" message when starting the game.
 
 #ifdef MODERN
 #define USE_EXTRA_CONTROLS						// Menu with an additional 10 custom actions that can be mapped to a keyboard key.
@@ -117,6 +117,6 @@
 /*###################*/
 
 //#define DEBUGKEYS									// Comment this out to compile without the Tab debug keys
-//#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
+#define NO_TIME_WASTE								// Disables the menu FadeIn and FadeOut delay, useful when debugging
 
 #endif

@@ -65,7 +65,7 @@ int dirscan[6] = { sc_W, sc_E, sc_S, sc_Q, sc_StrafeLeft, sc_StrafeRight };
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4, sc_LeftBracket, sc_RightBracket, sc_O, sc_Escape, sc_None, sc_None, sc_None, sc_None, sc_None, sc_None };
 #else
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4, sc_LeftBracket, sc_RightBracket, sc_O, sc_Escape, sc_None, sc_None, sc_None, sc_None, sc_None, sc_None,  sc_None, sc_CusCtl_1, sc_CusCtl_2, sc_CusCtl_3, sc_CusCtl_4, sc_CusCtl_5, sc_CusCtl_6, sc_CusCtl_7, sc_CusCtl_8, sc_CusCtl_9, sc_CusCtl_10 };
-int customControls[10] = { bt_cus_ctl_1, bt_cus_ctl_2, bt_cus_ctl_3, bt_cus_ctl_4, bt_cus_ctl_5, bt_cus_ctl_6, bt_cus_ctl_7, bt_cus_ctl_8, bt_cus_ctl_9, bt_cus_ctl_10 };
+int extraControls[10] = { bt_extra_ctl_1, bt_extra_ctl_2, bt_extra_ctl_3, bt_extra_ctl_4, bt_extra_ctl_5, bt_extra_ctl_6, bt_extra_ctl_7, bt_extra_ctl_8, bt_extra_ctl_9, bt_extra_ctl_10 };
 #endif
 #else
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
@@ -474,43 +474,43 @@ void PollCustomKeyboardMove(void)
 /*
 ===================
 =
-= PollCustomControls
+= PollExtraControls
 =
 ===================
 */
-void PollCustomControls(void)
+void PollExtraControls(void)
 {
 	if (param_debugmode) {
 #ifdef USE_WSJ_MESSAGE
-		if (Keyboard(buttonscan[bt_cus_ctl_1]))
-			GetMessage("Adv Ctl 1", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_1]))
+			GetMessage("Extra Ctl 1", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_2]))
-			GetMessage("Adv Ctl 2", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_2]))
+			GetMessage("Extra Ctl 2", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_3]))
-			GetMessage("Adv Ctl 3", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_3]))
+			GetMessage("Extra Ctl 3", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_4]))
-			GetMessage("Adv Ctl 4", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_4]))
+			GetMessage("Extra Ctl 4", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_5]))
-			GetMessage("Adv Ctl 5", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_5]))
+			GetMessage("Extra Ctl 5", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_6]))
-			GetMessage("Adv Ctl 6", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_6]))
+			GetMessage("Extra Ctl 6", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_7]))
-			GetMessage("Adv Ctl 7", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_7]))
+			GetMessage("Extra Ctl 7", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_8]))
-			GetMessage("Adv Ctl 8", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_8]))
+			GetMessage("Extra Ctl 8", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_9]))
-			GetMessage("Adv Ctl 9", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_9]))
+			GetMessage("Extra Ctl 9", DEF_MSG_CLR);
 
-		if (Keyboard(buttonscan[bt_cus_ctl_10]))
-			GetMessage("Adv Ctl 10", DEF_MSG_CLR);
+		if (Keyboard(buttonscan[bt_extra_ctl_10]))
+			GetMessage("Extra Ctl 10", DEF_MSG_CLR);
 #endif
 	}
 }
@@ -601,7 +601,7 @@ void PollControls(void)
 	//
 	PollKeyboardButtons();
 #if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
-	PollCustomControls();
+	PollExtraControls();
 #endif
 
 	if (mouseenabled && IN_IsInputGrabbed())

@@ -227,16 +227,16 @@ enum
 #if defined(USE_EXTRA_CONTROLS)
 enum
 {
-	CTL_ADV_1,
-	CTL_ADV_2,
-	CTL_ADV_3,
-	CTL_ADV_4,
-	CTL_ADV_5,
-	CTL_ADV_6,
-	CTL_ADV_7,
-	CTL_ADV_8,
-	CTL_ADV_9,
-	CTL_ADV_10
+	CTL_EXTRA_1,
+	CTL_EXTRA_2,
+	CTL_EXTRA_3,
+	CTL_EXTRA_4,
+	CTL_EXTRA_5,
+	CTL_EXTRA_6,
+	CTL_EXTRA_7,
+	CTL_EXTRA_8,
+	CTL_EXTRA_9,
+	CTL_EXTRA_10
 };
 #endif
 #else
@@ -249,7 +249,7 @@ enum
 };
 #endif
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 enum
 {
 	ATMOS_USE_TEXTURED,

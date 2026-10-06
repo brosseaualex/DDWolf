@@ -73,7 +73,7 @@
 #define SM_Y3 SM_Y2 + 5 * 13
 #define SM_H3 3 * 13 - 7
 #else
-#define SM_Y1   20
+#define SM_Y1   34
 #define SM_H1   3*13-7
 #define SM_Y2   SM_Y1+4*13
 #define SM_H2   3*13-7
@@ -96,13 +96,13 @@
 #define OPT_X 90
 #define OPT_Y 86
 #define OPT_W 152
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 #define OPT_H 13 * 5 + 8
 #else
 #define OPT_H 13 * 4 + 8
 #endif
 
-#ifdef SHOW_ATMOS_OPTIONS
+#if defined(SHOW_ATMOS_OPTIONS) && (defined(USE_FLOORCEILINGTEX) || defined(USE_SHADING) || defined(USE_CLOUDSKY) || defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW))
 #define ATMOS_X 46
 #define ATMOS_Y 84
 #define ATMOS_W 244
@@ -137,7 +137,7 @@
 #define RES_MENU_H 13 * 10 + 8
 
 #define DISPLAY_CTL_X 34
-#define DISPLAY_CTL_Y 86
+#define DISPLAY_CTL_Y 80
 #define DISPLAY_CTL_W 262
 #if DDWOLF
 #define DISPLAY_CTL_H 13 * 6 + 8
@@ -175,15 +175,16 @@
 
 // Keyboard
 #define OPT_KB_MOVE_KEYS_X 190
-#define OPT_KB_MOVE_KEYS_Y 65
 
 #define OPT_KB_MOVE_X 41
-#define OPT_KB_MOVE_Y 61
+#define OPT_KB_MOVE_Y 65
+
 #define OPT_KB_MOVE_W 250
 #define OPT_KB_MOVE_H 13 * 8 + 8
 
 #define OPT_KB_ACTION_X 41
-#define OPT_KB_ACTION_Y 72
+#define OPT_KB_ACTION_Y 65
+
 #define OPT_KB_ACTION_W 250
 
 #if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
@@ -194,6 +195,7 @@
 
 #define OPT_KB_MORE_ACTION_X 41
 #define OPT_KB_MORE_ACTION_Y 60
+
 #define OPT_KB_MORE_ACTION_W 250
 
 #ifndef USE_OVERHEAD_MAP
@@ -203,26 +205,24 @@
 #endif
 
 #define OPT_KB_MORE_ACTION_TEXT_X 200
-#define OPT_KB_MORE_ACTION_TEXT_Y 60
-
 #define OPT_KB_MORE_ACTION_RIGHT_TEXT_X 200
 
 // Game Controller
 #define OPT_GC_MOVE_X 41
-#define OPT_GC_MOVE_Y 72
+#define OPT_GC_MOVE_Y 60
+
 #define OPT_GC_MOVE_W 250
 #define OPT_GC_MOVE_H 13 * 9 + 8
 
 #define OPT_GC_MOVE_TEXT_X 170
-#define OPT_GC_MOVE_TEXT_Y 72
 
 #define OPT_GC_ACTION_X 41
-#define OPT_GC_ACTION_Y 72
+#define OPT_GC_ACTION_Y 60
+
 #define OPT_GC_ACTION_W 250
 #define OPT_GC_ACTION_H 13 * 9 + 8
 
 #define OPT_GC_ACTION_TEXT_X 170
-#define OPT_GC_ACTION_TEXT_Y 72
 
 #define OPT_GC_MORE_ACTION_X 41
 #define OPT_GC_MORE_ACTION_Y 72
@@ -235,7 +235,6 @@
 #endif
 
 #define OPT_GC_MORE_ACTION_TEXT_X 170
-#define OPT_GC_MORE_ACTION_TEXT_Y 72
 
 const int MORE_ACTIONS_ARRAY_START = 5;
 #ifndef USE_OVERHEAD_MAP
@@ -245,19 +244,18 @@ const int MORE_ACTIONS_ARRAY_END = 12;
 #endif
 
 #if defined(USE_EXTRA_CONTROLS)
-#define CUS_CTL_X 26
-#define CUS_CTL_Y 50
-#define CUS_CTL_W 280
-#define CUS_CTL_H 13 * 10 + 8
+#define EXTRA_CTL_X 26
+#define EXTRA_CTL_Y 55
+#define EXTRA_CTL_W 280
+#define EXTRA_CTL_H 13 * 10 + 8
 
-#define CUS_CTL_TEXT_X 25
-#define CUS_CTL_TEXT_Y 55
+#define EXTRA_CTL_TEXT_X 25
 
-#define CUS_CTL_RIGHT_TEXT_X 200
+#define EXTRA_CTL_RIGHT_TEXT_X 200
 
-const int MAX_CUSTOM_CONTROLS = 10;
-const int CUS_CTL_ARRAY_RANGE_START = 19;
-const int CUS_CTL_ARRAY_RANGE_END = 29;
+const int MAX_EXTRA_CONTROLS = 10;
+const int EXTRA_CTL_ARRAY_RANGE_START = 19;
+const int EXTRA_CTL_ARRAY_RANGE_END = 29;
 #endif
 #endif
 
@@ -375,11 +373,7 @@ void DrawDisplayOptScreen(void);
 void DrawCustomScreen(void);
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
-void DrawCustKeybd(int hilight);
-void DrawCustKeys(int hilight);
 void PrintCustMouse(int i);
-void PrintCustKeybd(int i);
-void PrintCustKeys(int i);
 
 #if !USE_MODERN_CONTROLS
 void DefineMouseBtns(void);
@@ -388,6 +382,10 @@ void DefineKeyBtns(void);
 void DefineJoyBtns(void);
 void PrintCustJoy(int i);
 void DrawCustJoy(int hilight);
+void DrawCustKeybd(int hilight);
+void DrawCustKeys(int hilight);
+void PrintCustKeybd(int i);
+void PrintCustKeys(int i);
 #endif
 
 int CP_NewGame(int);
@@ -423,6 +421,7 @@ int CP_Atmos(int);
 #endif
 
 #if USE_MODERN_CONTROLS
+void CheckKeyConflict(void);
 void DrawMouseCtlScreen(void);
 
 int CP_MouseCtl(int);
@@ -430,13 +429,16 @@ int CP_KbMoveCtl(int);
 int CP_KbActionCtl(int);
 int CP_KbMoreActionCtl(int);
 
-void CheckKeyConflict(void);
-
 void DrawKbMoveCtlScreen(void);
 void DrawKbActionCtlScreen(void);
 void DrawKbMoreActionCtlScreen(void);
 void DrawKbMoreActionsKeys(int hilight);
 void PrintKbMoreActionsKeys(int i);
+
+void DrawKbActionKeys(int hilight);
+void DrawKbMoveKeys(int hilight);
+void PrintKbActionKeys(int i);
+void PrintKbMoveKeys(int i);
 
 void DefineMouseBtns(int);
 void DefineKbMoveBtns(int);
@@ -444,10 +446,10 @@ void DefineKbActionBtns(int);
 void DefineJoyBtns(int);
 
 #ifdef USE_EXTRA_CONTROLS
-void DrawCustomCtlScreen(void);
-void DrawCustomCtlKeys(int hilight);
-void PrintCustomCtlKeys(int i);
-int CP_CustomCtl(int);
+void DrawExtraCtlScreen(void);
+void DrawExtraCtlKeys(int hilight);
+void PrintExtraCtlKeys(int i);
+int CP_ExtraCtl(int);
 #endif
 #endif
 
@@ -481,7 +483,7 @@ enum
 	KB_ACTIONS,
 	KB_MOVE,
 	KB_MORE_ACTIONS,
-	KB_CUSTOM_CONTROLS
+	KB_EXTRA_CONTROLS
 }; // FOR INPUT TYPES
 
 enum menuitems

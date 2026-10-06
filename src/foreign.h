@@ -166,18 +166,17 @@
 #endif
 
 #if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
-#define STR_CUS_CONTROLS "Custom Controls"
-
-#define STR_CUS_CTL_1 "Cus Ctl 1"
-#define STR_CUS_CTL_2 "Cus Ctl 2"
-#define STR_CUS_CTL_3 "Cus Ctl 3"
-#define STR_CUS_CTL_4 "Cus Ctl 4"
-#define STR_CUS_CTL_5 "Cus Ctl 5"
-#define STR_CUS_CTL_6 "Cus Ctl 6"
-#define STR_CUS_CTL_7 "Cus Ctl 7"
-#define STR_CUS_CTL_8 "Cus Ctl 8"
-#define STR_CUS_CTL_9 "Cus Ctl 9"
-#define STR_CUS_CTL_10 "Cus Ctl 10"
+#define STR_EXTRA_CONTROLS "Extra Controls"
+#define STR_EXTRA_CTL_1 "Extra Ctl 1"
+#define STR_EXTRA_CTL_2 "Extra Ctl 2"
+#define STR_EXTRA_CTL_3 "Extra Ctl 3"
+#define STR_EXTRA_CTL_4 "Extra Ctl 4"
+#define STR_EXTRA_CTL_5 "Extra Ctl 5"
+#define STR_EXTRA_CTL_6 "Extra Ctl 6"
+#define STR_EXTRA_CTL_7 "Extra Ctl 7"
+#define STR_EXTRA_CTL_8 "Extra Ctl 8"
+#define STR_EXTRA_CTL_9 "Extra Ctl 9"
+#define STR_EXTRA_CTL_10 "Extra Ctl 10"
 #endif
 
 #ifdef SPEAR

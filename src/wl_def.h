@@ -1239,16 +1239,16 @@ enum
 	bt_turnleft,
 	bt_turnright,
 #if USE_MODERN_CONTROLS && defined(USE_EXTRA_CONTROLS)
-	bt_cus_ctl_1,
-	bt_cus_ctl_2,
-	bt_cus_ctl_3,
-	bt_cus_ctl_4,
-	bt_cus_ctl_5,
-	bt_cus_ctl_6,
-	bt_cus_ctl_7,
-	bt_cus_ctl_8,
-	bt_cus_ctl_9,
-	bt_cus_ctl_10,
+	bt_extra_ctl_1,
+	bt_extra_ctl_2,
+	bt_extra_ctl_3,
+	bt_extra_ctl_4,
+	bt_extra_ctl_5,
+	bt_extra_ctl_6,
+	bt_extra_ctl_7,
+	bt_extra_ctl_8,
+	bt_extra_ctl_9,
+	bt_extra_ctl_10,
 #endif
 	NUMBUTTONS
 };
@@ -1493,7 +1493,7 @@ extern int dirscan[6];
 extern boolean controllerEnabled;
 #endif
 #if defined(USE_EXTRA_CONTROLS)
-extern int customControls[10];
+extern int extraControls[10];
 #endif
 #else
 extern int dirscan[4];

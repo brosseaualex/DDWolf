@@ -195,7 +195,7 @@ void ReadConfig(void)
 #endif
 
 #ifdef USE_EXTRA_CONTROLS
-		read(file, customControls, sizeof(customControls));
+		read(file, extraControls, sizeof(extraControls));
 #endif
 
 		boolean dummyJoypadEnabled;
@@ -481,7 +481,7 @@ void WriteConfig(void)
 #endif
 
 #ifdef USE_EXTRA_CONTROLS
-		write(file, customControls, sizeof(customControls));
+		write(file, extraControls, sizeof(extraControls));
 #endif
 
 		boolean dummyJoypadEnabled = false;
